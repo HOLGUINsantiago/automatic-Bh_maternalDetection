@@ -609,3 +609,12 @@ vertical_arrow_jump: 3
 [2025-06-11 11:12:19,053] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.20581259530839363
 [2025-06-11 11:13:42,314] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2157046240007081
 [2025-06-11 11:15:07,142] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2163543510698478
+[2025-06-11 11:16:32,343] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2102421763182647
+[2025-06-11 11:17:58,733] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19259248437733395
+[2025-06-11 11:19:23,053] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1975258918296893
+[2025-06-11 11:20:47,737] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25545326237026245
+[2025-06-11 11:22:13,700] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23151072894412272
+[2025-06-11 11:23:39,682] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18405386250885897
+[2025-06-11 11:25:04,248] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1885743209118437
+[2025-06-11 11:26:30,806] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26390158608356024
+[2025-06-11 11:27:53,648] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1948642266824085
