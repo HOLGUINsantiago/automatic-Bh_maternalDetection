@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: Cage1-LBN-2024-08-30_22-14-40_blur
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage1-LBN-2024-08-30_22-14-40_labels.csv
+  default: Cage1-LBN-2024-08-30_22-14-40_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage1-LBN-2024-08-30_22-14-40_blur.mp4
+  default: Cage1-LBN-2024-08-30_22-14-40_blur.mp4
+stats:
+  all: []
+  default: []

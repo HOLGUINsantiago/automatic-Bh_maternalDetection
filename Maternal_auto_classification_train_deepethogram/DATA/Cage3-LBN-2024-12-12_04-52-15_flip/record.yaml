@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: Cage3-LBN-2024-12-12_04-52-15_flip
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage3-LBN-2024-12-12_04-52-15_labels.csv
+  default: Cage3-LBN-2024-12-12_04-52-15_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage3-LBN-2024-12-12_04-52-15_flip.mp4
+  default: Cage3-LBN-2024-12-12_04-52-15_flip.mp4
+stats:
+  all: []
+  default: []

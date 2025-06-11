@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: Cage3-LBN-2024-12-11_04-38-42_blur
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage3-LBN-2024-12-11_04-38-42_labels.csv
+  default: Cage3-LBN-2024-12-11_04-38-42_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage3-LBN-2024-12-11_04-38-42_blur.mp4
+  default: Cage3-LBN-2024-12-11_04-38-42_blur.mp4
+stats:
+  all: []
+  default: []

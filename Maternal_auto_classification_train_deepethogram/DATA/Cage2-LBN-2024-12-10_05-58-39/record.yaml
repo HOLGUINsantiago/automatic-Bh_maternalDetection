@@ -1,0 +1,22 @@
+flow:
+  all: []
+  default: []
+key: Cage2-LBN-2024-12-10_05-58-39
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage2-LBN-2024-12-10_05-58-39_labels.csv
+  default: Cage2-LBN-2024-12-10_05-58-39_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage2-LBN-2024-12-10_05-58-39.mp4
+  default: Cage2-LBN-2024-12-10_05-58-39.mp4
+stats:
+  all:
+  - stats.yaml
+  default: stats.yaml

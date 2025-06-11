@@ -1,0 +1,1634 @@
+---
+title: "Analyse - Stage -VAEVE"
+author: "Santiago Holguin"
+date: "2025-05-12"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Stage VAEVE
+
+## Pre-process
+
+### Import juvenile data :
+
+```{r}
+library(knitr)
+library(readr)
+library(lubridate)
+library(dplyr)
+
+juvenile_data_all <- read.csv2("D:/LBN/Veave - metadatafile-juvenile-all-full.csv", stringsAsFactors=TRUE)
+
+juvenile_data_all <- juvenile_data_all %>%
+  mutate(
+    CageID = trimws(CageID),
+    CageID = sub("(?i)^cage\\s*", "", CageID, perl = TRUE)
+  )
+
+juvenile_data_all <- subset(juvenile_data_all, Project %in% c("VEAVE"))
+
+juvenile_data_only <- subset(juvenile_data_all, Cohort %in% c("Cohort 0", "Cohort 1", "Cohort 2"))
+
+```
+
+### Explore data status:
+
+```{r}
+
+
+juvenile_data_all[] <- lapply(juvenile_data_all, function(col) {
+  if (is.character(col)) as.factor(col) else col
+})
+
+missing_pct <- colMeans(is.na(juvenile_data_all)) * 100
+missing_df <- data.frame(Column = names(missing_pct), Missing_Percentage = round(missing_pct, 2))
+kable(missing_df, format = "markdown")
+
+juvenile_data_only[] <- lapply(juvenile_data_only, function(col) {
+  if (is.character(col)) as.factor(col) else col
+})
+
+missing_pct <- colMeans(is.na(juvenile_data_only)) * 100
+missing_df <- data.frame(Column = names(missing_pct), Missing_Percentage = round(missing_pct, 2))
+kable(missing_df, format = "markdown")
+
+
+```
+
+### Missing data completion - Miss forest
+
+Nonparametric Missing Value Imputation using Random Forest : The function 'missForest' in this package is used to impute missing values particularly in the case of mixed-type data. It uses a random forest trained on the observed values of a data matrix to predict the missing values. It can be used to impute continuous and/or categorical data including complex interactions and non-linear relations. It yields an out-of-bag (OOB) imputation error estimate without the need of a test set or elaborate cross-validation. It can be run in parallel to save computation time.
+
+```{r}
+library(missForest)
+
+process_data <- function(df, df_name = "df") {
+  missing_pct <- colMeans(is.na(df)) * 100
+  
+  to_remove_missing <- names(missing_pct[missing_pct > 30])
+  cat("\n[", df_name, "] Columnas eliminadas por >30% missing:\n", to_remove_missing, "\n")
+  
+  df_clean <- df[, !(names(df) %in% to_remove_missing)]
+  
+  apply_mf <- any(colMeans(is.na(df_clean)) * 100 <= 30)
+  if (apply_mf) {
+    cat("[", df_name, "] Aplicando missForest...\n")
+    
+    # Identificar columnas problemáticas
+    too_many_levels <- sapply(df_clean, function(col) is.factor(col) && nlevels(col) > 53)
+    problematic_cols <- names(df_clean)[too_many_levels]
+    
+    # Separar columnas a excluir temporalmente
+    df_problematic <- df_clean[, problematic_cols, drop = FALSE]
+    df_for_imputation <- df_clean[, !too_many_levels, drop = FALSE]
+    
+    # Aplicar missForest
+    imputed_result <- missForest(df_for_imputation)
+    df_imputed <- imputed_result$ximp
+    
+    # Volver a unir las columnas problemáticas (en el orden original)
+    df_final <- df[, names(df) %in% colnames(df_imputed) | names(df) %in% problematic_cols]
+    df_final[names(df_imputed)] <- df_imputed
+    df_final[problematic_cols] <- df_problematic
+  } else {
+    df_final <- df_clean
+  }
+  
+  return(df_final)
+}
+
+df_all_corrected  <- process_data(juvenile_data_all, "juvenile_data_all")
+df_only_corrected <- process_data(juvenile_data_only, "juvenile_data_only")
+
+
+```
+
+### Export data :
+
+We'll export the data for python post-processing :
+
+```{r}
+write.csv(df_all_corrected, "juvenile_data_all_corrected.csv", row.names = FALSE)
+write.csv(df_only_corrected, "juvenile_data_only_corrected.csv", row.names = FALSE)
+
+cat("[✓] Fichiers exportés : juvenile_data_all_corrected.csv et juvenile_data_only_corrected.csv\n")
+```
+
+Once the data is export, we'll do the first step of processing maternal data executing the first part of "analyseResultats.ipynb". This pipeline will produce two different df, full ethograms frame by frame df (fullDf), and summarized data of bouts and duration per behaviour per recording (resumeDf).
+
+## Big dataframe process :
+
+Data insertion and merge
+
+```{r}
+#fullDf <- read.csv("D:/LBN/behavioural_annotation.csv")
+resumeDf <-  read.csv("D:/LBN/Resume_df.csv")
+resumeDf$Transition <- resumeDf$Nest_exits_bouts + resumeDf$Nest_entry_bouts
+resumeDf <- resumeDf %>%
+  mutate(Day = floor(Time / 86400) + 1)
+
+resumeDf$Group <- as.factor(resumeDf$Group)
+
+# full_all_df <- left_join(fullDf, df_all_corrected, by = c("Cage.ID" = "CageID"))
+# full_only_df <- left_join(fullDf, df_only_corrected, by = c("Cage.ID" = "CageID"))
+resume_all_df <- left_join(resumeDf, df_all_corrected, by = c("Cage.ID" = "CageID"))
+resume_only_df <- left_join(resumeDf, df_only_corrected, by = c("Cage.ID" = "CageID"))
+```
+
+# LBN evolution
+
+The n = 14, 8 LBN mice and 6 LBN mice. we analyse here the resumeDf : Only bouts and duration data. Since n \< 30, and the variables distributions are not normal (Shpairo : pv \<0.05), we used wilcoxon test.
+
+### Time on nest - CONT vs LBN
+
+wilcoxon + Boxplot
+
+```{r}
+summary_cage <- resumeDf %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Onnest_duration_mean = mean(Onnest_duration, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Calcul des effectifs par groupe pour labels
+group_counts_cage <- summary_cage %>%
+  group_by(Group) %>%
+  summarise(n = n())
+
+# 3. Labels enrichis pour les groupes avec effectifs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Couleurs de base
+base_colors <- c("LBN" = "#1a80bb", "CONT" = "#a00000")
+
+# Crée les labels enrichis comme facteurs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Génère le vecteur de couleurs avec les bons noms enrichis
+colors <- setNames(base_colors[as.character(group_counts_cage$Group)], 
+                   paste0(group_counts_cage$Group, " (n = ", group_counts_cage$n, ")"))
+
+ymin <- min(summary_cage$Onnest_duration_mean, na.rm = TRUE)
+ymax <- max(summary_cage$Onnest_duration_mean, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)  # éviter valeurs < 0 si pas souhaité
+upper_limit <- ymax + padding
+
+comparisons <- list(levels(summary_cage$Group_n)) 
+library(ggpubr)
+
+p1 <- ggplot(summary_cage, aes(x = Group_n, y = Onnest_duration_mean, fill = Group_n)) +
+  geom_boxplot(aes(fill = Group_n), outlier.shape = NA) +
+  geom_jitter(
+    aes(fill = Group_n), 
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitter(width = 0.15)
+  ) +
+  stat_compare_means(
+    comparisons = comparisons,
+    method = "wilcox.test",
+    label = "p",
+    label.y = upper_limit,
+    bracket.size = 0.8,
+    tip.length = 0.02
+  ) +
+  labs(
+    title = "On nest",
+    y = "Mean of On nest duration (S)",
+    x = "Group",
+    fill = "Groups : "  # ← ici tu changes le titre de la légende fill
+  ) +
+  scale_y_continuous(limits = c(lower_limit, upper_limit + (upper_limit - lower_limit) * 0.1)) +
+  scale_fill_manual(values = colors) +
+  theme_minimal()
+
+p1
+```
+
+### Time off nest - CONT vs LBN
+
+wilcoxon + Boxplot
+
+```{r}
+
+summary_cage <- resumeDf %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Offnest_duration_mean = mean(Offnest_duration, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Calcul des effectifs par groupe pour labels
+group_counts_cage <- summary_cage %>%
+  group_by(Group) %>%
+  summarise(n = n())
+
+# 3. Labels enrichis pour les groupes avec effectifs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Couleurs de base
+base_colors <- c("LBN" = "#1a80bb", "CONT" = "#a00000")
+
+# Crée les labels enrichis comme facteurs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Génère le vecteur de couleurs avec les bons noms enrichis
+colors <- setNames(base_colors[as.character(group_counts_cage$Group)], 
+                   paste0(group_counts_cage$Group, " (n = ", group_counts_cage$n, ")"))
+
+ymin <- min(summary_cage$Offnest_duration_mean, na.rm = TRUE)
+ymax <- max(summary_cage$Offnest_duration_mean, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)  # éviter valeurs < 0 si pas souhaité
+upper_limit <- ymax + padding
+
+comparisons <- list(levels(summary_cage$Group_n)) 
+
+p2 <- ggplot(summary_cage, aes(x = Group_n, y = Offnest_duration_mean, fill = Group_n)) +
+  geom_boxplot(aes(fill = Group_n), outlier.shape = NA) +
+  geom_jitter(
+    aes(fill = Group_n), 
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitter(width = 0.15)
+  ) +
+  stat_compare_means(
+    comparisons = comparisons,
+    method = "wilcox.test",
+    label = "p",
+    label.y = upper_limit,
+    bracket.size = 0.8,
+    tip.length = 0.02
+  ) +
+  labs(
+    title = "Off nest",
+    y = "Mean of Off nest duration (S)",
+    x = "Group",
+    fill = "Groups : "  # ← ici tu changes le titre de la légende fill
+  ) +
+  scale_y_continuous(limits = c(lower_limit, upper_limit + (upper_limit - lower_limit) * 0.1)) +
+  scale_fill_manual(values = colors) +
+  theme_minimal()
+
+p2
+```
+
+### Time Building - CONT vs LBN
+
+wilcoxon + Boxplot
+
+```{r}
+summary_cage <- resumeDf %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Build_duration_mean = mean(Build_duration, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Calcul des effectifs par groupe pour labels
+group_counts_cage <- summary_cage %>%
+  group_by(Group) %>%
+  summarise(n = n())
+
+# 3. Labels enrichis pour les groupes avec effectifs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Couleurs de base
+base_colors <- c("LBN" = "#1a80bb", "CONT" = "#f2c45f")
+
+# Crée les labels enrichis comme facteurs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Génère le vecteur de couleurs avec les bons noms enrichis
+colors <- setNames(base_colors[as.character(group_counts_cage$Group)], 
+                   paste0(group_counts_cage$Group, " (n = ", group_counts_cage$n, ")"))
+
+ymin <- min(summary_cage$Build_duration_mean, na.rm = TRUE)
+ymax <- max(summary_cage$Build_duration_mean, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)  # éviter valeurs < 0 si pas souhaité
+upper_limit <- ymax + padding
+
+comparisons <- list(levels(summary_cage$Group_n)) 
+
+p3 <- ggplot(summary_cage, aes(x = Group_n, y = Build_duration_mean, fill = Group_n)) +
+  geom_boxplot(aes(fill = Group_n), outlier.shape = NA) +
+  geom_jitter(
+    aes(fill = Group_n), 
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitter(width = 0.15)
+  ) +
+  stat_compare_means(
+    comparisons = comparisons,
+    method = "wilcox.test",
+    label = "p",
+    label.y = upper_limit,
+    bracket.size = 0.8,
+    tip.length = 0.02
+  ) +
+  labs(
+    title = "Building",
+    y = "Mean of building duration (S)",
+    x = "Group",
+    fill = "Groups : "  # ← ici tu changes le titre de la légende fill
+  ) +
+  scale_y_continuous(limits = c(lower_limit, upper_limit + (upper_limit - lower_limit) * 0.1)) +
+  scale_fill_manual(values = colors) +
+  theme_minimal()
+
+p3
+```
+
+### Time Eating and drinking - CONT vs LBN
+
+wilcoxon + Boxplot
+
+```{r}
+
+summary_cage <- resumeDf %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Eat_drink_duration_mean = mean(Eat_drink_duration, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Calcul des effectifs par groupe pour labels
+group_counts_cage <- summary_cage %>%
+  group_by(Group) %>%
+  summarise(n = n())
+
+# 3. Labels enrichis pour les groupes avec effectifs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Couleurs de base
+base_colors <- c("LBN" = "#298c8c", "CONT" = "#800074")
+
+# Crée les labels enrichis comme facteurs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Génère le vecteur de couleurs avec les bons noms enrichis
+colors <- setNames(base_colors[as.character(group_counts_cage$Group)], 
+                   paste0(group_counts_cage$Group, " (n = ", group_counts_cage$n, ")"))
+
+ymin <- min(summary_cage$Eat_drink_duration_mean, na.rm = TRUE)
+ymax <- max(summary_cage$Eat_drink_duration_mean, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)  # éviter valeurs < 0 si pas souhaité
+upper_limit <- ymax + padding
+
+comparisons <- list(levels(summary_cage$Group_n)) 
+
+p4 <- ggplot(summary_cage, aes(x = Group_n, y = Eat_drink_duration_mean, fill = Group_n)) +
+  geom_boxplot(aes(fill = Group_n), outlier.shape = NA) +
+  geom_jitter(
+    aes(fill = Group_n), 
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitter(width = 0.15)
+  ) +
+  stat_compare_means(
+    comparisons = comparisons,
+    method = "wilcox.test",
+    label = "p",
+    label.y = upper_limit,
+    bracket.size = 0.8,
+    tip.length = 0.02
+  ) +
+  labs(
+    title = "Eat and drinking",
+    y = "Mean of Eat and drinking duration (S)",
+    x = "Group",
+    fill = "Groups : "  # ← ici tu changes le titre de la légende fill
+  ) +
+  scale_y_continuous(limits = c(lower_limit, upper_limit + (upper_limit - lower_limit) * 0.1)) +
+  scale_fill_manual(values = colors) +
+  theme_minimal()
+
+p4
+```
+
+### Frist part figures :
+
+```{r}
+library(patchwork)
+(p1 + p2) / (p3 + p4)
+```
+
+### Time on nest vs off nest - CONT vs LBN
+
+wilcoxon + Boxplot
+
+```{r}
+summary_cage_diff <- resumeDf %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Onnest_duration_mean = mean(Onnest_duration, na.rm = TRUE),
+    Offnest_duration_mean = mean(Offnest_duration, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  # Calcul des différences (Onnest - Offnest)
+  mutate(
+    duration_mean_diff = Onnest_duration_mean / Offnest_duration_mean
+  )
+
+group_counts_cage_diff <- summary_cage_diff %>%
+  group_by(Group) %>%
+  summarise(n = n())
+
+summary_cage_diff <- summary_cage_diff %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage_diff$n[match(Group, group_counts_cage_diff$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+base_colors <- c("LBN" = "#1a80bb", "CONT" = "#a00000")
+
+# Crée les labels enrichis comme facteurs
+summary_cage_diff <- summary_cage_diff %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Génère le vecteur de couleurs avec les bons noms enrichis
+colors <- setNames(base_colors[as.character(group_counts_cage$Group)], 
+                   paste0(group_counts_cage$Group, " (n = ", group_counts_cage$n, ")"))
+
+ymin <- min(summary_cage_diff$duration_mean_diff, na.rm = TRUE)
+ymax <- max(summary_cage_diff$duration_mean_diff, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)  # éviter valeurs < 0 si pas souhaité
+upper_limit <- ymax + padding
+
+comparisons <- list(c(levels(summary_cage_diff$Group_n)[1], levels(summary_cage_diff$Group_n)[2]))
+
+pB1 <- ggplot(summary_cage_diff, aes(x = Group_n, y = duration_mean_diff, fill = Group_n)) +
+  geom_boxplot(aes(fill = Group_n), outlier.shape = NA) +
+  geom_jitter(
+    aes(fill = Group_n), 
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitter(width = 0.15)
+  ) +
+  stat_compare_means(
+    comparisons = comparisons,
+    method = "wilcox.test",
+    label = "p",
+    label.y = upper_limit,
+    bracket.size = 0.8,
+    tip.length = 0.02
+  ) +
+  labs(
+    title = "On nest/off",
+    y = "On nest/off nest duration proportion",
+    x = "Group",
+    fill = "Groups : "  # ← ici tu changes le titre de la légende fill
+  ) +
+  scale_y_continuous(limits = c(lower_limit, upper_limit + (upper_limit - lower_limit) * 0.1)) +
+  scale_fill_manual(values = colors) +
+  theme_minimal()
+
+pB1
+
+```
+
+### Number of transitions per day - And in total - CONT vs LBN
+
+Boxplot + ANOVA and box plot + wilcoxon
+
+```{r}
+
+summary_cage <- resumeDf %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Transition = mean(Transition, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Calcul des effectifs par groupe pour labels
+group_counts_cage <- summary_cage %>%
+  group_by(Group) %>%
+  summarise(n = n())
+
+# 3. Labels enrichis pour les groupes avec effectifs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Couleurs de base
+base_colors <- c("LBN" = "#298c8c", "CONT" = "#800074")
+
+# Crée les labels enrichis comme facteurs
+summary_cage <- summary_cage %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_cage$n[match(Group, group_counts_cage$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+# Génère le vecteur de couleurs avec les bons noms enrichis
+colors <- setNames(base_colors[as.character(group_counts_cage$Group)], 
+                   paste0(group_counts_cage$Group, " (n = ", group_counts_cage$n, ")"))
+
+ymin <- min(summary_cage$Transition, na.rm = TRUE)
+ymax <- max(summary_cage$Transition, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)  # éviter valeurs < 0 si pas souhaité
+upper_limit <- ymax + padding
+
+comparisons <- list(levels(summary_cage$Group_n)) 
+
+pB2 <- ggplot(summary_cage, aes(x = Group_n, y = Transition, fill = Group_n)) +
+  geom_boxplot(aes(fill = Group_n), outlier.shape = NA) +
+  geom_jitter(
+    aes(fill = Group_n), 
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitter(width = 0.15)
+  ) +
+  stat_compare_means(
+    comparisons = comparisons,
+    method = "wilcox.test",
+    label = "p",
+    label.y = upper_limit,
+    bracket.size = 0.8,
+    tip.length = 0.02
+  ) +
+  labs(
+    title = "Transitions",
+    y = "Mean of transitions",
+    x = "Group",
+    fill = "Groups : "  # ← ici tu changes le titre de la légende fill
+  ) +
+  scale_y_continuous(limits = c(lower_limit, upper_limit + (upper_limit - lower_limit) * 0.1)) +
+  scale_fill_manual(values = colors) +
+  theme_minimal()
+
+pB2
+```
+
+### On/off per day - CONT vs LBN
+
+Boxplot + ANOVA
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(ggtext)
+
+# 1. Résumé des données par cage, groupe et jour
+summary_cage_diff <- resumeDf %>%
+  group_by(`Cage.ID`, Group, Day) %>%
+  summarise(
+    Onnest_duration_mean = mean(Onnest_duration, na.rm = TRUE),
+    Offnest_duration_mean = mean(Offnest_duration, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    duration_mean_diff = ifelse(Offnest_duration_mean == 0, 0, Onnest_duration_mean / Offnest_duration_mean)
+  )
+
+# 2. Fonction de test Wilcoxon entre jours consécutifs
+wilcox_consecutive_days <- function(df) {
+  jours <- sort(unique(df$Day))
+  results <- data.frame(Day1 = integer(), Day2 = integer(), p_value = numeric(), stringsAsFactors = FALSE)
+  
+  for (i in seq_along(jours)[-length(jours)]) {
+    day1 <- jours[i]
+    day2 <- jours[i+1]
+    
+    data_day1 <- df %>% filter(Day == day1) %>% pull(duration_mean_diff)
+    data_day2 <- df %>% filter(Day == day2) %>% pull(duration_mean_diff)
+    
+    if(length(data_day1) > 0 & length(data_day2) > 0){
+      test <- wilcox.test(data_day1, data_day2, paired = FALSE)
+      p_val <- test$p.value
+    } else {
+      p_val <- NA
+    }
+    
+    results <- rbind(results, data.frame(Day1 = day1, Day2 = day2, p_value = p_val))
+  }
+  return(results)
+}
+
+# 3. Calcul des p-values Wilcoxon pour chaque groupe
+LBN_results <- summary_cage_diff %>% filter(Group == "LBN") %>% wilcox_consecutive_days()
+CONT_results <- summary_cage_diff %>% filter(Group == "CONT") %>% wilcox_consecutive_days()
+
+# 4. Fusion des résultats avec formattage des étiquettes
+joint_results <- bind_rows(
+  LBN_results %>% mutate(Group = "LBN"),
+  CONT_results %>% mutate(Group = "CONT")
+) %>%
+  filter(!is.na(p_value)) %>%
+  mutate(xstart = Day1,
+         xend = Day2) %>%
+  group_by(Day1, Day2) %>%
+  summarise(
+    xstart = first(xstart),
+    xend = first(xend),
+    p_LBN = p_value[Group == "LBN"],
+    p_CONT = p_value[Group == "CONT"],
+    .groups = "drop"
+  ) %>%
+  mutate(
+    y = max(summary_cage_diff$duration_mean_diff, na.rm = TRUE) + 
+        0.03 * diff(range(summary_cage_diff$duration_mean_diff, na.rm = TRUE)),
+    label = paste0(
+      "<span style='color:#007191;'>p(LBN) = ", signif(p_LBN, 3), "</span><br>",
+      "<span style='color:#D31f11;'>p(CONT) = ", signif(p_CONT, 3), "</span>"
+    )
+  )
+
+# 5. Calcul des bornes Y
+ymin <- min(summary_cage_diff$duration_mean_diff, na.rm = TRUE)
+ymax <- max(summary_cage_diff$duration_mean_diff, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+lower_limit <- max(0, ymin - padding)
+upper_limit <- ymax + padding + 0.2 * range
+
+# 6. ANOVA globale
+aov_result <- aov(duration_mean_diff ~ Group, data = summary_cage_diff)
+p_anova <- summary(aov_result)[[1]][["Pr(>F)"]][1]
+
+# 7. Compter effectifs par groupe et créer variable Group_n
+group_counts_diff <- summary_cage_diff %>%
+  group_by(Group) %>%
+  summarise(n = n(), .groups = "drop")
+
+summary_cage_diff <- summary_cage_diff %>%
+  mutate(Group_n = paste0(Group, " (n = ", group_counts_diff$n[match(Group, group_counts_diff$Group)], ")")) %>%
+  mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+colors <- setNames(
+  c("LBN" = "#007191", "CONT" = "#D31f11")[as.character(group_counts_diff$Group)],
+  paste0(group_counts_diff$Group, " (n = ", group_counts_diff$n, ")")
+)
+
+# 8. Graphique de base
+p <- ggplot(summary_cage_diff, aes(x = factor(Day), y = duration_mean_diff, fill = Group_n)) +
+  geom_boxplot(position = position_dodge(0.8), alpha = 0.6, width = 0.6, outlier.shape = NA) +
+  geom_jitter(
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.8)
+  ) +
+  scale_fill_manual(values = colors) +
+  coord_cartesian(ylim = c(lower_limit - 0.2 * range , upper_limit)) +
+  labs(
+    title = paste0("Onnest / Offnest duration ratio per day\nANOVA globale : p = ", signif(p_anova, 3)),
+    x = "Day",
+    y = "Onnest / Offnest"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# 9. Ajouter crochets et p-values
+pB3 <- p +
+  geom_segment(data = joint_results,
+               aes(x = xstart + 0.1, xend = xend - 0.1, y = y, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  geom_segment(data = joint_results,
+               aes(x = xstart + 0.1, xend = xstart + 0.1, y = y - 0.02 * range, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  geom_segment(data = joint_results,
+               aes(x = xend - 0.1, xend = xend - 0.1, y = y - 0.02 * range, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  ggtext::geom_richtext(data = joint_results,
+                        aes(x = (xstart + xend)/2, y = y + 0.15 * range , label = label),
+                        fill = NA, label.color = NA, size = 3, inherit.aes = FALSE)
+
+# 10. Affichage final
+pB3
+
+```
+
+### Build per day - CONT vs LBN
+
+Boxplot + ANOVA (group factor) +wilcoxon between days
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(ggtext) 
+
+build_summary <- resumeDf %>%
+group_by(Cage.ID, Group, Day) %>%
+summarise(Build_sum = mean(Build_duration, na.rm = TRUE), .groups = "drop")
+
+# Fonction de test Wilcoxon jour-j
+wilcox_consecutive_days <- function(df) {
+  jours <- sort(unique(df$Day))
+  results <- data.frame(Day1 = integer(), Day2 = integer(), p_value = numeric(), stringsAsFactors = FALSE)
+  
+  for (i in seq_along(jours)[-length(jours)]) {
+    day1 <- jours[i]
+    day2 <- jours[i+1]
+    
+    data_day1 <- df %>% filter(Day == day1) %>% pull(Build_sum)
+    data_day2 <- df %>% filter(Day == day2) %>% pull(Build_sum)
+    
+    if(length(data_day1) > 0 & length(data_day2) > 0){
+      test <- wilcox.test(data_day1, data_day2, paired = FALSE)
+      p_val <- test$p.value
+    } else {
+      p_val <- NA
+    }
+    
+    results <- rbind(results, data.frame(Day1 = day1, Day2 = day2, p_value = p_val))
+  }
+  return(results)
+}
+
+# Calculs par groupe
+LBN_results <- build_summary %>% filter(Group == "LBN") %>% wilcox_consecutive_days()
+CONT_results <- build_summary %>% filter(Group == "CONT") %>% wilcox_consecutive_days()
+
+# 1. Preparar los resultados de Wilcoxon y anotaciones
+joint_results <- bind_rows(
+  LBN_results %>% mutate(Group = "LBN"),
+  CONT_results %>% mutate(Group = "CONT")
+) %>%
+  filter(!is.na(p_value)) %>%
+  mutate(xstart = Day1,
+         xend = Day2) %>%
+  group_by(Day1, Day2) %>%
+  summarise(
+    xstart = first(xstart),
+    xend = first(xend),
+    p_LBN = p_value[Group == "LBN"],
+    p_CONT = p_value[Group == "CONT"],
+    .groups = "drop"
+  ) %>%
+  mutate(
+    y = max(build_summary$Build_sum, na.rm = TRUE) + 
+        0.03 * diff(range(build_summary$Build_sum, na.rm = TRUE)),
+    label = paste0(
+      "<span style='color:#007191;'>p(LBN) = ", signif(p_LBN, 3), "</span><br>",
+      "<span style='color:#D31f11;'>p(CONT) = ", signif(p_CONT, 3), "</span>"
+    )
+  )
+
+aov_result <- aov(Build_sum ~ Group, data = build_summary)
+p_anova <- summary(aov_result)[[1]][["Pr(>F)"]][1] 
+
+
+# 2. Definir límites del gráfico
+ymin <- min(build_summary$Build_sum, na.rm = TRUE)
+ymax <- max(build_summary$Build_sum, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)
+upper_limit <- ymax + padding + 0.2 * range  # más margen para los crochets
+
+# 3. Crear el gráfico base
+p <- ggplot(build_summary, aes(x = factor(Day), y = Build_sum, fill = Group)) +
+  geom_boxplot(position = position_dodge(0.8), alpha = 0.6, width = 0.6, outlier.shape = NA) +
+   geom_jitter(
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.8)
+  ) +
+  scale_fill_manual(values = c("LBN" = "#007191", "CONT" = "#D31f11")) +
+  scale_color_manual(values = c("LBN" = "#007191", "CONT" = "#D31f11")) +
+  coord_cartesian(ylim = c(lower_limit - 0.2*range , upper_limit)) +
+  labs(
+    title = paste0("Build duration per day \nANOVA globale : p = ", signif(p_anova, 3)),
+    x = "Day",
+    y = "Build mean duration"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# 4. Añadir crochets y etiquetas
+pB3 <- p +
+  geom_segment(data = joint_results,
+               aes(x = xstart + 0.1, xend = xend - 0.1, y = y, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  geom_segment(data = joint_results,
+               aes(x = xstart + 0.1, xend = xstart + 0.1, y = y - 0.02 * range, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  geom_segment(data = joint_results,
+               aes(x = xend - 0.1, xend = xend - 0.1, y = y - 0.02 * range, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  ggtext::geom_richtext(data = joint_results,
+                        aes(x = (xstart + xend)/2, y = y + 0.15 * range, label = label),
+                        fill = NA, label.color = NA, size = 3, inherit.aes = FALSE)
+
+pB3
+
+```
+
+### Transitions
+
+Boxplot + ANOVA (group factor) + wilcoxon between days
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+library(ggtext) 
+
+build_summary <- resumeDf %>%
+group_by(Cage.ID, Group, Day) %>%
+summarise(Transition = mean(Transition, na.rm = TRUE), .groups = "drop")
+
+# Fonction de test Wilcoxon jour-j
+wilcox_consecutive_days <- function(df) {
+  jours <- sort(unique(df$Day))
+  results <- data.frame(Day1 = integer(), Day2 = integer(), p_value = numeric(), stringsAsFactors = FALSE)
+  
+  for (i in seq_along(jours)[-length(jours)]) {
+    day1 <- jours[i]
+    day2 <- jours[i+1]
+    
+    data_day1 <- df %>% filter(Day == day1) %>% pull(Transition)
+    data_day2 <- df %>% filter(Day == day2) %>% pull(Transition)
+    
+    if(length(data_day1) > 0 & length(data_day2) > 0){
+      test <- wilcox.test(data_day1, data_day2, paired = FALSE)
+      p_val <- test$p.value
+    } else {
+      p_val <- NA
+    }
+    
+    results <- rbind(results, data.frame(Day1 = day1, Day2 = day2, p_value = p_val))
+  }
+  return(results)
+}
+
+# Calculs par groupe
+LBN_results <- build_summary %>% filter(Group == "LBN") %>% wilcox_consecutive_days()
+CONT_results <- build_summary %>% filter(Group == "CONT") %>% wilcox_consecutive_days()
+
+# 1. Preparar los resultados de Wilcoxon y anotaciones
+joint_results <- bind_rows(
+  LBN_results %>% mutate(Group = "LBN"),
+  CONT_results %>% mutate(Group = "CONT")
+) %>%
+  filter(!is.na(p_value)) %>%
+  mutate(xstart = Day1,
+         xend = Day2) %>%
+  group_by(Day1, Day2) %>%
+  summarise(
+    xstart = first(xstart),
+    xend = first(xend),
+    p_LBN = p_value[Group == "LBN"],
+    p_CONT = p_value[Group == "CONT"],
+    .groups = "drop"
+  ) %>%
+  mutate(
+    y = max(build_summary$Transition, na.rm = TRUE) + 
+        0.03 * diff(range(build_summary$Transition, na.rm = TRUE)),
+    label = paste0(
+      "<span style='color:#007191;'>p(LBN) = ", signif(p_LBN, 3), "</span><br>",
+      "<span style='color:#D31f11;'>p(CONT) = ", signif(p_CONT, 3), "</span>"
+    )
+  )
+
+# 2. Definir límites del gráfico
+ymin <- min(build_summary$Transition, na.rm = TRUE)
+ymax <- max(build_summary$Transition, na.rm = TRUE)
+range <- ymax - ymin
+padding <- range / 2
+
+lower_limit <- max(0, ymin - padding)
+upper_limit <- ymax + padding + 0.2 * range  # más margen para los crochets
+
+# 3. Crear el gráfico base
+p <- ggplot(build_summary, aes(x = factor(Day), y = Transition, fill = Group)) +
+  geom_boxplot(position = position_dodge(0.8), alpha = 0.6, width = 0.6, outlier.shape = NA) +
+   geom_jitter(
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.8)
+  ) +
+  scale_fill_manual(values = c("LBN" = "#007191", "CONT" = "#D31f11")) +
+  scale_color_manual(values = c("LBN" = "#007191", "CONT" = "#D31f11")) +
+  coord_cartesian(ylim = c(lower_limit - 0.2*range , upper_limit)) +
+  labs(
+    title = paste0("Transitions per day \nANOVA globale : p = ", signif(p_anova, 3)),
+    x = "Day",
+    y = "Number of transitions"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# 4. Añadir crochets y etiquetas
+pB4 <- p +
+  geom_segment(data = joint_results,
+               aes(x = xstart + 0.1, xend = xend - 0.1, y = y, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  geom_segment(data = joint_results,
+               aes(x = xstart + 0.1, xend = xstart + 0.1, y = y - 0.02 * range, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  geom_segment(data = joint_results,
+               aes(x = xend - 0.1, xend = xend - 0.1, y = y - 0.02 * range, yend = y),
+               inherit.aes = FALSE, size = 0.5) +
+  ggtext::geom_richtext(data = joint_results,
+                        aes(x = (xstart + xend)/2, y = y + 0.15 * range, label = label),
+                        fill = NA, label.color = NA, size = 3, inherit.aes = FALSE)
+
+pB4
+
+```
+
+### Results full graph :
+
+```{r}
+library(patchwork)
+(pB1 + pB2) / pB3 / pB4
+```
+
+### Selfgrooming, grooming pups, transitions, ABN and (Carrying pups) evolution
+
+Boxplot + ANOVA (Internal - day factor + wilcoxon day vs day + 1)
+
+```{r}
+
+library(changepoint)
+library(dplyr)
+
+
+# 1. Filtrer juste le groupe LBN
+LBN_df <- resumeDf %>% filter(Group == "LBN")
+
+# 2. Comportements d’intérêt
+behaviors <- c("Selfgrooming_duration", "Groomingpups_duration", "Transition", 
+               "ABN_duration", "Carryingpups_bouts", "Build_duration")
+
+library(tidyr)
+
+# 3. Mise en forme longue (long format)
+LBN_long <- LBN_df %>%
+  dplyr::select(Cage.ID, Day, dplyr::all_of(behaviors)) %>%
+  pivot_longer(cols = dplyr::all_of(behaviors), names_to = "Behavior", values_to = "Bouts")
+
+
+# 4. Renommer les comportements pour lisibilité
+LBN_long$Behavior <- dplyr::recode(
+  LBN_long$Behavior,
+  "Selfgrooming_duration" = "Self Grooming",
+  "Groomingpups_duration" = "Grooming Pups",
+  "Transition" = "Transitions",
+  "ABN_duration" = "ABN",
+  "Carryingpups_bouts" = "Carrying Pups",
+  "Build_duration" = "Build"
+)
+
+
+# 5. Moyenne par cage, jour et comportement
+LBN_cage_means <- LBN_long %>%
+  group_by(Cage.ID, Day, Behavior) %>%
+  summarise(mean_bouts = mean(Bouts, na.rm = TRUE), .groups = "drop")
+
+# 6. Médianes par jour et comportement pour lignes
+medians <- LBN_cage_means %>%
+  group_by(Behavior, Day) %>%
+  summarise(median_bouts = median(mean_bouts, na.rm = TRUE), .groups = "drop")
+
+# 7. Changepoint par comportement (sur les médianes)
+rupture_points <- medians %>%
+  group_by(Behavior) %>%
+  reframe(
+    change_day = {
+      vec <- median_bouts
+      cp <- cpt.mean(vec, method = "AMOC")
+      if (length(cpts(cp)) > 0 && cpts(cp)[1] < length(vec)) {
+        Day[cpts(cp)]
+      } else {
+        NA
+      }
+    }
+  ) %>%
+  filter(!is.na(change_day))
+
+rupture_points$change_day <- as.factor(rupture_points$change_day)
+
+# 8. Couleurs distinctes par comportement
+color_palette <- c(
+  "Self Grooming" = "#66c2a5",
+  "Grooming Pups" = "#fc8d62",
+  "Transitions"   = "#8da0cb",
+  "ABN"           = "#e78ac3",
+  "Carrying Pups" = "#a6d854",
+  "Build"         = "#ffd92f"
+)
+
+# 9. Graphique final
+ggplot(LBN_cage_means, aes(x = factor(Day), y = mean_bouts, fill = Behavior)) +
+  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
+  geom_jitter(
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.8)
+  ) +
+  geom_line(data = medians, aes(x = factor(Day), y = median_bouts, group = 1), 
+            color = "black", size = 1, inherit.aes = FALSE) +
+  geom_point(data = medians, aes(x = factor(Day), y = median_bouts), 
+             color = "black", size = 1.5, inherit.aes = FALSE) +
+  geom_vline(data = rupture_points, aes(xintercept = change_day), 
+             color = "red", linetype = "dashed", size = 0.65) +
+  facet_wrap(~ Behavior, scales = "free_y") +
+  scale_fill_manual(values = color_palette) +
+  labs(
+    title = "LBN behaviours evolution and changepoint",
+    x = "Day",
+    y = "Mean duration or count per day"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+# Pup's data analysis
+
+## Single variable analysis
+
+ANOVA for normal variables, or n \> 90 variables. And Kruskal wallis application for non normal and not TLC approchoables variables. Bonferroni correction is applied for each test ANOVA ou kruskal. Another correction is applied for each "model" and also a global one. In the afterwards we'll use model adjusted p value , and not the global p value adj.
+
+Residual normality is reported, but is not used. Reported for diagnostics only
+
+```{r}
+df <- read.csv2("D:/LBN/Veave - metadatafile-juvenile-all-full.csv", stringsAsFactors=TRUE)
+# Chargement des packages nécessaires
+
+library(car)         # Pour Anova()
+library(broom)       # Pour tidy()
+library(multcomp)    # Pour la correction
+library(stats)       # Pour shapiro.test
+library(dplyr)  # ou library(tidyverse)
+
+# ── Sélection des colonnes numériques
+num_cols <- sapply(df, is.numeric)
+
+# ── Fonction qui renvoie le p-value Shapiro ou NA si la colonne n'est pas numérique
+shapiro_fun <- function(x) {
+  # Filtrer les NA
+  x <- na.omit(x)
+  if (length(x) < 3) return(NA)          # Shapiro exige au moins 3 valeurs
+  if (length(x) > 5000) {                # Au-delà de 5000, Shapiro n'est pas fiable
+    return(NA)                           # (ou utiliser ks.test / Anderson–Darling)
+  }
+  shapiro.test(x)$p.value
+}
+
+# ── Appliquer le test sur chaque colonne numérique
+normality_df <- data.frame(
+  Variable = names(df)[num_cols],
+  N        = sapply(df[ , num_cols, drop = FALSE], function(x) sum(!is.na(x))),
+  P_value  = sapply(df[ , num_cols, drop = FALSE], shapiro_fun)
+)
+
+# ── Ajouter une colonne interprétation (α = 0.05)
+normality_df$Normalité_OK <- with(normality_df, P_value > 0.05 | N > 90)
+
+print(normality_df)
+
+num_vars <- names(df)[sapply(df, is.numeric)]
+
+analyze_var <- function(var_name) {
+  results <- list()
+  
+  df_tibble <- as_tibble(df)
+  
+  norm_status <- normality_df$Normalité_OK[normality_df$Variable == var_name]
+  
+  for (i in 1:5) {
+    if (norm_status) {
+      # Modèles paramétriques (lm + anova)
+      form <- switch(i,
+                     as.formula(paste(var_name, "~ Condition")),
+                     as.formula(paste(var_name, "~ CageID")),
+                     as.formula(paste(var_name, "~ Condition * CageID")),
+                     as.formula(paste(var_name, "~ Condition * CageID * Sexe")),
+                     NULL)  # i == 5 pas utilisé en paramétrique
+      
+      if (!is.null(form)) {
+        model <- tryCatch(lm(form, data = df_tibble), error = function(e) NULL)
+        if (!is.null(model)) {
+          shapiro_p <- tryCatch(shapiro.test(residuals(model))$p.value, error = function(e) NA)
+          aov_result <- tryCatch(anova(model), error = function(e) NULL)
+          if (!is.null(aov_result)) {
+            p_values <- aov_result$`Pr(>F)`
+            factors <- rownames(aov_result)
+            padj <- p.adjust(p_values, method = "bonferroni")
+            df_model <- data.frame(
+              Variable = var_name,
+              Modele   = paste0("Modèle_", i),
+              Facteur  = factors,
+              P_value  = p_values,
+              P_adj    = padj,
+              Test     = "ANOVA",
+              Shapiro_p = shapiro_p
+            )
+            results[[i]] <- df_model
+          }
+        }
+      }
+      
+    } else {
+      # Tests non paramétriques
+      if (i == 1) {
+        # Kruskal-Wallis Condition (toutes conditions confondues)
+        data_sub <- df_tibble %>%
+          dplyr::select(all_of(c(var_name, "Condition"))) %>%
+          filter(!is.na(.data[[var_name]]))
+        
+        kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$Condition), error = function(e) NULL)
+        if (!is.null(kw_test)) {
+          df_model <- data.frame(
+            Variable = var_name,
+            Modele   = "Modèle_1",
+            Facteur  = "Condition",
+            P_value  = kw_test$p.value,
+            P_adj    = NA,
+            Test     = "Kruskal-Wallis",
+            Shapiro_p = NA
+          )
+          results[[i]] <- df_model
+        }
+        
+      } else if (i == 2) {
+        # Kruskal-Wallis CageID pour Condition == "LBN"
+        data_sub <- df_tibble %>%
+          dplyr::select(all_of(c(var_name, "Condition", "CageID"))) %>%
+          filter(!is.na(.data[[var_name]]), Condition == "LBN", !is.na(CageID))
+        
+        if (nrow(data_sub) > 2) {
+          kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$CageID), error = function(e) NULL)
+          if (!is.null(kw_test)) {
+            df_model <- data.frame(
+              Variable = var_name,
+              Modele   = "Modèle_2",
+              Facteur  = "CageID (LBN)",
+              P_value  = kw_test$p.value,
+              P_adj    = NA,
+              Test     = "Kruskal-Wallis",
+              Shapiro_p = NA
+            )
+            results[[i]] <- df_model
+          }
+        }
+
+      } else if (i == 5) {
+        # Kruskal-Wallis CageID pour Condition == "CONT"
+        data_sub <- df_tibble %>%
+          dplyr::select(all_of(c(var_name, "Condition", "CageID"))) %>%
+          filter(!is.na(.data[[var_name]]), Condition == "CONT", !is.na(CageID))
+        
+        if (nrow(data_sub) > 2) {
+          kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$CageID), error = function(e) NULL)
+          if (!is.null(kw_test)) {
+            df_model <- data.frame(
+              Variable = var_name,
+              Modele   = "Modèle_5",
+              Facteur  = "CageID (CONT)",
+              P_value  = kw_test$p.value,
+              P_adj    = NA,
+              Test     = "Kruskal-Wallis",
+              Shapiro_p = NA
+            )
+            results[[i]] <- df_model
+          }
+        }
+      }
+    }
+  }
+  results <- bind_rows(results)
+
+  results <- results %>%
+  group_by(Modele) %>%
+  mutate(P_adj_model = p.adjust(P_value, method = "bonferroni")) %>%
+  ungroup()
+
+  # Correction globale sur tous les tests faits pour la variable
+  results$P_adj_global <- p.adjust(results$P_value, method = "bonferroni")
+  
+  return(bind_rows(results))
+}
+
+df <- as_tibble(df)
+
+results_list <- lapply(num_vars, analyze_var)
+full_results <- bind_rows(results_list)
+
+# Ajuster uniquement les KW (Test == "Kruskal-Wallis")
+kw_idx <- which(full_results$Test == "Kruskal-Wallis")
+full_results$P_adj[kw_idx] <- p.adjust(full_results$P_value[kw_idx], method = "bonferroni")
+
+print(full_results)
+```
+
+### Important variables extraction
+
+ANOVA can not be used because N is too small whe we regroup by condition and by cage. We do then two kruskall wallis
+
+```{r}
+
+df <- df %>%
+  mutate(
+    Condition_Sexe = paste(Condition, Sexe, sep = "_"),
+    CageID_Sexe = paste(CageID, Sexe, sep = "_")
+  )
+
+# Fonction pour obtenir moyennes et écarts types selon les groupes
+get_summary_stats <- function(df, var, group_var) {
+  df %>%
+    group_by(.data[[group_var]]) %>%
+    summarise(
+      Moyenne = mean(.data[[var]], na.rm = TRUE),
+      SD = sd(.data[[var]], na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    mutate(Groupe = .data[[group_var]]) %>%
+    dplyr::select(Groupe, Moyenne, SD)
+}
+
+full_results <- full_results %>%
+  mutate(Residus_Normal = ifelse((!is.na(Shapiro_p) & Shapiro_p  > 0.001) | Test == "Kruskal-Wallis", TRUE, FALSE))
+
+df_condition <- full_results %>%
+  filter(Facteur == "Condition", P_adj < 0.05) %>%
+  rowwise() %>%
+  mutate(
+    Stats = list(get_summary_stats(df, Variable, "Condition"))
+  ) %>%
+  unnest(Stats) %>%
+  pivot_wider(names_from = Groupe, values_from = c(Moyenne, SD)) %>%
+  dplyr::select(Variable, starts_with("Moyenne_"), starts_with("SD_"), P_adj,Residus_Normal) %>%
+  arrange(P_adj)
+
+library(stringr)
+
+df_cage <- full_results %>%
+  filter(str_detect(Facteur, "CageID"), (P_adj < 0.05 | (is.na(P_adj) & P_value < 0.05))) %>%
+  rowwise() %>%
+  mutate(
+    Stats = list(get_summary_stats(df %>% filter(Condition == "LBN"), Variable, "CageID"))
+  ) %>%
+  unnest(Stats) %>%
+  pivot_wider(names_from = Groupe, values_from = c(Moyenne, SD)) %>%
+  dplyr::select(Variable, starts_with("Moyenne_"), starts_with("SD_"), P_adj, Residus_Normal) %>%
+  arrange(P_adj)
+
+
+df_sexe <- full_results %>%
+  filter(Facteur == "Sexe", P_adj < 0.05) %>%
+  rowwise() %>%
+  mutate(
+    Stats = list(get_summary_stats(df, Variable, "Sexe"))
+  ) %>%
+  unnest(Stats) %>%
+  pivot_wider(names_from = Groupe, values_from = c(Moyenne, SD)) %>%
+  dplyr::select(Variable, starts_with("Moyenne_"), starts_with("SD_"), P_adj)%>%
+  arrange(P_adj)
+
+df_interactionCondSexe <- full_results %>%
+  filter(Facteur == "Condition:Sexe", P_adj < 0.05) %>%
+  rowwise() %>%
+  mutate(
+    Stats = list(get_summary_stats(df, Variable, "Condition_Sexe"))
+  ) %>%
+  unnest(Stats) %>%
+  pivot_wider(names_from = Groupe, values_from = c(Moyenne, SD)) %>%
+  dplyr::select(Variable, starts_with("Moyenne_"), starts_with("SD_"), P_adj) %>%
+  arrange(P_adj)
+
+effet_cage_LBN <- full_results %>%
+  filter(Facteur == "CageID (LBN)", P_adj < 0.05, !is.na(P_value))
+
+effet_cage_CONT <- full_results %>%
+  filter(Facteur == "CageID (CONT)", P_adj < 0.05, !is.na(P_value) )
+
+# Variables avec effet cage spécifique à LBN
+specifiques_LBN <- effet_cage_LBN %>%
+  filter(!(Variable %in% effet_cage_CONT$Variable))%>%
+  pull(Variable)
+
+# Variables avec effet cage spécifique à CONT
+specifiques_CONT <- effet_cage_CONT %>%
+  filter(!(Variable %in% effet_cage_LBN$Variable))%>%
+  pull(Variable)
+
+vars_selectionnees <- union(specifiques_LBN, specifiques_CONT)
+
+# Garde uniquement les variables existantes dans df
+vars_selectionnees <- vars_selectionnees[vars_selectionnees %in% colnames(df)]
+
+print(vars_selectionnees)
+
+```
+
+### Filter
+
+```{r}
+extraction <- c("CageID", "Condition", vars_selectionnees)
+df_filtre <- df[, intersect(names(df), extraction)]
+
+cols_num <- sapply(df_filtre, is.numeric)
+
+df_filtre_resume <- df_filtre %>%
+  group_by(CageID, Condition) %>%
+  summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE))) %>%
+  ungroup()
+
+print(df_filtre_resume)
+```
+
+### Representation and confirmation
+
+```{r}
+library(patchwork)
+
+generer_boxplot_cage <- function(df, var_plot, full_results) {
+  df_plot <- df %>%
+    filter(!is.na(.data[[var_plot]]), !is.na(CageID), !is.na(Condition)) %>%
+    mutate(
+      CageID = as.factor(CageID),
+      Group = paste0(Condition, "_", CageID)
+    )
+
+  group_levels <- df_plot %>%
+    distinct(Condition, CageID, Group) %>%
+    arrange(desc(Condition), CageID) %>%
+    pull(Group)
+
+  df_plot$Group <- factor(df_plot$Group, levels = group_levels)
+
+  pval <- full_results %>%
+    filter(Variable == var_plot, Facteur == "Condition") %>%
+    pull(P_adj)
+
+  p_label <- if (length(pval) == 0 || is.na(pval)) {
+    "p = NA"
+  } else if (pval > 0.05) {
+    "NS"
+  } else {
+    paste0("p = ", formatC(pval, format = "e", digits = 2))
+  }
+
+  ggplot(df_plot, aes(x = Group, y = .data[[var_plot]], fill = Condition)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(
+      shape = 21, size = 2, stroke = 0.3,
+      position = position_jitter(width = 0.15),
+      color = "black", aes(fill = Condition)
+    ) +
+    labs(
+      title = paste0(var_plot, " (", p_label, ")"),
+      y = var_plot,
+      x = "Cages",
+      fill = "Condition"
+    ) +
+    scale_fill_manual(values = c("LBN" = "#E69F00", "CONT" = "#56B4E9")) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
+
+
+generer_panel_boxplots <- function(df, vars_selectionnees, full_results, ncol = 2) {
+  plots <- lapply(vars_selectionnees, function(var) {
+    generer_boxplot_cage(df, var, full_results)
+  })
+  wrap_plots(plots, ncol = ncol)
+}
+
+# Génération du panel avec p-values dans les titres
+panel <- generer_panel_boxplots(df, vars_selectionnees, full_results, ncol = 2)
+panel
+
+
+
+```
+
+## Digging in = Group analysis
+
+PCA avec toutes les variables dépendant du facteur cage ayant des résidus normaux, et une pvalue inf à 0.01
+
+```{r}
+library(FactoMineR)
+library(factoextra)
+
+df_cage_filtered <- df_cage %>%
+  filter(Residus_Normal == TRUE, P_adj < 0.01)
+
+# Extraire les variables d’intérêt sur ce sous-ensemble filtré
+vars_interes <- df_cage_filtered$Variable
+
+
+# Ne garder que celles présentes dans df_all_corrected
+vars_interes <- vars_interes[vars_interes %in% colnames(df_all_corrected)]
+library(dplyr)
+# Maintenant tu peux sélectionner sans erreur
+df_sub <- df %>% dplyr::select(CageID, Condition, all_of(vars_interes)) %>% na.omit()
+
+
+# Subset del dataframe con CageID y variables
+df_sub <- df %>% dplyr::select(CageID,Condition, all_of(vars_interes)) %>% na.omit()
+
+# Convertir CageID en factor
+df_sub$CageID <- as.factor(df_sub$CageID)
+
+# Ne garder que les colonnes numériques pour la PCA
+df_numeric <- df_sub %>% 
+  dplyr::select(-CageID) %>% 
+  dplyr::select(where(is.numeric))
+
+# Vérifier qu'il n'y a pas de colonnes constantes (variance = 0)
+variance_zero <- sapply(df_numeric, function(x) var(x) == 0)
+if(any(variance_zero)) {
+  cat("Colonnes avec variance nulle supprimées :", names(variance_zero)[variance_zero], "\n")
+  df_numeric <- df_numeric[, !variance_zero]
+}
+
+# Faire la PCA avec FactoMineR
+pca_res <- PCA(df_numeric, scale.unit = TRUE, graph = FALSE)
+
+# Visualiser le biplot avec habillage par CageID (couleurs + ellipses)
+fviz_pca_biplot(pca_res,
+                label = "var",         # afficher vecteurs variables
+                habillage = df_sub$CageID,   # colorier par CageID
+                addEllipses = TRUE,    # ajouter ellipse par groupe
+                ellipse.level = 0.95,
+                repel = TRUE)          # éviter chevauchement
+
+
+```
+
+### Analyse PCA : 
+
+```{r}
+summary(pca_res)
+library(ggrepel) 
+scores <- pca_res$ind$coord[, 1:2]  # PC1 et PC2
+
+# Clustering hiérarchique
+hc <- hclust(dist(scores), method = "ward.D2")
+plot(hc, main = "Dendrogramme clustering sur PC1-PC2")
+
+# Découpage en k clusters (exemple k=3)
+clusters <- cutree(hc, k = 4)
+
+# Ajouter cluster à dataframe des scores
+df_scores <- as.data.frame(scores)
+df_scores$CageID <- df_sub$CageID
+df_scores$cluster <- factor(clusters)
+
+df_scores <- df_scores %>%
+  left_join(df_sub %>% dplyr::select(CageID, Condition) %>% distinct(), by = "CageID")
+
+ggplot(df_scores, aes(x = Dim.1, y = Dim.2, color = cluster, shape = Condition)) +
+  geom_point(size = 3, alpha = 0.8) +
+  geom_text_repel(aes(label = CageID), size = 3) +
+  scale_shape_manual(values = c("LBN" = 16,   # cercle plein
+                                "CONT" = 15)) + # carré plein
+  labs(title = "Clusters sur composantes principales (PC1-PC2)",
+       color = "Cluster",
+       shape = "Condition") +
+  theme_minimal()
+
+proporciones <- df_scores %>%
+  group_by(CageID, cluster) %>%
+  summarise(nb_obs = n(), .groups = 'drop') %>%
+  group_by(CageID) %>%
+  mutate(total_obs = sum(nb_obs),
+         prop_cluster = nb_obs / total_obs) %>%
+  arrange(CageID, desc(prop_cluster))
+
+# Joindre la condition sur CageID (attention : si plusieurs conditions par CageID, ça peut créer des doublons)
+proporciones <- proporciones %>%
+  left_join(
+    df_sub %>% dplyr::select(CageID, Condition) %>% distinct(),
+    by = "CageID"
+  )
+
+# Garder pour chaque CageID le cluster majoritaire avec sa proportion et la condition
+proporciones %>%
+  group_by(CageID) %>%
+  slice_max(prop_cluster, n = 1) %>%
+  dplyr::select(CageID, Condition, cluster, prop_cluster) %>%
+  arrange(cluster, desc(prop_cluster)) %>%
+  print(n = 100)
+
+```
+
+Results : Both dimensions explain 95.7% of variance, 83.1% for one and 12.6 for seconf one). Good PCA then. Visual analysis of ward.D2 clustering allowed us to do 4 different groups, that we can regroup using cuttree. 4 gropus have difference easily observable in both dimensions. If we try to find better distribution of cage by cluster, we osberve an specific group for cage 7 - LBN (groupe 4). Somes specifitys are also observed : cluster 2 and 4 are CONT specifics, since 1 and 4 seems to be LBN specifics with exception for cage 1.
+
+We decid then to try to reduce the groups into 3 : Resulting in a merge of group 2 and 4.
+
+```{r}
+library(ggrepel) 
+scores <- pca_res$ind$coord[, 1:2]  # PC1 et PC2
+
+# Clustering hiérarchique
+hc <- hclust(dist(scores), method = "ward.D2")
+
+clusters <- cutree(hc, k = 3)
+
+# Ajouter cluster à dataframe des scores
+df_scores <- as.data.frame(scores)
+df_scores$CageID <- df_sub$CageID
+df_scores$cluster <- factor(clusters)
+
+df_scores <- df_scores %>%
+  left_join(df_sub %>% dplyr::select(CageID, Condition) %>% distinct(), by = "CageID")
+
+ggplot(df_scores, aes(x = Dim.1, y = Dim.2, color = cluster, shape = Condition)) +
+  geom_point(size = 3, alpha = 0.8) +
+  geom_text_repel(aes(label = CageID), size = 3) +
+  scale_shape_manual(values = c("LBN" = 16,   # cercle plein
+                                "CONT" = 15)) + # carré plein
+  scale_color_brewer(palette = "Dark2") +
+  labs(title = "Clusters sur composantes principales (PC1-PC2)",
+       color = "Cluster",
+       shape = "Condition") +
+  theme_minimal()
+
+proporciones <- df_scores %>%
+  group_by(CageID, cluster) %>%
+  summarise(nb_obs = n(), .groups = 'drop') %>%
+  group_by(CageID) %>%
+  mutate(total_obs = sum(nb_obs),
+         prop_cluster = nb_obs / total_obs) %>%
+  arrange(CageID, desc(prop_cluster))
+
+# Joindre la condition sur CageID (attention : si plusieurs conditions par CageID, ça peut créer des doublons)
+proporciones <- proporciones %>%
+  left_join(
+    df_sub %>% dplyr::select(CageID, Condition) %>% distinct(),
+    by = "CageID"
+  )
+
+# Garder pour chaque CageID le cluster majoritaire avec sa proportion et la condition
+proporciones %>%
+  group_by(CageID) %>%
+  slice_max(prop_cluster, n = 1) %>%
+  dplyr::select(CageID, Condition, cluster, prop_cluster) %>%
+  arrange(cluster, desc(prop_cluster)) %>%
+  print(n = 100)
+
+```
+
+We can conclude that cage number 7 exhibits a specific characteristic, showing increased vulnerability to LBN. However, these results do not perfectly align with previous statistical findings. In earlier analyses, cage 7 was notably different only for the variable BW P12. It is likely that this variable drives the distinct behavior of cage 7 and does not contribute significantly to the variability of the LBN group for the other variables.
+
+```{r}
+# Variables communes
+communes <- intersect(vars_selectionnees, df_cage$Variable)
+print("Variables communes :")
+print(communes)
+
+# Variables dans vars_selectionnees absentes de df_cage$Variable
+absentes_df_cage <- setdiff(vars_selectionnees, df_cage$Variable)
+print("Variables dans vars_selectionnees mais absentes dans df_cage$Variable :")
+print(absentes_df_cage)
+```

@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: Cage3-LBN-2024-12-08_21-38-35_combo123
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage3-LBN-2024-12-08_21-38-35_labels.csv
+  default: Cage3-LBN-2024-12-08_21-38-35_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage3-LBN-2024-12-08_21-38-35_combo123.mp4
+  default: Cage3-LBN-2024-12-08_21-38-35_combo123.mp4
+stats:
+  all: []
+  default: []

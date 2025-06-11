@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: CONT-2024-05-06_20-30-34
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - CONT-2024-05-06_20-30-34.mp4
+  default: CONT-2024-05-06_20-30-34.mp4
+stats:
+  all: []
+  default: []

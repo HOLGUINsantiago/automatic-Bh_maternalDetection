@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: CageD-CONT-2024-07-13_04-42-20
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - CageD-CONT-2024-07-13_04-42-20.mp4
+  default: CageD-CONT-2024-07-13_04-42-20.mp4
+stats:
+  all: []
+  default: []

@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: Cage2-LBN-2024-12-11_20-42-14_combo234
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage2-LBN-2024-12-11_20-42-14_labels.csv
+  default: Cage2-LBN-2024-12-11_20-42-14_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage2-LBN-2024-12-11_20-42-14_combo234.mp4
+  default: Cage2-LBN-2024-12-11_20-42-14_combo234.mp4
+stats:
+  all: []
+  default: []

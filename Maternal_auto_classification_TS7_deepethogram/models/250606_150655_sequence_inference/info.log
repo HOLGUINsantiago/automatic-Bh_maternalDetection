@@ -1,0 +1,134 @@
+[2025-06-06 15:06:55,754] INFO [deepethogram.sequence.inference.sequence_inference:230] args: d:/LBN/SequenceINfer.py
+[2025-06-06 15:06:55,754] INFO [deepethogram.sequence.inference.sequence_inference:232] configuration used: 
+[2025-06-06 15:06:55,770] INFO [deepethogram.sequence.inference.sequence_inference:233] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 8
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 1276852377600
+    mean:
+    - 0.40560616330988664
+    - 0.40903226014977145
+    - 0.3720154588275182
+    std:
+    - 0.24422178855813376
+    - 0.24576464877583507
+    - 0.24317006853183584
+sequence:
+  arch: tgmj
+  latent_name: null
+  output_name: null
+  sequence_length: 180
+  dropout_p: 0.5
+  num_layers: 3
+  hidden_size: 64
+  nonoverlapping: true
+  filter_length: 15
+  input_dropout: 0.5
+  n_filters: 8
+  tgm_reduction: max
+  c_in: 1
+  c_out: 8
+  soft_attn: true
+  num_features: 128
+  bidirectional: false
+  rnn_style: lstm
+  hidden_dropout: 0.0
+  weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250603_145653_sequence_train\lightning_checkpoints\epoch=28-step=9685.ckpt
+  nonlinear_classification: true
+  final_bn: true
+  input_type: features
+train:
+  regularization:
+    style: l2
+    alpha: 0.01
+  patience: 5
+  num_epochs: 100
+  loss_weight_exp: 1.0
+inference:
+  directory_list: []
+  ignore_error: true
+  overwrite: true
+  use_loaded_model_cfg: true
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+  min_bout_per_behavior:
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_TS7_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\pretrained_models
+run:
+  type: inference
+  model: sequence
+  dir: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250606_150655_sequence_inference
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-06 15:06:57,340] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250603_145653_sequence_train\lightning_checkpoints\epoch=28-step=9685.ckpt
+[2025-06-06 15:06:57,362] INFO [deepethogram.sequence.inference.sequence_inference:263] latent name used for running sequence inference: resnet18

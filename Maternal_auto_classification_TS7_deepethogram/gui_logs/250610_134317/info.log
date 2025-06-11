@@ -1,0 +1,111 @@
+[2025-06-10 13:43:17,330] INFO [deepethogram.gui.main.initialize_project:1021] loaded project configuration: split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+run:
+  type: gui
+  model: null
+  dir: D:\LBN\Maternal_auto_classification_TS7_deepethogram\gui_logs\250610_134317
+label_view_width: 31
+control_arrow_jump: 31
+vertical_arrow_jump: 3
+cmap: deepethogram
+unlabeled_alpha: 0.1
+prediction_opacity: 0.2
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    'N': 1276852377600
+    mean:
+    - 0.40560616330988664
+    - 0.40903226014977145
+    - 0.3720154588275182
+    std:
+    - 0.24422178855813376
+    - 0.24576464877583507
+    - 0.24317006853183584
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_TS7_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\pretrained_models
+sequence:
+  filter_length: 15
+train:
+  loss_weight_exp: 1.0
+
+[2025-06-10 13:43:17,332] INFO [deepethogram.gui.main.initialize_project:1022] cwd: D:\LBN\Maternal_auto_classification_TS7_deepethogram\gui_logs\250610_134317
+[2025-06-10 13:43:21,051] INFO [deepethogram.gui.main.project_loaded_buttons:175] Number finalized labels: 0
+[2025-06-10 13:43:38,062] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_TS7_deepethogram\\DATA\\Cage1-CONT-2024-12-08_20-08-34\\Cage1-CONT-2024-12-08_20-08-34_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_TS7_deepethogram\\DATA\\Cage1-CONT-2024-12-08_20-08-34\\Cage1-CONT-2024-12-08_20-08-34.mp4', 'keypoint': None, 'key': 'Cage1-CONT-2024-12-08_20-08-34'}
+[2025-06-10 13:43:38,140] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:43:39,875] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-10 13:43:50,875] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/Cage1-CONT-2024-12-08_20-08-34\\Cage1-CONT-2024-12-08_20-08-34_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/Cage1-CONT-2024-12-08_20-08-34\\Cage1-CONT-2024-12-08_20-08-34.mp4', 'keypoint': None, 'key': 'Cage1-CONT-2024-12-08_20-08-34'}
+[2025-06-10 13:43:50,905] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:43:52,358] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-10 13:44:10,754] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/Cage8-CONT-2024-12-14_06-43-45\\Cage8-CONT-2024-12-14_06-43-45_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/Cage8-CONT-2024-12-14_06-43-45\\Cage8-CONT-2024-12-14_06-43-45.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-14_06-43-45'}
+[2025-06-10 13:44:10,802] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:44:12,371] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-10 13:44:29,297] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageD-CONT-2024-07-09_20-42-15\\CageD-CONT-2024-07-09_20-42-15_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageD-CONT-2024-07-09_20-42-15\\CageD-CONT-2024-07-09_20-42-15.mp4', 'keypoint': None, 'key': 'CageD-CONT-2024-07-09_20-42-15'}
+[2025-06-10 13:44:29,348] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:44:30,811] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-10 13:44:44,750] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageK1-CONT-2024-09-05_07-42-39\\CageK1-CONT-2024-09-05_07-42-39_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageK1-CONT-2024-09-05_07-42-39\\CageK1-CONT-2024-09-05_07-42-39.mp4', 'keypoint': None, 'key': 'CageK1-CONT-2024-09-05_07-42-39'}
+[2025-06-10 13:44:44,787] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:44:46,249] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-10 13:44:59,967] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageD-CONT-2024-07-06_23-44-40\\CageD-CONT-2024-07-06_23-44-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageD-CONT-2024-07-06_23-44-40\\CageD-CONT-2024-07-06_23-44-40.mp4', 'keypoint': None, 'key': 'CageD-CONT-2024-07-06_23-44-40'}
+[2025-06-10 13:45:00,062] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:45:01,530] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-10 13:45:20,169] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageD-CONT-2024-07-11_05-32-14\\CageD-CONT-2024-07-11_05-32-14_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageD-CONT-2024-07-11_05-32-14\\CageD-CONT-2024-07-11_05-32-14.mp4', 'keypoint': None, 'key': 'CageD-CONT-2024-07-11_05-32-14'}
+[2025-06-10 13:45:20,218] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:45:21,707] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-10 13:45:40,700] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageK1-CONT-2024-09-10_05-26-49\\CageK1-CONT-2024-09-10_05-26-49_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_TS7_deepethogram/DATA/CageK1-CONT-2024-09-10_05-26-49\\CageK1-CONT-2024-09-10_05-26-49.mp4', 'keypoint': None, 'key': 'CageK1-CONT-2024-09-10_05-26-49'}
+[2025-06-10 13:45:40,748] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-10 13:45:42,249] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj

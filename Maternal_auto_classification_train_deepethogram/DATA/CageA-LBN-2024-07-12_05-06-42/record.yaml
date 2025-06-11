@@ -1,0 +1,23 @@
+flow:
+  all: []
+  default: []
+key: CageA-LBN-2024-07-12_05-06-42
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - CageA-LBN-2024-07-12_05-06-42_labels.csv
+  default: CageA-LBN-2024-07-12_05-06-42_labels.csv
+output:
+  all:
+  - CageA-LBN-2024-07-12_05-06-42_outputs.h5
+  default: CageA-LBN-2024-07-12_05-06-42_outputs.h5
+rgb:
+  all:
+  - CageA-LBN-2024-07-12_05-06-42.mp4
+  default: CageA-LBN-2024-07-12_05-06-42.mp4
+stats:
+  all:
+  - stats.yaml
+  default: stats.yaml

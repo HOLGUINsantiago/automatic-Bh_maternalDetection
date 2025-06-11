@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: CageK1-CONT-2024-09-10_06-16-49
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - CageK1-CONT-2024-09-10_06-16-49.mp4
+  default: CageK1-CONT-2024-09-10_06-16-49.mp4
+stats:
+  all: []
+  default: []

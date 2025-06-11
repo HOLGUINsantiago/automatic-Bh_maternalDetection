@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: Cage8-CONT-2024-12-12_20-17-32
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage8-CONT-2024-12-12_20-17-32.mp4
+  default: Cage8-CONT-2024-12-12_20-17-32.mp4
+stats:
+  all: []
+  default: []

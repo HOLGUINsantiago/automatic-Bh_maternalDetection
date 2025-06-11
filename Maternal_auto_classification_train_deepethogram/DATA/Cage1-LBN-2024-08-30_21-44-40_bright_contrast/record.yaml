@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: Cage1-LBN-2024-08-30_21-44-40_bright_contrast
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage1-LBN-2024-08-30_21-44-40_labels.csv
+  default: Cage1-LBN-2024-08-30_21-44-40_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage1-LBN-2024-08-30_21-44-40_bright_contrast.mp4
+  default: Cage1-LBN-2024-08-30_21-44-40_bright_contrast.mp4
+stats:
+  all: []
+  default: []

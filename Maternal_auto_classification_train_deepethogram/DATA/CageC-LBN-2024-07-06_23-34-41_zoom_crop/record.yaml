@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: CageC- LBN-2024-07-06_23-34-41_zoom_crop
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - CageC- LBN-2024-07-06_23-34-41_labels.csv
+  default: CageC- LBN-2024-07-06_23-34-41_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - CageC- LBN-2024-07-06_23-34-41_zoom_crop.mp4
+  default: CageC- LBN-2024-07-06_23-34-41_zoom_crop.mp4
+stats:
+  all: []
+  default: []

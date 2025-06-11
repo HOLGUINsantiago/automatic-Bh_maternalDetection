@@ -1,0 +1,101 @@
+[2025-06-06 15:40:53,313] INFO [deepethogram.gui.main.initialize_project:1021] loaded project configuration: split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+run:
+  type: gui
+  model: null
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250606_154053
+label_view_width: 31
+control_arrow_jump: 31
+vertical_arrow_jump: 3
+cmap: deepethogram
+unlabeled_alpha: 0.1
+prediction_opacity: 0.2
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    'N': 618077952000
+    mean:
+    - 0.42517412266678273
+    - 0.43137161373889366
+    - 0.36341115380866434
+    std:
+    - 0.21811947189196618
+    - 0.22076338169887563
+    - 0.21714027118257334
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+sequence:
+  filter_length: 15
+train:
+  loss_weight_exp: 1.0
+
+[2025-06-06 15:40:53,317] INFO [deepethogram.gui.main.initialize_project:1022] cwd: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250606_154053
+[2025-06-06 15:40:55,031] INFO [deepethogram.gui.main.project_loaded_buttons:175] Number finalized labels: 402
+[2025-06-06 15:40:57,636] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': None, 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\CONT-2024-05-06_20-00-34\\CONT-2024-05-06_20-00-34.mp4', 'keypoint': None, 'key': 'CONT-2024-05-06_20-00-34'}
+[2025-06-06 15:41:04,514] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_20-24-40\\Cage1-LBN-2024-08-30_20-24-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_20-24-40\\Cage1-LBN-2024-08-30_20-24-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_20-24-40\\Cage1-LBN-2024-08-30_20-24-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-30_20-24-40'}
+[2025-06-06 15:41:04,583] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-06 15:41:06,243] ERROR [deepethogram.gui.main.initialize_video:251] Error initializing video: name 'k' is not defined
+Traceback (most recent call last):
+  File "C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\gui\main.py", line 236, in initialize_video
+    self.import_outputfile(outputfile, first_time=True)
+  File "C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\gui\main.py", line 862, in import_outputfile
+    estimated_labels = self.postprocessor(probabilities)
+  File "C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\postprocessing.py", line 239, in __call__
+    return self.process(probabilities)
+  File "C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\postprocessing.py", line 269, in process
+    bout_lengths = [10] * len(k)
+NameError: name 'k' is not defined

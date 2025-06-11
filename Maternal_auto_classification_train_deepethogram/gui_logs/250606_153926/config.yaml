@@ -1,0 +1,84 @@
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    N: 618077952000
+    mean:
+    - 0.42517412266678273
+    - 0.43137161373889366
+    - 0.36341115380866434
+    std:
+    - 0.21811947189196618
+    - 0.22076338169887563
+    - 0.21714027118257334
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+cmap: deepethogram
+compute:
+  batch_size: 8
+  dali: false
+  distributed: false
+  fp16: false
+  gpu_id: 0
+  max_batch_size: 128
+  metrics_workers: 0
+  min_batch_size: 8
+  num_workers: 3
+control_arrow_jump: 31
+label_view_width: 31
+log:
+  level: info
+notes: null
+postprocessor:
+  min_bout_length: 10
+  type: min_bout_per_behavior
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+reload:
+  latest: false
+  overwrite_cfg: false
+run:
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250606_153926
+  model: null
+  type: gui
+sequence:
+  filter_length: 15
+split:
+  file: null
+  reload: true
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+train:
+  loss_weight_exp: 1.0
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3

@@ -1,0 +1,280 @@
+[2025-06-03 14:56:53,843] INFO [__main__.sequence_train:43] args: C:\Users\TeamGranon\anaconda3\envs\deg_env\lib\site-packages\deepethogram\sequence\train.py project.path=D:\LBN\Maternal_auto_classification_TS7_deepethogram
+[2025-06-03 14:56:53,843] INFO [__main__.sequence_train:49] Configuration used: 
+[2025-06-03 14:56:53,843] INFO [__main__.sequence_train:50] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+feature_extractor:
+  arch: resnet18
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 1
+  curriculum: false
+  inputs: both
+  weights: pretrained
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 1000
+    test: 20
+  num_epochs: 100
+  lr: 0.0001
+  scheduler: plateau
+  min_lr: 5.0e-07
+  stopping_type: learning_rate
+  milestones:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  weight_loss: true
+  patience: 5
+  early_stopping_begins: 0
+  viz_metrics: true
+  viz_examples: 10
+  reduction_factor: 0.1
+  loss_weight_exp: 1.0
+  loss_gamma: 1.0
+  label_smoothing: 0.05
+  oversampling_exp: 0.0
+  regularization:
+    style: l2
+    alpha: 0.01
+    beta: 0.001
+sequence:
+  arch: tgmj
+  latent_name: resnet18
+  output_name: null
+  sequence_length: 180
+  dropout_p: 0.5
+  num_layers: 3
+  hidden_size: 64
+  nonoverlapping: true
+  filter_length: 15
+  input_dropout: 0.5
+  n_filters: 8
+  tgm_reduction: max
+  c_in: 1
+  c_out: 8
+  soft_attn: true
+  num_features: 128
+  bidirectional: false
+  rnn_style: lstm
+  hidden_dropout: 0.0
+  weights: null
+  nonlinear_classification: true
+  final_bn: true
+  input_type: features
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    'N': 616891852800
+    mean:
+    - 0.425280944716674
+    - 0.43149049968550984
+    - 0.3634010999177969
+    std:
+    - 0.2179858888556464
+    - 0.2206349264361932
+    - 0.21700557077024724
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+postprocessor:
+  min_bout_length: 10
+  type: min_bout_per_behavior
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_TS7_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\pretrained_models
+run:
+  type: train
+  model: sequence
+  dir: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250603_145653_sequence_train
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-08_21-28-34
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-08_21-58-35
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-08_22-18-35
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-08_23-18-35
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-09_21-28-38
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-09_21-38-38
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-10_05-38-39
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-10_05-48-39
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-10_05-58-39
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-10_06-28-39
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-10_20-28-40
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-10_22-58-40
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14_blur
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14_bright_contrast
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14_combo123
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14_combo124
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14_combo234
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14_flip
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_20-42-14_zoom_crop
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14_blur
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14_bright_contrast
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14_combo123
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14_combo124
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14_combo234
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14_flip
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_21-02-14_zoom_crop
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-12-14
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14_blur
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14_bright_contrast
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14_combo123
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14_combo124
+[2025-06-03 14:56:54,093] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14_combo234
+[2025-06-03 14:56:54,104] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14_flip
+[2025-06-03 14:56:54,104] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_22-52-14_zoom_crop
+[2025-06-03 14:56:54,104] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-11_23-42-14
+[2025-06-03 14:56:54,104] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-12_20-12-15
+[2025-06-03 14:56:54,104] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-12_21-42-15
+[2025-06-03 14:56:54,104] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage2-LBN-2024-12-12_22-52-15
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35_blur
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35_bright_contrast
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35_combo123
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35_combo124
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35_combo234
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35_flip
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_21-38-35_zoom_crop
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35
+[2025-06-03 14:56:54,105] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35_blur
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35_bright_contrast
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35_combo123
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35_combo124
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35_combo234
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35_flip
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-08_22-28-35_zoom_crop
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-09_07-28-36
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_20-08-42
+[2025-06-03 14:56:54,106] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_20-08-42_blur
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_20-08-42_bright_contrast
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_20-08-42_flip
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_20-08-42_zoom_crop
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-08-42
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42_blur
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42_bright_contrast
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42_combo123
+[2025-06-03 14:56:54,107] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42_combo124
+[2025-06-03 14:56:54,108] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42_combo234
+[2025-06-03 14:56:54,108] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42_flip
+[2025-06-03 14:56:54,108] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_21-28-42_zoom_crop
+[2025-06-03 14:56:54,108] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_22-38-42
+[2025-06-03 14:56:54,108] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-10_22-58-42
+[2025-06-03 14:56:54,108] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42
+[2025-06-03 14:56:54,108] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42_blur
+[2025-06-03 14:56:54,109] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42_bright_contrast
+[2025-06-03 14:56:54,109] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42_combo123
+[2025-06-03 14:56:54,109] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42_combo124
+[2025-06-03 14:56:54,109] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42_combo234
+[2025-06-03 14:56:54,109] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42_flip
+[2025-06-03 14:56:54,109] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_04-38-42_zoom_crop
+[2025-06-03 14:56:54,110] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_07-28-42
+[2025-06-03 14:56:54,110] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-11_22-42-15
+[2025-06-03 14:56:54,110] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15
+[2025-06-03 14:56:54,110] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15_blur
+[2025-06-03 14:56:54,110] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15_bright_contrast
+[2025-06-03 14:56:54,110] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15_combo123
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15_combo124
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15_combo234
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15_flip
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-12-15_zoom_crop
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15_blur
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15_bright_contrast
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15_combo123
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15_combo124
+[2025-06-03 14:56:54,111] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15_combo234
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15_flip
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_04-52-15_zoom_crop
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-12_05-42-15
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-13_20-03-40
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-13_22-03-41
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-13_22-13-41
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41_blur
+[2025-06-03 14:56:54,112] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41_bright_contrast
+[2025-06-03 14:56:54,113] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41_combo123
+[2025-06-03 14:56:54,113] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41_combo124
+[2025-06-03 14:56:54,113] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41_combo234
+[2025-06-03 14:56:54,113] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41_flip
+[2025-06-03 14:56:54,113] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No output file found in record: Cage3-LBN-2024-12-14_06-23-41_zoom_crop
+[2025-06-03 14:57:27,827] INFO [deepethogram.data.utils.make_loss_weight:115] Class counts: [     0 346966 123495 119173   4624  50706  89058      0  25506  33227]
+[2025-06-03 14:57:27,827] INFO [deepethogram.data.utils.make_loss_weight:116] Pos weight: [         inf   0.35562562   2.80870481   2.94683359 100.72058824
+   8.27614089   4.28145703          inf  17.44099428  13.15583712]
+[2025-06-03 14:57:27,827] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight, weighted: [  0.           0.35562563   2.8087049    2.9468336  100.72059
+   8.276141     4.281457     0.          17.440994    13.155837  ]
+[2025-06-03 14:57:27,843] INFO [deepethogram.data.utils.make_loss_weight:118] Softmax weight: [0.         0.00858066 0.02410784 0.02498214 0.6438575  0.05871489
+ 0.03342987 0.         0.11672536 0.08960174]
+[2025-06-03 14:57:27,843] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight transformed: [0.         0.00858066 0.02410783 0.02498215 0.6438575  0.05871489
+ 0.03342987 0.         0.11672536 0.08960174]
+[2025-06-03 14:57:28,343] WARNING [deepethogram.projects.get_weightfile_from_cfg:1090] no sequence weights found...
+[2025-06-03 14:57:28,343] INFO [__main__.sequence_train:63] Total trainable params: 266,278
+[2025-06-03 14:57:28,343] INFO [deepethogram.feature_extractor.train.get_metrics:632] key metric: f1_class_mean
+[2025-06-03 14:57:28,812] INFO [deepethogram.feature_extractor.losses.__init__:100] Focal loss: gamma 1.00 smoothing: 0.05
+[2025-06-03 14:57:28,812] INFO [deepethogram.losses.get_regularization_loss:188] Regularization: L2. alpha: 0.01 
+[2025-06-03 14:57:28,812] INFO [deepethogram.base.__init__:95] scheduler mode: max
+[2025-06-03 14:57:29,062] INFO [deepethogram.base.configure_optimizers:227] learning rate: 0.0001
+[2025-06-03 15:55:29,829] INFO [deepethogram.callbacks.on_train_epoch_end:257] Stopping criterion reached! setting trainer.should_stop=True

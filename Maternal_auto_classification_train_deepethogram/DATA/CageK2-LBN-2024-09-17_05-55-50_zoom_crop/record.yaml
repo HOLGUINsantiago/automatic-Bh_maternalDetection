@@ -1,0 +1,21 @@
+flow:
+  all: []
+  default: []
+key: CageK2-LBN-2024-09-17_05-55-50_zoom_crop
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - CageK2-LBN-2024-09-17_05-55-50_labels.csv
+  default: CageK2-LBN-2024-09-17_05-55-50_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - CageK2-LBN-2024-09-17_05-55-50_zoom_crop.mp4
+  default: CageK2-LBN-2024-09-17_05-55-50_zoom_crop.mp4
+stats:
+  all: []
+  default: []

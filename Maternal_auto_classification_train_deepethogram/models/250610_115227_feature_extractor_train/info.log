@@ -1,0 +1,631 @@
+[2025-06-10 11:52:27,394] INFO [deepethogram.feature_extractor.train.feature_extractor_train:66] args: d:/LBN/complexTraining_FE.py
+[2025-06-10 11:52:27,394] INFO [deepethogram.feature_extractor.train.feature_extractor_train:71] configuration used ~~~~~
+[2025-06-10 11:52:27,433] INFO [deepethogram.feature_extractor.train.feature_extractor_train:72] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 618077952000
+    mean:
+    - 0.42517412266678273
+    - 0.43137161373889366
+    - 0.36341115380866434
+    std:
+    - 0.21811947189196618
+    - 0.22076338169887563
+    - 0.21714027118257334
+feature_extractor:
+  arch: resnet3d_34
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 11
+  curriculum: false
+  inputs: both
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200409_101808_hidden_two_stream_kinetics_degs\checkpoint.pt
+  n_flow: 10
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 1000
+    test: 20
+  num_epochs: 100
+  lr: 0.0001
+  scheduler: plateau
+  min_lr: 5.0e-07
+  stopping_type: learning_rate
+  milestones:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  weight_loss: true
+  patience: 3
+  early_stopping_begins: 0
+  viz_metrics: true
+  viz_examples: 10
+  reduction_factor: 0.1
+  loss_weight_exp: 1.0
+  loss_gamma: 1.0
+  label_smoothing: 0.05
+  oversampling_exp: 0.0
+  regularization:
+    style: l2_sp
+    alpha: 1.0e-05
+    beta: 0.001
+flow_generator:
+  type: flow_generator
+  flow_loss: MotionNet
+  flow_max: 10
+  input_images: 11
+  flow_sparsity: true
+  smooth_weight_multiplier: 0.25
+  sparsity_weight: 0.05
+  loss: MotionNet
+  max: 5
+  n_rgb: 11
+  arch: TinyMotionNet3D
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250606_152347_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+  'n': 10
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+inference:
+  directory_list:
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_22-21-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_23-41-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_20-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_21-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_21-58-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-18-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-48-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_23-18-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_05-48-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_07-08-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_20-48-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_21-28-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_21-38-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_21-48-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_05-38-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_05-48-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_05-58-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_06-28-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_20-28-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_22-58-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-12-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_23-42-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-12_20-12-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-12_21-42-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-12_22-52-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-09_07-28-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-08-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_22-38-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_22-58-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_07-28-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_22-42-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_05-42-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-13_20-03-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-13_22-03-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-13_22-13-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_00-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-53-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-03-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-13-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-23-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-33-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-43-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-53-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-03-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-13-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-23-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-33-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_20-14-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_21-54-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_22-24-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_23-04-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_23-14-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_04-54-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_05-44-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_06-14-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_06-44-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_06-54-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_20-04-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_20-24-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_20-44-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_21-04-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_21-54-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_22-54-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_04-54-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_05-34-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_05-54-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_07-34-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_21-44-52
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_23-14-52
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_05-04-53
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_05-24-53
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_05-44-53
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_21-16-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_21-56-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_22-26-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_23-06-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_23-36-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_04-26-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_04-56-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_05-16-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_05-26-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_06-16-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_21-36-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_22-46-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-06-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-16-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-26-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-36-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-46-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-56-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-06-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-16-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-26-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-36-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-46-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-56-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-06-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-16-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-26-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-36-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-46-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-56-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-24-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-44-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-54-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_20-34-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-04-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-14-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-44-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_22-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_05-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_05-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_05-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_07-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_07-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_07-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-25-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_04-25-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-35-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_20-05-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-18_20-55-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-00-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-10-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-20-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-30-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_21-00-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_22-00-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_22-10-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_22-40-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_23-20-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_23-40-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_04-00-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_04-50-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_05-30-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_06-20-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_06-50-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_07-10-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_07-20-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_20-56-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_22-06-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_22-26-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_22-46-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_23-06-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_23-36-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_23-46-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_04-06-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_04-16-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_04-46-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_05-06-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_06-36-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_22-06-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_23-46-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-09_05-16-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-09_06-56-23
+  ignore_error: true
+  overwrite: true
+  use_loaded_model_cfg: true
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+run:
+  type: train
+  model: feature_extractor
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250610_115227_feature_extractor_train
+sequence:
+  filter_length: 15
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-10 11:52:27,662] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250606_152347_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-10 11:52:27,662] INFO [deepethogram.feature_extractor.train.feature_extractor_train:79] loading flow generator from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250606_152347_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-10 11:52:27,664] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250606_152347_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt...
+[2025-06-10 11:52:27,971] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-00-34
+[2025-06-10 11:52:27,971] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-10-34
+[2025-06-10 11:52:27,971] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-20-34
+[2025-06-10 11:52:27,971] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-30-34
+[2025-06-10 11:52:45,434] INFO [deepethogram.data.utils.make_loss_weight:115] Class counts: [    63 479869 163861 143625  11790  66185 103479    525  30539  47735]
+[2025-06-10 11:52:45,434] INFO [deepethogram.data.utils.make_loss_weight:116] Pos weight: [10212.0952381      0.34083469     2.92665125     3.47989556
+    53.57379135     8.72161366     5.21792828  1224.57142857
+    20.068961      12.47910338]
+[2025-06-10 11:52:45,434] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight, weighted: [10212.096          0.34083468     2.9266512      3.4798956
+    53.57379        8.721614       5.2179284   1224.5714
+    20.06896       12.479103  ]
+[2025-06-10 11:52:45,435] INFO [deepethogram.data.utils.make_loss_weight:118] Softmax weight: [0.88398468 0.00011605 0.00033987 0.00038775 0.00472358 0.00084144
+ 0.00053819 0.10607816 0.0018236  0.00116667]
+[2025-06-10 11:52:45,435] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight transformed: [0.8839847  0.00011605 0.00033987 0.00038775 0.00472358 0.00084144
+ 0.00053819 0.10607816 0.0018236  0.00116667]
+[2025-06-10 11:52:45,667] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200409_101808_hidden_two_stream_kinetics_degs\checkpoint.pt
+[2025-06-10 11:52:45,667] INFO [deepethogram.feature_extractor.train.build_model_from_cfg:220] feature extractor weightfile: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200409_101808_hidden_two_stream_kinetics_degs\checkpoint.pt
+[2025-06-10 11:52:46,054] INFO [deepethogram.feature_extractor.models.CNN.get_cnn:91] Custom bias: Parameter containing:
+tensor([-9.2313,  1.0764, -1.0739, -1.2470, -3.9811, -2.1658, -1.6521, -7.1103,
+        -2.9992, -2.5241], requires_grad=True)
+[2025-06-10 11:52:46,054] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component spatial from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200409_101808_hidden_two_stream_kinetics_degs\checkpoint.pt
+[2025-06-10 11:52:49,671] WARNING [deepethogram.utils.load_state_from_dict:249] 1.weight has different size: pretrained:torch.Size([700, 512]) model:torch.Size([10, 512])
+[2025-06-10 11:52:49,672] WARNING [deepethogram.utils.load_state_from_dict:249] 1.bias has different size: pretrained:torch.Size([700]) model:torch.Size([10])
+[2025-06-10 11:52:50,063] INFO [deepethogram.feature_extractor.models.CNN.get_cnn:91] Custom bias: Parameter containing:
+tensor([-9.2313,  1.0764, -1.0739, -1.2470, -3.9811, -2.1658, -1.6521, -7.1103,
+        -2.9992, -2.5241], requires_grad=True)
+[2025-06-10 11:52:50,063] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component flow from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200409_101808_hidden_two_stream_kinetics_degs\checkpoint.pt
+[2025-06-10 11:52:50,194] WARNING [deepethogram.utils.load_state_from_dict:249] 1.weight has different size: pretrained:torch.Size([700, 512]) model:torch.Size([10, 512])
+[2025-06-10 11:52:50,195] WARNING [deepethogram.utils.load_state_from_dict:249] 1.bias has different size: pretrained:torch.Size([700]) model:torch.Size([10])
+[2025-06-10 11:52:50,443] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250606_152347_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-10 11:52:50,451] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250606_152347_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt...
+[2025-06-10 11:52:50,452] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component fusion from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200409_101808_hidden_two_stream_kinetics_degs\checkpoint.pt
+[2025-06-10 11:52:50,824] INFO [deepethogram.feature_extractor.train.get_metrics:632] key metric: f1_class_mean_nobg
+[2025-06-10 11:52:51,085] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-00-34
+[2025-06-10 11:52:51,085] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-10-34
+[2025-06-10 11:52:51,101] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-20-34
+[2025-06-10 11:52:51,101] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: CONT-2024-05-06_20-30-34
+[2025-06-10 11:53:06,095] INFO [deepethogram.data.utils.make_loss_weight:115] Class counts: [    63 479869 163861 143625  11790  66185 103479    525  30539  47735]
+[2025-06-10 11:53:06,095] INFO [deepethogram.data.utils.make_loss_weight:116] Pos weight: [10212.0952381      0.34083469     2.92665125     3.47989556
+    53.57379135     8.72161366     5.21792828  1224.57142857
+    20.068961      12.47910338]
+[2025-06-10 11:53:06,095] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight, weighted: [10212.096          0.34083468     2.9266512      3.4798956
+    53.57379        8.721614       5.2179284   1224.5714
+    20.06896       12.479103  ]
+[2025-06-10 11:53:06,095] INFO [deepethogram.data.utils.make_loss_weight:118] Softmax weight: [0.88398468 0.00011605 0.00033987 0.00038775 0.00472358 0.00084144
+ 0.00053819 0.10607816 0.0018236  0.00116667]
+[2025-06-10 11:53:06,095] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight transformed: [0.8839847  0.00011605 0.00033987 0.00038775 0.00472358 0.00084144
+ 0.00053819 0.10607816 0.0018236  0.00116667]
+[2025-06-10 11:53:06,095] INFO [deepethogram.feature_extractor.losses.__init__:100] Focal loss: gamma 1.00 smoothing: 0.05
+[2025-06-10 11:53:06,136] INFO [deepethogram.losses.get_regularization_loss:205] Regularization: L2_SP. Pretrained file: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200409_101808_hidden_two_stream_kinetics_degs\checkpoint.pt alpha: 1e-05 beta: 0.001
+[2025-06-10 11:53:06,285] INFO [deepethogram.data.augs.get_gpu_transforms:246] GPU transforms: {'train': Sequential(
+  (0): ToFloat()
+  (1): VideoSequential(
+    (RandomHorizontalFlip_0): RandomHorizontalFlip(p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomRotation_1): RandomRotation(degrees=10, p=0.5, p_batch=1.0, same_on_batch=False, resample=bilinear, align_corners=True)
+    (ColorJitter_2): ColorJitter(brightness=0.25, contrast=0.1, saturation=0.1, hue=0.1, p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomGrayscale_3): RandomGrayscale(p=0.5, p_batch=1.0, same_on_batch=False)
+  )
+  (2): NormalizeVideo()
+), 'val': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+), 'test': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+), 'denormalize': Sequential(
+  (0): DenormalizeVideo()
+)}
+[2025-06-10 11:53:06,285] INFO [deepethogram.base.__init__:95] scheduler mode: max
+[2025-06-10 11:53:06,285] INFO [deepethogram.base.get_train_sampler:171] not using oversampling
+[2025-06-10 11:53:06,706] INFO [deepethogram.base.configure_optimizers:227] learning rate: 0.0001

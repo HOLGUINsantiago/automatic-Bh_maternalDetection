@@ -1,0 +1,23 @@
+flow:
+  all: []
+  default: []
+key: CONT-2024-05-07_22-26-20
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - CONT-2024-05-07_22-26-20_labels.csv
+  default: CONT-2024-05-07_22-26-20_labels.csv
+output:
+  all:
+  - CONT-2024-05-07_22-26-20_outputs.h5
+  default: CONT-2024-05-07_22-26-20_outputs.h5
+rgb:
+  all:
+  - CONT-2024-05-07_22-26-20.mp4
+  default: CONT-2024-05-07_22-26-20.mp4
+stats:
+  all:
+  - stats.yaml
+  default: stats.yaml

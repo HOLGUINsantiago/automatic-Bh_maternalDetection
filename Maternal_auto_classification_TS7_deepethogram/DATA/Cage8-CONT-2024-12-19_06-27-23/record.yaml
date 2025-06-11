@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: Cage8-CONT-2024-12-19_06-27-23
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage8-CONT-2024-12-19_06-27-23.mp4
+  default: Cage8-CONT-2024-12-19_06-27-23.mp4
+stats:
+  all: []
+  default: []

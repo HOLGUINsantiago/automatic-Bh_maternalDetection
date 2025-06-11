@@ -1,0 +1,136 @@
+[2025-06-06 15:23:19,669] INFO [deepethogram.flow_generator.train.flow_generator_train:54] args: d:/LBN/complexTraining_FG.py
+[2025-06-06 15:23:19,669] INFO [deepethogram.flow_generator.train.flow_generator_train:62] configuration used ~~~~~
+[2025-06-06 15:23:19,671] INFO [deepethogram.flow_generator.train.flow_generator_train:63] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 1276852377600
+    mean:
+    - 0.40560616330988664
+    - 0.40903226014977145
+    - 0.3720154588275182
+    std:
+    - 0.24422178855813376
+    - 0.24576464877583507
+    - 0.24317006853183584
+flow_generator:
+  type: flow_generator
+  flow_loss: MotionNet
+  flow_max: 10
+  input_images: 11
+  flow_sparsity: true
+  smooth_weight_multiplier: 0.25
+  sparsity_weight: 0.05
+  loss: MotionNet
+  max: 5
+  n_rgb: 11
+  arch: TinyMotionNet3D
+  weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\pretrained_models\200313_125331_TinyMotionNet3D_kinetics\checkpoint.pt
+  'n': 10
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 1000
+    test: 20
+  num_epochs: 100
+  lr: 0.0001
+  scheduler: plateau
+  min_lr: 5.0e-07
+  stopping_type: learning_rate
+  milestones:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  weight_loss: true
+  patience: 3
+  early_stopping_begins: 0
+  viz_metrics: true
+  viz_examples: 10
+  reduction_factor: 0.1
+  loss_weight_exp: 1.0
+  loss_gamma: 1.0
+  label_smoothing: 0.05
+  oversampling_exp: 0.0
+  regularization:
+    style: l2_sp
+    alpha: 1.0e-05
+    beta: 0.001
+feature_extractor:
+  arch: resnet3d_34
+  n_flow: 10
+  n_rgb: 11
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+postprocessor:
+  min_bout_length: 10
+  type: min_bout_per_behavior
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_TS7_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\pretrained_models
+run:
+  type: train
+  model: flow_generator
+  dir: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250606_152319_flow_generator_train
+sequence:
+  filter_length: 15
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
