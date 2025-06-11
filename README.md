@@ -58,7 +58,7 @@ You can process training results with [read metrics script](utils\validation\rea
 - You can also create a summary df where the results of a single video are resumed on a single line eliminating "frame dimension"
 
 ### Results analysis
-Different analysis for maternal and pup's data are available on [AnalyseR file](AnalyseR.Rmd)
+Different analysis for maternal and pup's data are available on [AnalyseR file](results_analysis.Rmd)
 
 ## Data availability
 Pretrained models, and annotated videos are available on demand by contacting our [Neuropsi team](https://neuropsi.cnrs.fr/departements/cnn/equipe-sylvie-granon/)

@@ -1,0 +1,2770 @@
+---
+title: "Stage_data analysis"
+author: "Santiago Holguin Urbano"
+date: "2025-05-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Library importing
+
+```{r}
+library(knitr)
+library(readr)
+library(lubridate)
+library(dplyr)
+library(missForest)
+library(ggpubr)
+library(patchwork)
+library(ggplot2)
+library(ggtext)
+library(changepoint)
+library(tidyr)
+library(car)
+library(broom)
+library(multcomp)
+library(stats)
+library(tidyverse)
+library(stringr)
+library(FactoMineR)
+library(factoextra)
+library(ggrepel)
+library(randomForest)
+library(cluster)     # For clustering
+library(dendextend)  # For nicer dendrograms
+library(pheatmap)
+library(dynamicTreeCut)
+library(dbscan)
+library(vars)
+library(ggraph)
+library(igraph)
+library(tidygraph)
+library(corrplot)
+library(vegan)
+
+```
+
+# Data preparation
+
+## Importing data sets :
+
+Some pups were eliminated because of the lack of data existing on them
+
+```{r}
+juvenile_df <- read.csv2("D:/Stage_VAEVE_2025/Analysis of results/LBN/Veave - metadatafile-juvenile-all-full.csv", stringsAsFactors=TRUE)
+
+juvenile_df <- juvenile_df %>%
+  mutate(
+    CageID = trimws(CageID),
+    CageID = sub("(?i)^cage\\s*", "", CageID, perl = TRUE)
+  )
+
+juvenile_df <- subset(juvenile_df, Project %in% c("VEAVE"))
+
+juvenile_df_only <- subset(juvenile_df, Cohort %in% c("Cohort 0", "Cohort 1", "Cohort 2"))
+
+maternal_df <- read.csv("D:/Stage_VAEVE_2025/LBN/Resume_df.csv")
+maternal_df$Transition <- maternal_df$Nest_exits_bouts + maternal_df$Nest_entry_bouts
+maternal_df <- maternal_df %>%
+  mutate(Day = floor(Time / 86400) + 1)
+
+# FILTRAR días 1 a 7
+maternal_df <- maternal_df %>%
+  filter(Day >= 1 & Day <= 7)
+
+# Añadir formato POSIX para Start_time si existe (si no, se ignora este filtro para maternal_df)
+if ("Start_time" %in% colnames(maternal_df)) {
+  maternal_df <- maternal_df %>%
+    mutate(Start_time = ymd_hms(gsub("T", " ", Start_time))) %>%
+    filter(!(hour(Start_time) >= 7 & hour(Start_time) < 20))
+}
+
+# Leer archivo completo de anotaciones
+maternal_full_df <- read.csv("D:/Stage_VAEVE_2025/LBN/behavioural_annotation.csv")
+maternal_full_df <- maternal_full_df %>%
+  mutate(Start_time = ymd_hms(gsub("T", " ", Start_time)))
+
+# Calcular tiempo desde el inicio de grabación
+maternal_full_df$Time <- NA_real_
+
+maternal_full_df <- maternal_full_df %>%
+  group_by(Cage) %>%
+  mutate(
+    start_0 = min(Start_time, na.rm = TRUE),
+    total_frames = max(frame, na.rm = TRUE),
+    Time = as.numeric(difftime(Start_time, start_0, units = "secs")) +
+      frame * Recording_duration / total_frames
+  ) %>%
+  ungroup() %>%
+  select(-start_0, -total_frames) %>%
+  mutate(Day = floor(Time / 86400) + 1)
+
+# FILTRAR días 1 a 7 y Start_time fuera de 07:30 a 20:00
+maternal_full_df <- maternal_full_df %>%
+  filter(Day >= 1 & Day <= 7) %>%
+  filter(!(hour(Start_time) >= 7 & hour(Start_time) < 20))
+
+# Asegurar que Group es factor
+maternal_df$Group <- as.factor(maternal_df$Group)
+
+
+ids_a_eliminar <- c("C1-3", "C7-1") 
+juvenile_df <- juvenile_df %>% 
+  filter(!(PupID %in% ids_a_eliminar))
+
+ado_df <- read.csv("D:/Stage_VAEVE_2025/Analysis of results/LBN/Ado-SIT-data.csv", sep=";", stringsAsFactors=TRUE)
+
+juvenile_cages_temp <- juvenile_df %>%
+  dplyr::select(ID.blind, CageID) %>%
+  dplyr::rename(Dam_cage = CageID)
+
+ado_df <- ado_df %>%
+  rename(ID.blind = Blind.ID)
+
+ado_df <- ado_df %>%
+  left_join(juvenile_df %>% dplyr::select(ID.blind, CageID) %>% rename(Dam_cage = CageID), 
+            by = "ID.blind")
+```
+
+### NT
+
+```{r}
+library(readxl)
+Nt_df <- read_excel("D:/Stage_VAEVE_2025/Veave - Analyse NTs_221124-R.xlsx", sheet = "NT-R-stack")
+
+
+```
+
+## Missing data completion
+
+Nonparametric Missing Value Imputation using Random Forest : The function 'missForest' in this package is used to impute missing values particularly in the case of mixed-type data. It uses a random forest trained on the observed values of a data matrix to predict the missing values. It can be used to impute continuous and/or categorical data including complex interactions and non-linear relations. It yields an out-of-bag (OOB) imputation error estimate without the need of a test set or elaborate cross-validation. It can be run in parallel to save computation time.
+
+```{r}
+juvenile_df[] <- lapply(juvenile_df, function(col) {
+  if (is.character(col)) as.factor(col) else col
+})
+
+missing_pct <- colMeans(is.na(juvenile_df)) * 100
+missing_df <- data.frame(Column = names(missing_pct), Missing_Percentage = round(missing_pct, 2))
+kable(missing_df, format = "markdown")
+
+juvenile_df_only[] <- lapply(juvenile_df_only, function(col) {
+  if (is.character(col)) as.factor(col) else col
+})
+
+missing_pct <- colMeans(is.na(juvenile_df_only)) * 100
+missing_df <- data.frame(Column = names(missing_pct), Missing_Percentage = round(missing_pct, 2))
+kable(missing_df, format = "markdown")
+
+process_data <- function(df, df_name = "df") {
+  missing_pct <- colMeans(is.na(df)) * 100
+  
+  to_remove_missing <- names(missing_pct[missing_pct > 30])
+  cat("\n[", df_name, "] Columnas eliminadas por >30% missing:\n", to_remove_missing, "\n")
+  
+  df_clean <- df[, !(names(df) %in% to_remove_missing)]
+  
+  apply_mf <- any(colMeans(is.na(df_clean)) * 100 <= 30)
+  if (apply_mf) {
+    cat("[", df_name, "] Aplicando missForest...\n")
+    
+    # Identificar columnas problemáticas
+    too_many_levels <- sapply(df_clean, function(col) is.factor(col) && nlevels(col) > 53)
+    problematic_cols <- names(df_clean)[too_many_levels]
+    
+    # Separar columnas a excluir temporalmente
+    df_problematic <- df_clean[, problematic_cols, drop = FALSE]
+    df_for_imputation <- df_clean[, !too_many_levels, drop = FALSE]
+    
+    # Aplicar missForest
+    imputed_result <- missForest(df_for_imputation)
+    df_imputed <- imputed_result$ximp
+    
+    # Volver a unir las columnas problemáticas (en el orden original)
+    df_final <- df[, names(df) %in% colnames(df_imputed) | names(df) %in% problematic_cols]
+    df_final[names(df_imputed)] <- df_imputed
+    df_final[problematic_cols] <- df_problematic
+  } else {
+    df_final <- df_clean
+  }
+  
+  return(df_final)
+}
+
+juvenile_all_completed  <- process_data(juvenile_df, "juvenile_df")
+juvenile_unic_completed <- process_data(juvenile_df_only, "juvenile_df_only")
+```
+
+# Functions creation
+
+## Maternal analysis
+
+### CONT vs LBN boxplot
+
+```{r}
+
+plot_behavior_boxplot <- function(df, title, y_label, base_colors, value_column) {
+  # Count individuals per group
+  group_counts <- df %>%
+    group_by(Group) %>%
+    summarise(n = n(), .groups = "drop")
+  
+  # Create enriched group labels with n
+  df <- df %>%
+    mutate(Group_n = paste0(Group, " (n = ", group_counts$n[match(Group, group_counts$Group)], ")")) %>%
+    mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+
+  # Generate color mapping with enriched labels
+  colors <- setNames(base_colors[as.character(group_counts$Group)], 
+                     paste0(group_counts$Group, " (n = ", group_counts$n, ")"))
+
+  # Compute y-axis limits
+  ymin <- min(df[[value_column]], na.rm = TRUE)
+  ymax <- max(df[[value_column]], na.rm = TRUE)
+  range <- ymax - ymin
+  padding <- range / 2
+
+  lower_limit <- max(0, ymin - padding)
+  upper_limit <- ymax + padding
+
+  comparisons <- list(levels(df$Group_n))
+
+  # Plot
+  p <- ggplot(df, aes(x = Group_n, y = .data[[value_column]], fill = Group_n)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(
+      shape = 21,
+      size = 2,
+      stroke = 0.3,
+      color = "black",
+      position = position_jitter(width = 0.15)
+    ) +
+    stat_compare_means(
+      comparisons = comparisons,
+      method = "wilcox.test",
+      label = "p",
+      label.y = upper_limit,
+      bracket.size = 0.8,
+      tip.length = 0.02
+    ) +
+    labs(
+      title = title,
+      y = y_label,
+      x = "Group",
+      fill = "Groups :"
+    ) +
+    scale_y_continuous(limits = c(lower_limit, upper_limit + range * 0.1)) +
+    scale_fill_manual(values = colors) +
+    theme_minimal() +
+    theme(panel.grid = element_blank())
+
+  return(p)
+}
+
+```
+
+### CONT vs LBN day by day evolution boxplots
+
+```{r}
+
+
+plot_duration_ratio_with_wilcox <- function(df, y_var, title, y_label, colors) {
+  y_var_sym <- sym(y_var)
+
+  # 1. Wilcoxon test between consecutive days
+  wilcox_consecutive_days <- function(subdf) {
+    jours <- sort(unique(subdf$Day))
+    results <- data.frame(Day1 = integer(), Day2 = integer(), p_value = numeric(), stringsAsFactors = FALSE)
+
+    for (i in seq_along(jours)[-length(jours)]) {
+      d1 <- jours[i]
+      d2 <- jours[i + 1]
+      vals1 <- subdf %>% filter(Day == d1) %>% pull(!!y_var_sym)
+      vals2 <- subdf %>% filter(Day == d2) %>% pull(!!y_var_sym)
+
+      p_val <- if (length(vals1) > 0 & length(vals2) > 0) {
+        wilcox.test(vals1, vals2, paired = FALSE)$p.value
+      } else {
+        NA
+      }
+
+      results <- rbind(results, data.frame(Day1 = d1, Day2 = d2, p_value = p_val))
+    }
+    return(results)
+  }
+
+  # 2. Wilcoxon results per group
+  results_all <- bind_rows(
+    df %>% filter(Group == "LBN") %>% wilcox_consecutive_days() %>% mutate(Group = "LBN"),
+    df %>% filter(Group == "CONT") %>% wilcox_consecutive_days() %>% mutate(Group = "CONT")
+  ) %>%
+    filter(!is.na(p_value)) %>%
+    mutate(xstart = Day1, xend = Day2)
+
+  # 3. Combine results across groups
+  y_vals <- pull(df, !!y_var_sym)
+  joint_results <- results_all %>%
+    group_by(Day1, Day2) %>%
+    summarise(
+      xstart = first(xstart),
+      xend = first(xend),
+      p_LBN = first(p_value[Group == "LBN"]),
+      p_CONT = first(p_value[Group == "CONT"]),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      y = max(y_vals, na.rm = TRUE) + 0.03 * diff(range(y_vals, na.rm = TRUE)),
+      label = paste0(
+        "<span style='color:", colors["LBN"], ";'>p(LBN) = ", signif(p_LBN, 3), "</span><br>",
+        "<span style='color:", colors["CONT"], ";'>p(CONT) = ", signif(p_CONT, 3), "</span>"
+      )
+    )
+
+  # 4. Y-axis limits
+  ymin <- min(y_vals, na.rm = TRUE)
+  ymax <- max(y_vals, na.rm = TRUE)
+  range_val <- ymax - ymin
+  lower_limit <- max(0, ymin - range_val / 2)
+  upper_limit <- ymax + range_val / 2 + 0.2 * range_val
+
+  # 5. ANOVA
+  df_for_aov <- df %>% mutate(y_temp = !!y_var_sym)
+  p_anova <- summary(aov(y_temp ~ Group, data = df_for_aov))[[1]][["Pr(>F)"]][1]
+
+  # 6. Group labels
+  group_counts <- df %>% group_by(Group) %>% summarise(n = n(), .groups = "drop")
+  df <- df %>%
+    mutate(Group_n = paste0(Group, " (n = ", group_counts$n[match(Group, group_counts$Group)], ")")) %>%
+    mutate(Group_n = factor(Group_n, levels = unique(Group_n)))
+  colors_named <- setNames(
+    colors[as.character(group_counts$Group)],
+    paste0(group_counts$Group, " (n = ", group_counts$n, ")")
+  )
+
+  # 7. Plot
+  p <- ggplot(df, aes(x = factor(Day), y = !!y_var_sym, fill = Group_n)) +
+    geom_boxplot(position = position_dodge(0.8), alpha = 0.6, width = 0.6, outlier.shape = NA) +
+    geom_jitter(
+      shape = 21,
+      size = 2,
+      stroke = 0.3,
+      color = "black",
+      position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.8)
+    ) +
+    scale_fill_manual(values = colors_named) +
+    coord_cartesian(ylim = c(lower_limit - 0.2 * range_val, upper_limit)) +
+    labs(
+      title = paste0(title, "\nGlobal ANOVA: p = ", signif(p_anova, 3)),
+      x = "Day",
+      y = y_label
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(panel.grid = element_blank(), legend.position = "bottom")
+
+  # 8. Add p-value annotations
+  p <- p +
+    geom_segment(data = joint_results,
+                 aes(x = xstart + 0.1, xend = xend - 0.1, y = y, yend = y),
+                 inherit.aes = FALSE, size = 0.5) +
+    geom_segment(data = joint_results,
+                 aes(x = xstart + 0.1, xend = xstart + 0.1, y = y - 0.02 * range_val, yend = y),
+                 inherit.aes = FALSE, size = 0.5) +
+    geom_segment(data = joint_results,
+                 aes(x = xend - 0.1, xend = xend - 0.1, y = y - 0.02 * range_val, yend = y),
+                 inherit.aes = FALSE, size = 0.5) +
+    ggtext::geom_richtext(data = joint_results,
+                          aes(x = (xstart + xend)/2, y = y + 0.15 * range_val, label = label),
+                          fill = NA, label.color = NA, size = 3, inherit.aes = FALSE)
+
+  return(p)
+}
+
+```
+
+### PCA
+
+```{r}
+
+analyser_clusters_pca_mat <- function(df_all_corrected, vars_interes, nombreDimensions = 2, k = 3) {
+  
+  # Vérifications des colonnes nécessaires
+  required_cols <- c("Cage.ID", "Group")
+  missing_cols <- setdiff(required_cols, colnames(df_all_corrected))
+  if (length(missing_cols) > 0) {
+    stop(paste("Colonnes manquantes :", paste(missing_cols, collapse = ", ")))
+  }
+  
+  # Vérification que les vars_interes existent
+  vars_interes <- intersect(vars_interes, colnames(df_all_corrected))
+  if (length(vars_interes) == 0) {
+    stop("Aucune variable d'intérêt trouvée dans le dataframe.")
+  }
+
+  df_all_corrected <- df_all_corrected %>%
+    mutate(Cage.ID = as.factor(Cage.ID)) %>%
+    dplyr::select(Cage.ID, Group, all_of(vars_interes)) %>%
+    na.omit()
+  
+  # Sélection des variables numériques
+  df_numeric <- df_all_corrected %>%
+    dplyr::select(where(is.numeric), -Cage.ID)
+  
+  # Suppression des colonnes avec variance nulle
+  variance_zero <- sapply(df_numeric, function(x) var(x) == 0)
+  if (any(variance_zero)) {
+    cat("Colonnes avec variance nulle supprimées :", names(variance_zero)[variance_zero], "\n")
+    df_numeric <- df_numeric[, !variance_zero, drop = FALSE]
+  }
+  
+  if (ncol(df_numeric) < nombreDimensions) {
+    stop("Pas assez de variables numériques pour réaliser la PCA avec ", nombreDimensions, " dimensions.")
+  }
+  
+  # PCA
+  pca_res <- FactoMineR::PCA(df_numeric, scale.unit = TRUE, graph = FALSE)
+
+  # Biplot (facultatif)
+  print(factoextra::fviz_pca_biplot(pca_res,
+                                    label = "var",
+                                    habillage = df_all_corrected$Cage.ID,
+                                    addEllipses = FALSE,
+                                    repel = TRUE,
+                                    geom.ind = "point"))
+  
+  # Scores PCA
+  df_scores <- as.data.frame(pca_res$ind$coord[, 1:nombreDimensions])
+  colnames(df_scores) <- paste0("Dim.", 1:nombreDimensions)
+  df_scores$Cage.ID <- df_all_corrected$Cage.ID
+  
+  # Clustering hiérarchique
+  hc <- hclust(dist(df_scores[, 1:nombreDimensions]), method = "ward.D2")
+  plot(hc, main = "Dendrogramme clustering sur composantes principales")
+  
+  # Clustering dynamique ou k fixe
+  if (k == -1) {
+    diss_matrix <- as.matrix(dist(df_scores[, 1:nombreDimensions]))
+    clusters <- cutreeDynamic(dendro = hc, distM = diss_matrix, method = "tree", deepSplit = 2)
+    message("Clustering automatique avec cutreeDynamic()")
+  } else {
+    clusters <- cutree(hc, k = k)
+    message(paste("Clustering avec k =", k))
+  }
+  
+  # Construction du dendrogramme coloré
+  library(dendextend)
+  library(RColorBrewer)
+  
+  dend <- as.dendrogram(hc)
+  ordered_clusters <- clusters[order.dendrogram(dend)]
+  
+  cluster_colors <- RColorBrewer::brewer.pal(max(3, length(unique(clusters))), "Set2")
+  cluster_color_map <- setNames(cluster_colors, sort(unique(clusters)))
+  branch_colors <- cluster_color_map[as.character(ordered_clusters)]
+  
+  dend <- color_branches(dend, k = length(unique(clusters)), col = cluster_colors)
+  dend <- set(dend, "branches_lwd", 3)
+  dend <- set(dend, "labels", as.character(ordered_clusters))
+  dend <- set(dend, "labels_col", branch_colors)
+  dend <- set(dend, "labels_cex", 1.2)
+  
+  plot(dend, main = "Dendrogramme avec couleurs et étiquettes de cluster")
+  legend("topright", legend = paste("Cluster", sort(unique(clusters))),
+         fill = cluster_colors, border = NA, bty = "n")
+  
+  # Ajouter cluster
+  df_scores$cluster <- factor(clusters)
+  
+  # Ajout du groupe
+  df_scores <- df_scores %>%
+    left_join(df_all_corrected %>% distinct(Cage.ID, Group), by = "Cage.ID")
+  
+  # Plot des clusters sur PCA
+  p_cluster <- ggplot(df_scores, aes(x = Dim.1, y = Dim.2, color = cluster, shape = Group)) +
+    geom_point(size = 3, alpha = 0.8) +
+    geom_text_repel(aes(label = Cage.ID), size = 3) +
+    scale_shape_manual(values = c("LBN" = 16, "CONT" = 15)) +
+    labs(title = "Clusters sur composantes principales",
+         color = "Cluster",
+         shape = "Group") +
+    theme_minimal() +
+    theme(panel.grid = element_blank())
+  print(p_cluster)
+  
+  # Proportions par cage
+  proportions <- df_scores %>%
+    group_by(Cage.ID, cluster) %>%
+    summarise(nb_obs = n(), .groups = 'drop') %>%
+    group_by(Cage.ID) %>%
+    mutate(
+      total_obs = sum(nb_obs),
+      prop_cluster = nb_obs / total_obs
+    ) %>%
+    arrange(Cage.ID, desc(prop_cluster)) %>%
+    left_join(df_scores %>% distinct(Cage.ID, Group), by = "Cage.ID")
+  
+  dominant_clusters <- proportions %>%
+    slice_max(prop_cluster, n = 1) %>%
+    arrange(cluster, desc(prop_cluster))
+  
+  print(dominant_clusters, n = 100)
+  
+  return(list(
+    pca = pca_res,
+    clusters = df_scores,
+    proportions = dominant_clusters
+  ))
+}
+
+```
+
+### Random forest
+
+```{r}
+
+cluster_rf_analysis_mat <- function(data_df, 
+                                    k = NULL,             # Nombre de clusters (NULL = auto)
+                                    deepSplit = 2,        # Pour cutreeDynamic
+                                    plot_heatmap = TRUE) {
+
+  # Étape 1 : Ajouter un identifiant de ligne pour suivi
+  data_df <- data_df %>%
+    mutate(row_id = row_number())
+
+  # Étape 2 : Extraire les métadonnées (Cage.ID, Group) + row_id
+  meta <- data_df %>%
+    dplyr::select(Cage.ID, Group, row_id)
+
+  # Étape 3 : Extraire données numériques avec row_id
+  numeric_data <- data_df %>%
+    dplyr::select(row_id, where(is.numeric))
+
+  # Étape 4 : Joindre les métadonnées aux données numériques
+  data <- inner_join(numeric_data, meta, by = "row_id") %>%
+    dplyr::select(-row_id) %>%
+    na.omit()
+
+  # Étape 5 : Vérification du nombre d’observations
+  if (nrow(data) < 3) {
+    stop("Pas assez de données après suppression des NA pour effectuer l’analyse.")
+  }
+
+  # Étape 6 : Suppression des colonnes à variance nulle
+  numeric_data <- data %>% dplyr::select(where(is.numeric))
+  zero_var_cols <- sapply(numeric_data, function(x) var(x, na.rm = TRUE) == 0)
+  if (any(zero_var_cols)) {
+    cat("Colonnes à variance nulle supprimées :", names(zero_var_cols)[zero_var_cols], "\n")
+    numeric_data <- numeric_data[, !zero_var_cols]
+  }
+
+  # Étape 7 : Random Forest non supervisé
+  rf_model <- randomForest(x = numeric_data, proximity = TRUE, ntree = 500)
+
+  # Matrice de dissimilarité propre
+  prox <- rf_model$proximity
+  diss_matrix <- 1 - prox
+  
+  # S'assurer qu'elle est symétrique et diagonale = 0
+  diss_matrix[lower.tri(diss_matrix)] <- t(diss_matrix)[lower.tri(diss_matrix)]
+  diag(diss_matrix) <- 0
+  
+  # Vérification finale
+  if (any(!is.finite(diss_matrix))) stop("Dissimilarity matrix has NA/NaN/Inf")
+  if (!isSymmetric(diss_matrix)) stop("Dissimilarity matrix is not symmetric")
+
+  
+  print(dim(rf_model$proximity))
+  print(sum(is.na(rf_model$proximity)))
+  print(summary(as.vector(rf_model$proximity)))
+  
+
+  # Étape 9 : Clustering hiérarchique
+  hc <- hclust(as.dist(diss_matrix), method = "ward.D2")
+
+  # Étape 10 : Découpage en clusters
+  if (is.null(k)) {
+    clusters <- cutreeDynamic(dendro = hc, distM = diss_matrix, method = "tree", deepSplit = deepSplit)
+  } else {
+    clusters <- cutree(hc, k = k)
+  }
+
+  # Étape 11 : Dendrogramme
+  dend <- as.dendrogram(hc)
+  dend <- color_branches(dend, k = length(unique(clusters)))
+  dend <- set(dend, "branches_lwd", 2)
+  plot(dend, main = "Dendrogramme Random Forest")
+
+  # Étape 12 : PCA + visualisation
+  pca <- prcomp(numeric_data, scale. = TRUE)
+  pca_df <- as.data.frame(pca$x[, 1:2])
+  colnames(pca_df) <- c("PC1", "PC2")
+  pca_df$cluster <- as.factor(clusters)
+  pca_df$CageID <- data$CageID
+  pca_df$Group <- data$Group
+
+  p <- ggplot(pca_df, aes(x = PC1, y = PC2, color = cluster, shape = Group)) +
+    geom_point(size = 3, alpha = 0.8) +
+    geom_text_repel(aes(label = CageID), size = 3) +
+    labs(title = "Clusters via Random Forest + PCA") +
+    theme_minimal()
+  print(p)
+
+  # Étape 13 : Résumé par cage
+  df_scores <- pca_df %>%
+    dplyr::select(CageID, Group, cluster)
+
+  proportions <- df_scores %>%
+    group_by(CageID, cluster) %>%
+    summarise(nb_obs = n(), .groups = 'drop') %>%
+    group_by(CageID) %>%
+    mutate(
+      total_obs = sum(nb_obs),
+      prop_cluster = nb_obs / total_obs
+    ) %>%
+    arrange(CageID, desc(prop_cluster)) %>%
+    left_join(df_scores %>% distinct(CageID, Group), by = "CageID")
+
+  dominant_clusters <- proportions %>%
+    slice_max(prop_cluster, n = 1) %>%
+    arrange(cluster, desc(prop_cluster))
+  print(dominant_clusters, n = 100)
+
+  # Étape 14 : Heatmap
+  if (plot_heatmap) {
+    df <- data_df %>%
+      dplyr::select(CageID, Group, where(is.numeric)) %>%
+      na.omit()
+
+    df_cage_mean <- df %>%
+      group_by(CageID, Group) %>%
+      summarise(across(where(is.numeric), mean, na.rm = TRUE)) %>%
+      ungroup()
+
+    mat_scaled <- df_cage_mean %>%
+      column_to_rownames("CageID") %>%
+      dplyr::select(-Group) %>%
+      scale()
+
+    annotation <- df_cage_mean %>%
+      dplyr::select(CageID, Group) %>%
+      column_to_rownames("CageID")
+
+    pheatmap(t(mat_scaled),
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         annotation_col = annotation,
+         annotation_colors = list(Group = c("LBN" = "#E69F00", "CONT" = "#56B4E9")),
+         main = "Expression moyenne par cage (variables en colonnes)",
+         fontsize_col = 10)
+  }
+
+  return(list(
+    rf_model = rf_model,
+    diss_matrix = diss_matrix,
+    hc = hc,
+    clusters = clusters,
+    pca_df = pca_df,
+    dominant_clusters = dominant_clusters
+  ))
+}
+
+
+```
+
+## Pup's analysis
+
+### CONT vs LBN Box-plot
+
+```{r}
+plot_variable_box <- function(df, df_condition, var_name, fill_colors, y_label) {
+  # Convert var_name to symbol for tidy evaluation
+  var_sym <- sym(var_name)
+
+  # 1. Filter relevant data
+  df_stat <- df %>%
+    filter(Condition %in% names(fill_colors)) %>%
+    dplyr::select(Condition, !!var_sym, CageID) %>%
+    filter(!is.na(!!var_sym))
+
+  # 2. Get adjusted p-value
+  p_val <- df_condition %>%
+    filter(Variable == var_name, Modele == "Modèle_1") %>%
+    pull(P_adj_global)%>%
+    first()
+
+  # 3. Format p-value for display
+  p_label <- paste0("p = ", formatC(p_val, format = "e", digits = 2))
+
+  # 4. Define y-axis limits and annotation positions
+  upper_limit <- max(pull(df_stat, !!var_sym), na.rm = TRUE) * 1.2
+  lower_limit <- min(pull(df_stat, !!var_sym), na.rm = TRUE) * 0.8
+  ylim_max <- upper_limit * 1.2
+  bracket_y <- upper_limit * 1.1
+  text_y <- upper_limit * 1.13
+
+  # 5. Generate plot
+  p <- ggplot(df_stat, aes(x = Condition, y = !!var_sym, fill = Condition)) +
+    geom_boxplot(outlier.shape = NA, width = 0.5) +
+    geom_jitter(size = 2, width = 0.15, shape = 21, stroke = 0.3, color = "black") +
+
+    # Bracket
+    geom_segment(aes(x = 1, xend = 2, y = bracket_y, yend = bracket_y), size = 0.8) +
+    geom_segment(aes(x = 1, xend = 1, y = bracket_y * 0.98, yend = bracket_y), size = 0.8) +
+    geom_segment(aes(x = 2, xend = 2, y = bracket_y * 0.98, yend = bracket_y), size = 0.8) +
+
+    # P-value annotation
+    annotate("label",
+             x = 1.5, y = text_y,
+             label = p_label, size = 5,
+             fill = "white", alpha = 0.8, label.size = NA) +
+
+    scale_fill_manual(values = fill_colors) +
+    scale_y_continuous(limits = c(lower_limit, ylim_max)) +
+    labs(
+      title = var_name,
+      x = "Group",
+      y = y_label,
+      fill = "Group"
+    ) +
+    theme_minimal() +
+    theme(panel.grid = element_blank())
+
+  return(p)
+}
+```
+
+### PCA
+
+```{r}
+
+analyser_clusters_pca <- function(df_all_corrected, vars_interes, nombreDimensions = 2, k = 3) {
+
+  # Vérifications de colonnes nécessaires
+  required_cols <- c("PupID", "CageID", "Condition")
+  missing_cols <- setdiff(required_cols, colnames(df_all_corrected))
+
+  if (length(missing_cols) > 0) {
+    stop(paste("Colonnes manquantes :", paste(missing_cols, collapse = ", ")))
+  }
+
+  # Vérification que les vars_interes existent dans le dataframe
+  vars_interes <- intersect(vars_interes, colnames(df_all_corrected))
+
+  df_all_corrected <- df_all_corrected %>%
+    mutate(CageID = as.factor(CageID)) %>%
+    dplyr::select(PupID, CageID, Condition, all_of(vars_interes)) %>%
+    na.omit()
+
+  # Sélection des variables numériques
+  df_numeric <- df_all_corrected %>%
+    dplyr::select(where(is.numeric), -CageID)
+
+  # Suppression des colonnes avec variance nulle
+  variance_zero <- sapply(df_numeric, function(x) var(x) == 0)
+  if (any(variance_zero)) {
+    cat("Colonnes avec variance nulle supprimées :", names(variance_zero)[variance_zero], "\n")
+    df_numeric <- df_numeric[, !variance_zero]
+  }
+
+  # PCA
+  pca_res <- PCA(df_numeric, scale.unit = TRUE, graph = FALSE)
+
+  # Biplot avec habillage par CageID
+  print(fviz_pca_biplot(pca_res,
+                        label = "var",
+                        habillage = df_all_corrected$CageID,
+                        addEllipses = FALSE,
+                        repel = TRUE,
+                        geom.ind = "point"))
+
+  summary(pca_res)
+
+  # Extraction des coordonnées pour clustering
+  df_scores <- as.data.frame(pca_res$ind$coord[, 1:nombreDimensions])
+  df_scores$CageID <- df_all_corrected$CageID
+  df_scores$PupID <- df_all_corrected$PupID
+
+  # Clustering hiérarchique
+  hc <- hclust(dist(df_scores[, 1:nombreDimensions]), method = "ward.D2")
+  plot(hc, main = "Dendrogramme clustering sur PC1-PC2")
+
+  # Clustering dynamique ou fixe selon la valeur de k
+  if (k == -1) {
+    diss_matrix <- as.matrix(dist(df_scores[, 1:nombreDimensions]))
+    clusters <- cutreeDynamic(dendro = hc, distM = diss_matrix, method = "tree", deepSplit = 2)
+    message("Clustering automatique avec cutreeDynamic()")
+  } else {
+    clusters <- cutree(hc, k = k)
+    message(paste("Clustering avec k =", k))
+  }
+  
+  dend <- as.dendrogram(hc)
+  ordered_clusters <- clusters[order.dendrogram(dend)]
+  
+  # Colores distintos para cada cluster
+  cluster_colors <- RColorBrewer::brewer.pal(length(unique(clusters)), "Set2")
+  
+  # Asignar colores a cada cluster
+  cluster_color_map <- setNames(cluster_colors, sort(unique(clusters)))
+  branch_colors <- cluster_color_map[as.character(ordered_clusters)]
+  
+  # Colorear ramas y etiquetas
+  dend <- color_branches(dend, k = length(unique(clusters)), col = cluster_colors)
+  dend <- set(dend, "branches_lwd", 3)
+  dend <- set(dend, "labels", as.character(ordered_clusters))  # Etiquetas = cluster
+  dend <- set(dend, "labels_col", branch_colors)
+  dend <- set(dend, "labels_cex", 1.2)
+  
+  # Plot
+  plot(dend, main = "Dendrograma con ramas coloreadas y número de cluster")
+  legend("topright", legend = paste("Cluster", sort(unique(clusters))),
+         fill = cluster_colors, border = NA, bty = "n")
+
+
+  df_scores$cluster <- factor(clusters)
+
+  # Ajout des métadonnées (Condition)
+  df_scores <- df_scores %>%
+    left_join(df_all_corrected %>% distinct(CageID, Condition), by = "CageID")
+
+  # Affichage du clustering sur PCA
+  p_cluster <- ggplot(df_scores, aes(x = Dim.1, y = Dim.2, color = cluster, shape = Condition)) +
+    geom_point(size = 3, alpha = 0.8) +
+    geom_text_repel(aes(label = CageID), size = 3) +
+    scale_shape_manual(values = c("LBN" = 16, "CONT" = 15)) +
+    labs(title = "Clusters sur composantes principales",
+         color = "Cluster",
+         shape = "Condition") +
+    theme_minimal() +
+    theme(panel.grid = element_blank())
+  print(p_cluster)
+
+  # Calcul des proportions des clusters par cage
+  proportions <- df_scores %>%
+    group_by(CageID, cluster) %>%
+    summarise(nb_obs = n(), .groups = 'drop') %>%
+    group_by(CageID) %>%
+    mutate(
+      total_obs = sum(nb_obs),
+      prop_cluster = nb_obs / total_obs
+    ) %>%
+    arrange(CageID, desc(prop_cluster)) %>%
+    left_join(df_scores %>% distinct(CageID, Condition), by = "CageID")
+
+  # Résumé final : cluster dominant par cage
+  dominant_clusters <- proportions %>%
+    slice_max(prop_cluster, n = 1) %>%
+    arrange(cluster, desc(prop_cluster))
+
+  print(dominant_clusters, n = 100)
+
+  return(list(
+    pca = pca_res,
+    clusters = df_scores,
+    proportions = dominant_clusters
+  ))
+}
+
+
+```
+
+### Random forest
+
+```{r}
+
+cluster_rf_analysis <- function(data_df, vars_interes, k = NULL,deepSplit = 2, plot_heatmap = TRUE) {
+  
+  vars_interes <- intersect(vars_interes, colnames(data_df))
+    data_df <- data_df %>%
+    mutate(CageID = as.factor(CageID)) %>%
+    dplyr::select(PupID, CageID, Condition, all_of(vars_interes)) %>%
+    na.omit()
+  
+  # Selección de variables numéricas y quitar NAs
+  data <- data_df %>%
+    dplyr::select(where(is.numeric)) %>%
+    na.omit()
+  
+  # Eliminar columnas con varianza cero
+  zero_var_cols <- sapply(data, function(x) var(x) == 0)
+  if (any(zero_var_cols)) {
+    cat("Eliminando columnas con varianza cero:", names(zero_var_cols)[zero_var_cols], "\n")
+    data <- data[, !zero_var_cols]
+  }
+
+  # Entrenamiento Random Forest no supervisado
+  rf_model <- randomForest(x = data, proximity = TRUE, ntree = 500)
+  
+  # Matriz de disimilitud
+  diss_matrix <- 1 - rf_model$proximity
+  
+  # Clustering jerárquico
+  hc <- hclust(as.dist(diss_matrix), method = "ward.D2")
+  
+  dend <- as.dendrogram(hc)
+  dend <- color_branches(dend, clusters = clusters)
+  
+  plot(dend, main = "Dendrograma coloreado según clusters")
+
+  
+  # Elección clusters
+  if (is.null(k)) {
+    # Clustering automático con cutreeDynamic
+    clusters <- cutreeDynamic(dendro = hc, distM = diss_matrix, method = "tree", deepSplit = deepSplit)
+  } else {
+    # Clustering con k clusters
+    clusters <- cutree(hc, k = k)
+  }
+  
+  # PCA para visualización
+  pca <- prcomp(data, scale. = TRUE)
+  pca_df <- as.data.frame(pca$x[, 1:2])
+  pca_df$cluster <- as.factor(clusters)
+  
+  # Añadir metadata (asumiendo que data_df tiene PupID, Cage.ID, Group y que filas coinciden)
+  print(colnames(data_df))
+
+  rows_kept <- as.numeric(rownames(pca_df))
+  meta <- data_df[rows_kept, c("PupID", "CageID", "Condition")]
+  pca_df <- cbind(pca_df, meta)
+  
+  # Plot PCA + clusters
+  p <- ggplot(pca_df, aes(PC1, PC2, color = cluster, shape = Condition)) +
+    geom_point(size = 3, alpha = 0.8) +
+    geom_text_repel(aes(label = CageID), size = 3) +
+    labs(title = "Clusters via Random Forest + PCA") +
+    theme_minimal()
+  print(p)
+  
+  # Cálculo de proporciones de clusters por Cage.ID
+  df_scores <- data_df %>%
+    mutate(cluster = as.factor(clusters)) %>%
+    dplyr::select(PupID, CageID, Condition, cluster) %>%
+    na.omit()
+  
+  proportions <- df_scores %>%
+    group_by(CageID, cluster) %>%
+    summarise(nb_obs = n(), .groups = 'drop') %>%
+    group_by(CageID) %>%
+    mutate(
+      total_obs = sum(nb_obs),
+      prop_cluster = nb_obs / total_obs
+    ) %>%
+    arrange(CageID, desc(prop_cluster)) %>%
+    left_join(df_scores %>% distinct(CageID, Condition), by = "CageID")
+  
+  # Cluster dominante por cage
+  dominant_clusters <- proportions %>%
+    slice_max(prop_cluster, n = 1) %>%
+    arrange(cluster, desc(prop_cluster))
+  
+  print(dominant_clusters, n = 100)
+  
+  # Opcional: heatmap con promedio por cage y condición
+  if (plot_heatmap) {
+    df <- data_df %>%
+      dplyr::select(PupID, CageID, Condition, where(is.numeric)) %>%
+      na.omit()
+    
+    df_cage_mean <- df %>%
+      group_by(CageID, Condition) %>%
+      summarise(across(where(is.numeric), mean, na.rm = TRUE)) %>%
+      ungroup()
+    
+    mat_scaled <- df_cage_mean %>%
+      column_to_rownames("CageID") %>%
+      dplyr::select(-Condition) %>%
+      scale()
+    
+    annotation <- df_cage_mean %>%
+      dplyr::select(CageID, Condition) %>%
+      column_to_rownames("CageID")
+    
+    pheatmap(t(mat_scaled),
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         annotation_col = annotation,
+         annotation_colors = list(Group = c("LBN" = "#E69F00", "CONT" = "#56B4E9")),
+         main = "Expression moyenne par cage (variables en colonnes)",
+         fontsize_col = 10)
+
+  }
+  
+  return(list(
+    rf_model = rf_model,
+    diss_matrix = diss_matrix,
+    hc = hc,
+    clusters = clusters,
+    pca_df = pca_df,
+    dominant_clusters = dominant_clusters
+  ))
+}
+
+```
+
+# Maternal analysis
+
+## Direct condition comparision
+
+```{r}
+summary_cage <- maternal_df %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Onnest_duration_mean = mean(Onnest_bouts, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+plot_behavior_boxplot(
+  df = summary_cage,
+  title = "On nest bouts",
+  y_label = "Mean of 'On nest' bouts in a 60-second video",
+  base_colors = c("LBN" = "#298c8c", "CONT" = "#800074"),
+  value_column = "Onnest_duration_mean"
+)
+
+summary_cage <- maternal_df %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Onnest_duration_mean = mean(Onnest_duration, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+plot_behavior_boxplot(
+  df = summary_cage,
+  title = "On nest duration",
+  y_label = "Mean of 'On nest' duration in a 60-second video",
+  base_colors = c("LBN" = "#298c8c", "CONT" = "#800074"),
+  value_column = "Onnest_duration_mean"
+)
+
+summary_cage <- maternal_df %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Onnest_duration_mean = mean(Onnest_duration, na.rm = TRUE),
+    Offnest_duration_mean = mean(Offnest_duration, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  # Calcul des différences (Onnest - Offnest)
+  mutate(
+    duration_mean_diff = Onnest_duration_mean / Offnest_duration_mean
+  )
+
+plot_behavior_boxplot(
+  df = summary_cage,
+  title = "On / off nest ratio duration",
+  y_label = "Ratio of on/off nest durations in a 60-second video",
+  base_colors = c("LBN" = "#298c8c", "CONT" = "#800074"),
+  value_column = "duration_mean_diff"
+)
+
+summary_cage <- maternal_df %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Build_duration_mean = mean(Build_duration, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+plot_behavior_boxplot(
+  df = summary_cage,
+  title = "Build duration",
+  y_label = "Mean of 'Build' duration in a 60-second video",
+  base_colors = c("LBN" = "#298c8c", "CONT" = "#800074"),
+  value_column = "Build_duration_mean"
+)
+
+summary_cage <- maternal_df %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Eat_drink_duration_mean = mean(Eat_drink_duration, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+plot_behavior_boxplot(
+  df = summary_cage,
+  title = "Eating and drinking duration",
+  y_label = "Mean of 'Eating / drinking' duration in a 60-second video",
+  base_colors = c("LBN" = "#298c8c", "CONT" = "#800074"),
+  value_column = "Eat_drink_duration_mean"
+)
+
+summary_cage <- maternal_df %>%
+  group_by(`Cage.ID`, Group) %>%
+  summarise(
+    Eat_drink_duration_mean = mean(Eat_drink_bouts, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+plot_behavior_boxplot(
+  df = summary_cage,
+  title = "Eating and drinking bouts",
+  y_label = "Mean of 'Eating / drinking' bouts in a 60-second video",
+  base_colors = c("LBN" = "#298c8c", "CONT" = "#800074"),
+  value_column = "Eat_drink_duration_mean"
+)
+
+```
+
+## Daily evolution
+
+### On nest / off nest ratio evolution
+
+```{r}
+summary_cage_diff <- maternal_df %>%
+  group_by(`Cage.ID`, Group, Day) %>%
+  summarise(
+    Onnest_duration_mean = mean(Onnest_duration, na.rm = TRUE),
+    Offnest_duration_mean = mean(Offnest_duration, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    duration_mean_diff = ifelse(Offnest_duration_mean == 0, 0, Onnest_duration_mean / Offnest_duration_mean)
+  )
+
+plot_duration_ratio_with_wilcox(summary_cage_diff, "duration_mean_diff", "Onnest / Offnest duration ratio per day", "Onnest / Offnest ratio in a 60-second video", colors = c("LBN" = "#1a80bb", "CONT" = "#f2c45f"))
+
+```
+
+### Building per day evolution
+
+```{r}
+
+build_summary <- maternal_df %>%
+group_by(Cage.ID, Group, Day) %>%
+summarise(Build_sum = mean(Build_duration, na.rm = TRUE), .groups = "drop")
+
+plot_duration_ratio_with_wilcox(build_summary, "Build_sum", "Build duration per day", "Build meand duration in a 60-second video", colors = c("LBN" = "#1a80bb", "CONT" = "#f2c45f"))
+
+```
+
+### Transitions per day evolution
+
+```{r}
+transition_summary <- maternal_df %>%
+group_by(Cage.ID, Group, Day) %>%
+summarise(Transition = mean(Transition, na.rm = TRUE), .groups = "drop")
+
+plot_duration_ratio_with_wilcox(transition_summary, "Transition", "Transition mean number per day", "Transitions mean duration in a 60-second video", colors = c("LBN" = "#1a80bb", "CONT" = "#f2c45f"))
+
+```
+
+### Changepoint and daily evolution
+
+```{r}
+
+# 1. Filtrer juste le groupe LBN
+LBN_df <- maternal_df %>% filter(Group == "LBN")
+
+# 2. Comportements d’intérêt
+behaviors <- c("Selfgrooming_duration", "Eat_drink_bouts", "Onnest_bouts", 
+               "ABN_bouts", "Carryingpups_bouts", "Build_duration")
+
+# 3. Mise en forme longue (long format)
+LBN_long <- LBN_df %>%
+  dplyr::select(Cage.ID, Day, dplyr::all_of(behaviors)) %>%
+  pivot_longer(cols = dplyr::all_of(behaviors), names_to = "Behavior", values_to = "Bouts")
+
+
+# 4. Renommer les comportements pour lisibilité
+LBN_long$Behavior <- dplyr::recode(
+  LBN_long$Behavior,
+  "Selfgrooming_duration" = "Self Gr. duration",
+  "Eat_drink_bouts" = "Eat/drinki bouts",
+  "Onnest_bouts" = "On nest bouts",
+  "ABN_bouts" = "ABN bouts",
+  "Carryingpups_bouts" = "Carrying bouts",
+  "Build_duration" = "Build duration"
+)
+
+# 8. Couleurs distinctes par comportement
+color_palette <- c(
+  "Self Gr. duration" = "#66c2a5",
+  "Eat/drinki bouts" = "#fc8d62",
+  "Transition bouts"   = "#8da0cb",
+  "ABN bouts"           = "#e78ac3",
+  "Carrying bouts" = "#a6d854",
+  "Build duration"         = "#ffd92f"
+)
+
+# 5. Moyenne par cage, jour et comportement
+LBN_cage_means <- LBN_long %>%
+  group_by(Cage.ID, Day, Behavior) %>%
+  summarise(mean_bouts = mean(Bouts, na.rm = TRUE), .groups = "drop")
+
+# 6. Médianes par jour et comportement pour lignes
+medians <- LBN_cage_means %>%
+  group_by(Behavior, Day) %>%
+  summarise(median_bouts = median(mean_bouts, na.rm = TRUE), .groups = "drop")
+
+rupture_points <- medians %>%
+  arrange(Behavior, Day) %>%
+  group_by(Behavior) %>%
+  summarise(
+    change_day = {
+      vec <- median_bouts
+      cp <- cpt.mean(vec, method = "PELT", penalty = "MBIC")
+      if (length(cpts(cp)) > 0) {
+        Day[cpts(cp) + 0.5]
+      } else {
+        NA
+      }
+    },
+    .groups = "drop"
+  ) %>%
+  filter(!is.na(change_day)) %>%
+  mutate(change_day = as.numeric(change_day))
+
+
+slopes <- medians %>%
+  group_by(Behavior) %>%
+  do({
+    model <- lm(median_bouts ~ Day, data = .)
+    p_val <- summary(model)$coefficients["Day", "Pr(>|t|)"]
+    label <- paste0(unique(.$Behavior), " (slope p = ", signif(p_val, 2), ")")
+    tibble(Behavior = unique(.$Behavior), label = label)
+  })
+
+# Joindre cette info à LBN_cage_means et medians
+LBN_cage_means <- LBN_cage_means %>% left_join(slopes, by = "Behavior")
+medians <- medians %>% left_join(slopes, by = "Behavior")
+rupture_points <- rupture_points %>% left_join(slopes, by = "Behavior")
+
+# 9. Graphique final
+ggplot(LBN_cage_means, aes(x = factor(Day), y = mean_bouts, fill = Behavior)) +
+  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
+  geom_jitter(
+    shape = 21,         
+    size = 2,
+    stroke = 0.3,         
+    color = "black",
+    position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.8)
+  ) +
+  geom_line(data = medians, aes(x = factor(Day), y = median_bouts, group = 1), 
+            color = "black", size = 1, inherit.aes = FALSE) +
+  geom_point(data = medians, aes(x = factor(Day), y = median_bouts), 
+             color = "black", size = 1.5, inherit.aes = FALSE) +
+  geom_vline(data = rupture_points, aes(xintercept = change_day), 
+             color = "red", linetype = "dashed", size = 0.65) +
+  facet_wrap(~ label, scales = "free_y") +
+  scale_fill_manual(values = color_palette) +
+  labs(
+    title = "LBN behaviours evolution and changepoint",
+    x = "Day",
+    y = "Mean duration or count per day"
+  ) +
+  theme_minimal() +   theme(     panel.grid = element_blank()    ) +
+  theme(legend.position = "none")
+```
+
+## Clustering
+
+```{r}
+
+maternal_means <- maternal_df %>%
+  group_by(Cage.ID, Group) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE), .groups = "drop")
+
+meta_info <- maternal_df %>%
+  group_by(Cage.ID) %>%
+  summarise(
+    PupID = first(PupID),
+    Group = first(Group),
+    .groups = "drop"
+  )
+
+# 3. Join pour enrichir avec PupID
+maternal_means_full <- maternal_means %>%
+  left_join(meta_info, by = "Cage.ID")
+
+maternal_cleaned <- maternal_means_full %>%
+  mutate(Group = coalesce(Group.x, Group.y)) %>%  # Choisir un seul "Group"
+  group_by(Cage.ID, Group) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE), .groups = "drop")
+
+maternal_cleaned <- maternal_cleaned %>%
+  dplyr::select(-c("Recording_duration", "Day", "Time"))
+
+res_auto <- analyser_clusters_pca_mat(maternal_cleaned, colnames(maternal_cleaned),2, 3)
+```
+
+## VAR
+
+### Model creation
+
+```{r}
+fit_VAR_models <- function(df, 
+                           behav_vars = NULL,
+                           group_by_col = NULL,
+                           frame_col = "Time",
+                           bin_size = NULL,
+                           lag = 1,
+                           auto_lag = FALSE,
+                           lag_max = 10,
+                           verbose = TRUE) {
+  df_proc <- df
+  
+  # Temporal binning si especificado
+  if (!is.null(bin_size)) {
+    df_proc <- df_proc %>%
+      mutate(time_bin = floor(.data[[frame_col]] / bin_size))
+    time_unit <- "time_bin"
+  } else {
+    time_unit <- frame_col
+  }
+  
+  # Seleccionar columnas de comportamiento si no se pasa explícitamente
+  if (is.null(behav_vars)) {
+    vars_to_exclude <- c(frame_col, "time_bin", "Cage", "Start_time", "LBN", 
+                         "Recording_duration", "Sexe", "Group", "ID.blind", 
+                         "PupID", "background", "Cohort", "Project", 
+                         "Nest_exits", "Nest_entry", "Cage.ID", "Date", "Day", "Time", "frame", "cluster", "Condition")
+    behav_vars <- setdiff(colnames(df_proc), vars_to_exclude)
+  }
+  
+  print(behav_vars)
+  if (!is.null(group_by_col) && !(group_by_col %in% colnames(df_proc))) {
+    stop(paste("La columna", group_by_col, "no existe en el data.frame"))
+  }
+  df_proc <- df_proc %>%
+  drop_na(all_of(behav_vars))
+  
+  print(df_proc)
+
+  # Mantener solo una línea por temps et groupe (pré-agrégation)
+  df_unique <- df_proc %>%
+    group_by(across(all_of(c(group_by_col, time_unit)))) %>%
+    summarise(across(all_of(behav_vars), max, na.rm = TRUE), .groups = "drop")
+
+  # Split selon le grouping (ou tout en une fois si NULL)
+  if (!is.null(group_by_col)) {
+    data_groups <- df_unique %>% group_split(.data[[group_by_col]])
+    names(data_groups) <- df_unique %>% pull(group_by_col) %>% unique()
+  } else {
+    data_groups <- list(All = df_unique)
+  }
+  
+  view(data_groups)
+  # Fit des modèles VAR
+  var_models <- imap(data_groups, function(df_g, name) {
+    ts_data <- ts(df_g %>% dplyr::select(all_of(behav_vars)), start = 0, frequency = 1)
+
+    p <- lag
+    if (auto_lag) {
+      if (verbose) cat(glue::glue("[{name}] Sélection du lag optimal...\n"))
+      p <- tryCatch({
+        VARselect(ts_data, lag.max = lag_max, type = "const")$selection["AIC(n)"]
+      }, error = function(e) {
+        warning(glue::glue("Lag auto échoué pour {name}, fallback à p=1"))
+        1
+      })
+    }
+    
+    if (verbose) cat(glue::glue("[{name}] Ajustement VAR avec p={p}...\n"))
+    
+    tryCatch({
+      VAR(ts_data, p = p, type = "const")
+    }, error = function(e) {
+      warning(glue::glue("Échec modèle VAR pour {name} : {e$message}"))
+      NULL
+    })
+  })
+
+  return(var_models)
+}
+```
+
+### Visualization
+
+```{r}
+plot_VAR_graph <- function(var_model, var_name_labels = NULL,
+                           min_width = 1, max_width = 1.5,
+                           edge_col = "#01cb01",
+                           title = "Réseau comportemental VAR (probabilités de transition)") {
+  # Nombre de lags
+  p <- var_model$p
+  
+  # Extraire les matrices A_k
+  coef_matrices <- lapply(1:p, function(k) {
+    sapply(var_model$varresult, function(x) {
+      coefs <- coef(x)
+      start_idx <- 1 + (k - 1) * ncol(var_model$y)
+      end_idx <- start_idx + ncol(var_model$y) - 1
+      coefs[start_idx:end_idx]
+    })
+  })
+  
+  # Convertir en tableau 3D [cible, source, lag]
+  coef_array <- array(unlist(coef_matrices), dim = c(ncol(var_model$y), ncol(var_model$y), p))
+  
+  # Moyenne des A_k (effet moyen entre variables)
+  coef_prom <- apply(coef_array, c(1, 2), mean)
+
+  print(coef_prom)
+
+  
+  # Supprimer les influences négatives
+  coef_prom[coef_prom < 0] <- 0
+  
+  # Transformer en "probabilités de transition"
+  coef_prob <- coef_prom / rowSums(coef_prom)
+  coef_prob[is.na(coef_prob)] <- 0
+  
+  # Normaliser les largeurs d’arêtes
+  edge_width_norm <- (coef_prob - min(coef_prob)) / (max(coef_prob) - min(coef_prob))
+  edge_width_norm <- edge_width_norm * (max_width - min_width) + min_width
+  
+  print(coef_prob)
+  
+  # Étiquettes des nœuds
+  if (is.null(var_name_labels)) {
+    var_name_labels <- colnames(coef_prob)
+  } else {
+    colnames(coef_prob) <- var_name_labels
+    rownames(coef_prob) <- var_name_labels
+  }
+  
+  # Total de aristas posibles (para matriz simétrica)
+  n_edges <- sum(coef_prob != 0 & !is.na(coef_prob))
+  
+  # Tamaño de fuente
+  font_size <- 1
+  
+  # Tamaño del nodo para que quepan las etiquetas
+  max_label_length <- max(nchar(var_name_labels))
+  node_size <- min(9, max_label_length * font_size )
+  
+  # Llamada a qgraph
+  qgraph::qgraph(coef_prob,
+    layout = "circle",
+    directed = TRUE,
+    edge.color = rep(edge_col, sum(coef_prob != 0, na.rm = TRUE)),
+    edge.width = edge_width_norm[coef_prob != 0],
+    labels = var_name_labels,
+    label.cex = 1,
+    label.font = 1.7,                     # Negrita
+    vsize = node_size,                         # Tamaño del nodo
+    #color = adjustcolor("yellow", alpha.f = 0.6),  
+    border.width = 2,
+    border.color = "black",
+    legend = FALSE
+  )
+}
+
+```
+
+### Comparison
+
+```{r}
+
+compare_VAR_models <- function(model_A, model_B, exclude = NULL, plot = TRUE, title = "Diferencias entre coeficientes") {
+  
+  # Función interna para extraer matriz de coeficientes
+  extract_estimate_matrix <- function(var_model) {
+    coef_list <- coef(var_model)
+    var_names <- names(coef_list)
+    pred_names <- rownames(coef_list[[1]])
+    
+    mat <- matrix(NA, nrow = length(pred_names), ncol = length(var_names),
+                  dimnames = list(pred_names, var_names))
+    
+    for (var in var_names) {
+      mat[, var] <- coef_list[[var]][, "Estimate"]
+    }
+    return(mat)
+  }
+
+  # Extraer las matrices
+  A_mat <- extract_estimate_matrix(model_A)
+  B_mat <- extract_estimate_matrix(model_B)
+
+  # Asegurar coincidencia de filas/columnas
+  common_rows <- intersect(rownames(A_mat), rownames(B_mat))
+  common_cols <- intersect(colnames(A_mat), colnames(B_mat))
+  
+  A_common <- A_mat[common_rows, common_cols, drop = FALSE]
+  B_common <- B_mat[common_rows, common_cols, drop = FALSE]
+  
+  # Matriz de diferencias
+  diff_mat <- A_common - B_common
+
+  # Excluir comportamientos si se pide
+  if (!is.null(exclude)) {
+    exclude_lags <- paste0(exclude, ".l1")
+    diff_mat <- diff_mat[
+      !(rownames(diff_mat) %in% exclude_lags) & rownames(diff_mat) != "const",
+      !(colnames(diff_mat) %in% exclude),
+      drop = FALSE
+    ]
+  }
+
+  # Filtrar para qgraph: variables presentes en filas y columnas
+  row_vars <- gsub(".l1", "", rownames(diff_mat))
+  col_vars <- colnames(diff_mat)
+  valid_vars <- intersect(row_vars, col_vars)
+
+  diff_filtered <- diff_mat[paste0(valid_vars, ".l1"), valid_vars, drop = FALSE]
+  
+  print(diff_filtered)
+  # Graficar si se desea
+  if (plot) {
+    qgraph::qgraph(diff_filtered,
+           layout = "circle",
+           directed = TRUE,
+           edge.labels = TRUE,
+           title = title)
+  }
+  
+  return(diff_filtered)
+}
+
+```
+
+# Pup's analysis
+
+## All variables testing
+
+### Body weight change
+
+```{r}
+compute_BW_stats <- function(df) {
+  df_long <- df %>%
+    pivot_longer(
+      cols = starts_with("BW.P"),
+      names_to = "Jour",
+      values_to = "Valeur"
+    ) %>%
+    filter(!is.na(Valeur)) %>%
+    mutate(Jour_num = as.numeric(sub("BW.P", "", Jour)))
+  
+  df_stats <- df_long %>%
+    group_by(PupID) %>%
+    summarise(
+      BW.auc = sum(diff(Jour_num) * (head(Valeur, -1) + tail(Valeur, -1)) / 2),
+      lm_fit = list(lm(Valeur ~ Jour_num)),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      slope = map_dbl(lm_fit, ~ coef(.x)[["Jour_num"]]),
+      rsq = map_dbl(lm_fit, ~ summary(.x)$r.squared)
+    ) %>%
+    dplyr::select(-lm_fit)
+  
+  df %>% left_join(df_stats, by = "PupID")
+}
+
+juvenile_df <- compute_BW_stats(juvenile_df)
+juvenile_all_completed <- compute_BW_stats(juvenile_all_completed)
+juvenile_df_only <- compute_BW_stats(juvenile_df_only)
+juvenile_unic_completed <- compute_BW_stats(juvenile_unic_completed)
+
+```
+
+### Variable filtering
+
+```{r}
+# Liste initiale des colonnes à supprimer
+cols_to_eliminate <- c(
+  "av.geotax.lat", "av.front.lat", "av.grasp.lat", 
+  "exit.tube", "BW.auc", "rsq"
+)
+
+# Ajouter dynamiquement les colonnes qui commencent par BW.P et flip.lat.p
+cols_to_eliminate <- c(
+  cols_to_eliminate,
+  names(juvenile_df)[startsWith(names(juvenile_df), "BW.P")],
+  names(juvenile_df)[startsWith(names(juvenile_df), "flip.lat.p")]
+)
+
+# Garder uniquement les colonnes qui existent vraiment dans le dataframe
+cols_to_eliminate <- cols_to_eliminate[cols_to_eliminate %in% names(juvenile_df)]
+
+# Supprimer les colonnes
+juvenile_df <- juvenile_df %>% dplyr::select(-all_of(cols_to_eliminate))
+
+# Répéter pour juvenile_all_completed
+cols_to_eliminate <- c(
+  "av.geotax.lat", "av.front.lat", "av.grasp.lat", 
+  "exit.tube", "BW.auc", "rsq",
+  names(juvenile_all_completed)[startsWith(names(juvenile_all_completed), "BW.P")],
+  names(juvenile_all_completed)[startsWith(names(juvenile_all_completed), "flip.lat.p")]
+)
+
+cols_to_eliminate <- cols_to_eliminate[cols_to_eliminate %in% names(juvenile_all_completed)]
+
+juvenile_all_completed <- juvenile_all_completed %>% dplyr::select(-all_of(cols_to_eliminate))
+
+# Répéter pour juvenile_all_completed
+cols_to_eliminate <- c(
+  "av.geotax.lat", "av.front.lat", "av.grasp.lat", 
+  "exit.tube", "BW.auc", "rsq",
+  names(juvenile_unic_completed)[startsWith(names(juvenile_unic_completed), "BW.P")],
+  names(juvenile_unic_completed)[startsWith(names(juvenile_unic_completed), "flip.lat.p")]
+)
+
+cols_to_eliminate <- cols_to_eliminate[cols_to_eliminate %in% names(juvenile_unic_completed)]
+
+juvenile_unic_completed <- juvenile_unic_completed %>% dplyr::select(-all_of(cols_to_eliminate))
+
+
+
+physical_variables <- c("d.ear.twicth",	"d.ear.c.open",	"d.eye.l.open", "BW.auc")
+
+motor_variables <- c("flip.AUC.p7.10", "norm.av.grasp.lat", "norm.av.front.lat", "d.transition", "d.walk")
+
+transcriptomal_variables <- c("Cortp",	"CDK9",	"DGKH",	"FKBP5",	"HSP90AA1",	"HSP90AB1",	"NFATC1",	"NR3C1",	"PTGES3",	"SGK1",	"SGK3",	"SKA2",	"STAT5A")
+
+dam_missing_variables <- c("av.freq.p3",	"av.ep.dur.p3",	"lat.p3",	"tot.n.voc.p14",	"av.freq.p14",	"av.ep.dur.p14",	"lat.p14")
+```
+
+### Variable testing
+
+```{r}
+# 1. Vérifier quelles colonnes sont numériques
+num_cols <- sapply(juvenile_df, is.numeric)
+
+# 2. Fonction Shapiro sur les colonnes (brutes)
+shapiro_fun <- function(x) {
+  x <- na.omit(x)
+  if (length(x) < 3 || length(x) > 5000) return(NA)
+  shapiro.test(x)$p.value
+}
+
+# 3. Calcul normalité des colonnes numériques
+normality_df <- data.frame(
+  Variable = names(juvenile_df)[num_cols],
+  N        = sapply(juvenile_df[ , num_cols, drop = FALSE], function(x) sum(!is.na(x))),
+  P_value  = sapply(juvenile_df[ , num_cols, drop = FALSE], shapiro_fun)
+)
+
+normality_df$Normalité_OK <- with(normality_df, P_value > 0.05 | N > 60)
+
+print(normality_df)
+
+# 4. Liste des variables numériques
+num_vars <- names(juvenile_df)[sapply(juvenile_df, is.numeric)]
+
+# 5. Fonction principale d’analyse
+analyze_var <- function(var_name) {
+  results <- list()
+  df_tibble <- as_tibble(juvenile_df)
+
+  # Essayer modèles paramétriques (ANOVA) et fallback si nécessaire
+  for (i in 1:3) {
+    form <- switch(i,
+                   as.formula(paste(var_name, "~ Condition")),
+                   as.formula(paste(var_name, "~ CageID")),
+                   as.formula(paste(var_name, "~ Condition * CageID")),
+                   NULL)
+
+    if (!is.null(form)) {
+      model <- tryCatch(lm(form, data = df_tibble), error = function(e) NULL)
+      if (!is.null(model)) {
+        shapiro_p <- tryCatch(shapiro.test(residuals(model))$p.value, error = function(e) NA)
+        aov_result <- tryCatch(anova(model), error = function(e) NULL)
+
+        if (!is.null(aov_result)) {
+          p_values <- aov_result$`Pr(>F)`
+          factors <- rownames(aov_result)
+          padj <- p.adjust(p_values, method = "bonferroni")
+
+          # Si les résidus ne sont pas normaux → Kruskal
+          if (!is.na(shapiro_p) && shapiro_p <= 0.05) {
+            if (i == 1) {
+              data_sub <- df_tibble %>%
+                select(all_of(c(var_name, "Condition"))) %>%
+                filter(!is.na(.data[[var_name]]))
+              kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$Condition), error = function(e) NULL)
+              if (!is.null(kw_test)) {
+                df_model <- data.frame(
+                  Variable  = var_name,
+                  Modele    = "Modèle_1",
+                  Facteur   = "Condition",
+                  P_value   = kw_test$p.value,
+                  P_adj     = NA,
+                  Test      = "Kruskal-Wallis",
+                  Shapiro_p = shapiro_p
+                )
+                results[[length(results) + 1]] <- df_model
+              }
+            } else if (i == 2) {
+              data_sub <- df_tibble %>%
+                select(all_of(c(var_name, "CageID"))) %>%
+                filter(!is.na(.data[[var_name]]), !is.na(CageID))
+              kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$CageID), error = function(e) NULL)
+              if (!is.null(kw_test)) {
+                df_model <- data.frame(
+                  Variable  = var_name,
+                  Modele    = "Modèle_2",
+                  Facteur   = "CageID",
+                  P_value   = kw_test$p.value,
+                  P_adj     = NA,
+                  Test      = "Kruskal-Wallis",
+                  Shapiro_p = shapiro_p
+                )
+                results[[length(results) + 1]] <- df_model
+              }
+            }
+          } else {
+            # Résidus OK → garder ANOVA
+            df_model <- data.frame(
+              Variable  = var_name,
+              Modele    = paste0("Modèle_", i),
+              Facteur   = factors,
+              P_value   = p_values,
+              P_adj     = padj,
+              Test      = "ANOVA",
+              Shapiro_p = shapiro_p
+            )
+            results[[length(results) + 1]] <- df_model
+          }
+        }
+      }
+    }
+  }
+
+  # Modèle 3 et 5 : Kruskal-Wallis CageID selon Condition (LBN/CONT)
+  for (cond in c("LBN", "CONT")) {
+    data_sub <- df_tibble %>%
+      select(all_of(c(var_name, "Condition", "CageID"))) %>%
+      filter(!is.na(.data[[var_name]]), Condition == cond, !is.na(CageID))
+    
+    if (nrow(data_sub) > 2) {
+      kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$CageID), error = function(e) NULL)
+      if (!is.null(kw_test)) {
+        df_model <- data.frame(
+          Variable  = var_name,
+          Modele    = paste0("Modèle_", ifelse(cond == "LBN", "3", "5")),
+          Facteur   = paste0("CageID (", cond, ")"),
+          P_value   = kw_test$p.value,
+          P_adj     = NA,
+          Test      = "Kruskal-Wallis",
+          Shapiro_p = NA
+        )
+        results[[length(results) + 1]] <- df_model
+      }
+    }
+  }
+
+  results <- bind_rows(results)
+
+  # Correction intra-modèle
+  results <- results %>%
+    group_by(Modele) %>%
+    mutate(P_adj_model = p.adjust(P_value, method = "bonferroni")) %>%
+    ungroup()
+
+  # Correction globale
+  results$P_adj_global <- p.adjust(results$P_value, method = "bonferroni")
+
+  return(results)
+}
+
+# 6. Lancer l'analyse pour chaque variable numérique
+juvenile_df <- as_tibble(juvenile_df)
+results_list <- lapply(num_vars, analyze_var)
+full_results <- bind_rows(results_list)
+
+# 7. Correction finale globale (si besoin)
+full_results$P_adj <- p.adjust(full_results$P_value, method = "bonferroni")
+
+
+```
+
+### Important variables
+
+```{r}
+# Cage effects - normal (based on P_adj_global)
+cage_impacted_normal <- full_results %>%
+  filter(
+    str_detect(Facteur, "CageID") | str_detect(Facteur, "CageID \\(CONT\\)") | str_detect(Facteur, "CageID \\(LBN\\)"),
+    P_adj_global < 0.05 | (is.na(P_adj) & P_value < 0.05)
+  ) %>%
+  pull(Variable) %>%
+  unique()
+
+
+# Cage effects - strict (based on P_adj)
+cage_impacted_strict <- full_results %>%
+  filter(
+    str_detect(Facteur, "CageID") | str_detect(Facteur, "CageID \\(CONT\\)") | str_detect(Facteur, "CageID \\(LBN\\)"),
+    P_adj < 0.05 | (is.na(P_adj) & P_value < 0.05)
+  ) %>%
+  pull(Variable) %>%
+  unique()
+
+# Condition effects - normal (with global adjusted p)
+condition_impacted_normal <- full_results %>%
+  filter(
+    str_detect(Facteur, "Condition") &
+    str_detect(Modele, "Modèle_1") &
+    (P_adj_global < 0.05 | (is.na(P_adj) & P_value < 0.05))
+  ) %>%
+  pull(Variable) %>%
+  unique()
+
+
+
+# Condition effects - strict (with adjusted p)
+condition_impacted_strict <- full_results %>%
+  filter(
+    str_detect(Facteur, "Condition") &
+    str_detect(Modele, "Modèle_1") &
+    (P_adj < 0.05 | (is.na(P_adj) & P_value < 0.05))
+  ) %>%
+  pull(Variable) %>%
+  unique()
+
+```
+
+### LBN impacts
+
+```{r}
+fill_colors <- c("CONT" = "#a00000", "LBN" = "#1a80bb")
+
+walk(condition_impacted_normal, ~{
+  print(plot_variable_box(
+    df = juvenile_df,
+    df_condition = full_results,
+    var_name = .x,
+    fill_colors = fill_colors,
+    y_label = paste(.x)
+  ))
+})
+
+```
+
+## Specific maternal impacts
+
+```{r}
+generer_boxplot_cage <- function(df, var_plot, full_results) {
+  df_plot <- df %>%
+    filter(!is.na(.data[[var_plot]]), !is.na(CageID), !is.na(Condition)) %>%
+    mutate(
+      CageID = as.factor(CageID),
+      Group = paste0(Condition, "_", CageID)
+    )
+
+  group_levels <- df_plot %>%
+    distinct(Condition, CageID, Group) %>%
+    arrange(desc(Condition), CageID) %>%
+    pull(Group)
+
+  df_plot$Group <- factor(df_plot$Group, levels = group_levels)
+
+  pval <- full_results %>%
+    filter(Variable == var_plot, Facteur == "Condition") %>%
+    pull(P_adj_global) %>%
+    first()
+
+  p_label <- if (length(pval) == 0 || is.na(pval)) {
+    "p = NA"
+  } else if (pval > 0.05) {
+    "NS"
+  } else {
+    paste0("p = ", formatC(pval, format = "e", digits = 2))
+  }
+
+  ggplot(df_plot, aes(x = Group, y = .data[[var_plot]], fill = Condition)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(
+      shape = 21, size = 2, stroke = 0.3,
+      position = position_jitter(width = 0.15),
+      color = "black", aes(fill = Condition)
+    ) +
+    labs(
+      title = paste0(var_plot, " (", p_label, ")"),
+      y = var_plot,
+      x = "Cages",
+      fill = "Condition"
+    ) +
+    scale_fill_manual(values = c("LBN" = "#E69F00", "CONT" = "#56B4E9")) +
+    theme_minimal() +   theme(     panel.grid = element_blank()    ) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
+
+
+generer_panel_boxplots <- function(df, vars_selectionnees, full_results, ncol = 2) {
+  plots <- lapply(vars_selectionnees, function(var) {
+    generer_boxplot_cage(df, var, full_results)
+  })
+  wrap_plots(plots, ncol = ncol)
+}
+
+# Génération du panel avec p-values dans les titres
+panel <- generer_panel_boxplots(juvenile_df, cage_impacted_strict, full_results, ncol = 2)
+panel
+
+print()
+```
+
+## PCA
+
+### All very important variables - true data
+
+```{r}
+analyser_clusters_pca(juvenile_df, condition_impacted_strict, 2, -1)
+```
+
+First results validated = Good separation between CONT and LBN - 8 observable groups
+
+```{r}
+analyser_clusters_pca(juvenile_df, condition_impacted_strict, 2, 8)
+```
+
+### All important variables - Corrected data
+
+```{r}
+clusters <- analyser_clusters_pca(juvenile_all_completed, condition_impacted_normal, 3, -1)
+cluster_rf_analysis(juvenile_all_completed, condition_impacted_normal)
+```
+
+\
+There are two intrusive variables =\> Two LBN are into CONT cluster, but we'll try. 5 observable groups
+
+```{r}
+analyser_clusters_pca(juvenile_all_completed, condition_impacted_normal, 4, 6)
+```
+
+### All very cage impacted - All data
+
+```{r}
+analyser_clusters_pca(juvenile_df, cage_impacted_strict, 2, -1)
+```
+
+Very good separation between conditions
+
+```{r}
+clusters <- analyser_clusters_pca(juvenile_df, cage_impacted_strict, 2, 5)
+```
+
+### All cage impacted - corrected data
+
+```{r}
+analyser_clusters_pca(juvenile_all_completed, cage_impacted_strict, 2, -1)
+```
+
+2 Cont into LBN group - not very good
+
+```{r}
+analyser_clusters_pca(juvenile_all_completed, cage_impacted_strict, 2, 5)
+```
+
+### All cage impacted - corrected data
+
+```{r}
+analyser_clusters_pca(juvenile_all_completed,unique(c(cage_impacted_normal, cage_impacted_strict, condition_impacted_normal, condition_impacted_strict)) , 4, -1)
+
+cluster_rf_analysis(juvenile_all_completed, unique(c(cage_impacted_normal, cage_impacted_strict, condition_impacted_normal, condition_impacted_strict)))
+```
+
+2 intrusive CONT.6 groups
+
+```{r}
+analyser_clusters_pca(juvenile_all_completed, cage_impacted_normal, 4, 6)
+```
+
+# Dams
+
+## PCA clustering
+
+```{r}
+
+maternal_means <- maternal_df %>%
+  group_by(Cage.ID, Group) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE), .groups = "drop")
+
+meta_info <- maternal_df %>%
+  group_by(Cage.ID) %>%
+  summarise(
+    PupID = first(PupID),
+    Group = first(Group),
+    .groups = "drop"
+  )
+
+# 3. Join pour enrichir avec PupID
+maternal_means_full <- maternal_means %>%
+  left_join(meta_info, by = "Cage.ID")
+
+maternal_cleaned <- maternal_means_full %>%
+  mutate(Group = coalesce(Group.x, Group.y)) %>%  # Choisir un seul "Group"
+  group_by(Cage.ID, Group) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE), .groups = "drop")
+
+maternal_cleaned <- maternal_cleaned %>%
+  dplyr::select(-c("Recording_duration", "Day", "Time"))
+
+res_auto <- analyser_clusters_pca_mat(maternal_cleaned, colnames(maternal_cleaned),2, 5)
+```
+
+```{r}
+analyser_clusters_pca(juvenile_all_completed, colnames(juvenile_all_completed), 5, -1)
+
+```
+
+# Adolescent data
+
+## All variables testing
+
+# Maternal pattern search
+
+## VAR
+
+```{r}
+
+group_VARs <- fit_VAR_models(
+  df = maternal_full_df,
+  group_by_col = "Group",
+  bin_size = 60,
+  auto_lag = TRUE,
+  lag_max = 10
+)
+
+# Modelos por jaula
+cage_VARs <- fit_VAR_models(
+  df = maternal_full_df,
+  group_by_col = "Cage.ID",
+  bin_size = 6,
+  auto_lag = TRUE,
+  lag_max = 5
+)
+
+# Modelo global sin agrupación
+global_VAR <- fit_VAR_models(
+  df = maternal_full_df,
+  bin_size = 60,
+  auto_lag = TRUE,
+  lag_max = 10
+)
+
+beh_cols <- c("Onnest", "Offnest", "ABN", "Carryingpups", "Selfgrooming", "Eat_drink", "Kicking", "Groomingpups", "Build")
+
+plot_VAR_graph(cage_VARs[["7"]], beh_cols)
+plot_VAR_graph(cage_VARs[["9"]], beh_cols)
+plot_VAR_graph(cage_VARs[["3"]], beh_cols)
+plot_VAR_graph(cage_VARs[["A"]], beh_cols)
+
+
+plot_VAR_graph(group_VARs[["LBN"]], beh_cols)
+plot_VAR_graph(group_VARs[["CONT"]], beh_cols)
+
+```
+
+### Control vs LBN comparison
+
+```{r}
+
+diff_matrix <- compare_VAR_models(
+  model_A = cage_VARs[["A"]],
+  model_B = cage_VARs[["1"]],
+  exclude = c("Carryingpups", "Kicking"),
+  title = "1 vs A",
+  plot = TRUE
+)
+
+cage_conditions <- maternal_full_df %>%
+  distinct(Cage.ID, Group) %>%
+  rename(Condition = Group)
+
+# Lista para guardar resultados de comparación con CONT
+diff_results <- map_dfr(names(cage_VARs), function(cage_id) {
+  result <- tryCatch({
+    diff_matrix <- compare_VAR_models(
+      model_A = cage_VARs[[cage_id]],
+      model_B = group_VARs[["CONT"]],
+      exclude = c("Carryingpups"),
+      plot = FALSE
+    )
+    
+    dist_val <- if (!is.null(diff_matrix) && nrow(diff_matrix) > 0 && ncol(diff_matrix) > 0) {
+      norm(as.matrix(diff_matrix), type = "F")
+    } else {
+      NA
+    }
+    
+    data.frame(Cage.ID = cage_id, Frobenius_Dist = dist_val)
+  }, error = function(e) {
+    data.frame(Cage.ID = cage_id, Frobenius_Dist = NA)
+  })
+})
+
+# Añadir condición a cada jaula
+diff_results <- left_join(diff_results, cage_conditions, by = "Cage.ID")
+
+# Ordenar de más diferente a más similar a CONT
+diff_results_sorted <- diff_results %>% arrange(desc(Frobenius_Dist))
+
+print(diff_results_sorted)
+
+```
+
+### All cages comparison
+
+```{r}
+
+diff_results <- map_dfr(names(cage_VARs), function(cage_id) {
+  result <- tryCatch({
+    model <- cage_VARs[[cage_id]]
+    
+    # Extraer matriz de coeficientes
+    coef_list <- coef(model)
+    var_names <- names(coef_list)
+    pred_names <- rownames(coef_list[[1]])
+    
+    mat <- matrix(NA, nrow = length(pred_names), ncol = length(var_names),
+                  dimnames = list(pred_names, var_names))
+    
+    for (var in var_names) {
+      mat[, var] <- coef_list[[var]][, "Estimate"]
+    }
+
+    # Excluir comportamientos si es necesario
+    exclude <- c("Carryingpups")
+    exclude_lags <- paste0(exclude, ".l1")
+    mat <- mat[
+      !(rownames(mat) %in% exclude_lags) & rownames(mat) != "const",
+      !(colnames(mat) %in% exclude),
+      drop = FALSE
+    ]
+
+    dist_val <- norm(mat, type = "F")
+
+    data.frame(Cage.ID = cage_id, Frobenius_Dist = dist_val)
+  }, error = function(e) {
+    data.frame(Cage.ID = cage_id, Frobenius_Dist = NA)
+  })
+})
+
+diff_results <- left_join(diff_results, cage_conditions, by = "Cage.ID")
+diff_results_sorted <- diff_results %>% arrange(desc(Frobenius_Dist))
+
+print(diff_results_sorted)
+
+```
+
+### PCA
+
+```{r}
+
+
+# 1. Extraer y vectorizar matrices
+vectorized_matrices <- map_dfr(names(cage_VARs), function(cage_id) {
+  result <- tryCatch({
+    model <- cage_VARs[[cage_id]]
+    coef_list <- coef(model)
+    var_names <- names(coef_list)
+    pred_names <- rownames(coef_list[[1]])
+    
+    mat <- matrix(NA, nrow = length(pred_names), ncol = length(var_names),
+                  dimnames = list(pred_names, var_names))
+    
+    for (var in var_names) {
+      mat[, var] <- coef_list[[var]][, "Estimate"]
+    }
+    
+    # Excluir comportamientos si quieres
+    exclude <- c("Carryingpups")
+    exclude_lags <- paste0(exclude, ".l1")
+    mat <- mat[
+      !(rownames(mat) %in% exclude_lags) & rownames(mat) != "const",
+      !(colnames(mat) %in% exclude),
+      drop = FALSE
+    ]
+    
+    vec <- as.vector(mat)
+    names(vec) <- paste(rep(rownames(mat), times = ncol(mat)), rep(colnames(mat), each = nrow(mat)), sep = "_")
+    data.frame(Cage.ID = cage_id, t(vec))
+  }, error = function(e) {
+    message(paste("Error with cage", cage_id, ":", e$message))
+    return(NULL)
+  })
+})
+
+# 2. Añadir condición si tienes ese dataframe
+vectorized_matrices <- left_join(vectorized_matrices, cage_conditions, by = "Cage.ID")
+
+# 3. PCA
+pca_input <- vectorized_matrices %>% select(where(is.numeric)) %>% drop_na()
+row_names <- vectorized_matrices$Cage.ID[complete.cases(vectorized_matrices)]
+
+vectorized_matrices <- vectorized_matrices %>%
+  drop_na()
+
+pca_input <- vectorized_matrices %>%
+  select(where(is.numeric))
+
+# 2. Eliminar columnas con varianza 0
+var_zero <- apply(pca_input, 2, function(col) var(col) == 0)
+pca_input_filtered <- pca_input[, !var_zero]
+
+# 3. PCA
+pca_res <- FactoMineR::PCA(pca_input_filtered, scale.unit = TRUE, graph = FALSE)
+summary(pca_res)
+
+dim <- 4
+# 4. Coordenadas para clustering
+df_scores <- as.data.frame(pca_res$ind$coord[, 1:dim])
+df_scores$Cage.ID <- vectorized_matrices$Cage.ID[complete.cases(pca_input)] 
+df_scores <- left_join(df_scores, cage_conditions, by = "Cage.ID")
+
+# 5. Clustering jerárquico
+hc <- hclust(dist(df_scores[, 1:dim]), method = "ward.D2")
+dend <- as.dendrogram(hc)
+
+# 6. Clustering dinámico
+diss_matrix <- as.matrix(dist(df_scores[, 1:dim]))
+clusters <- cutree(hc, k = 3)
+df_scores$cluster <- factor(clusters)
+
+# 7. Dendrograma con colores
+ordered_clusters <- clusters[order.dendrogram(dend)]
+cluster_colors <- brewer.pal(length(unique(clusters)), "Set2")
+cluster_color_map <- setNames(cluster_colors, sort(unique(clusters)))
+branch_colors <- cluster_color_map[as.character(ordered_clusters)]
+
+dend <- color_branches(dend, k = length(unique(clusters)), col = cluster_colors)
+dend <- set(dend, "branches_lwd", 3)
+dend <- set(dend, "labels", as.character(ordered_clusters))
+dend <- set(dend, "labels_col", branch_colors)
+dend <- set(dend, "labels_cex", 1.2)
+
+plot(dend, main = "Dendrograma con clusters coloreados")
+legend("topright", legend = paste("Cluster", sort(unique(clusters))),
+       fill = cluster_colors, border = NA, bty = "n")
+
+# 8. PCA plot con colores de cluster y formas por condición
+ggplot(df_scores, aes(x = Dim.1, y = Dim.2, color = cluster, shape = Condition)) +
+  geom_point(size = 3, alpha = 0.8) +
+  geom_text_repel(aes(label = Cage.ID), size = 3) +
+  scale_shape_manual(values = c("LBN" = 16, "CONT" = 15)) +
+  labs(title = "Clusters sobre PCA", color = "Cluster", shape = "Condition") +
+  theme_minimal()
+
+# 9. Proporciones por jaula
+proportions <- df_scores %>%
+  group_by(Cage.ID, cluster) %>%
+  summarise(nb_obs = n(), .groups = 'drop') %>%
+  group_by(Cage.ID) %>%
+  mutate(total_obs = sum(nb_obs), prop_cluster = nb_obs / total_obs) %>%
+  arrange(Cage.ID, desc(prop_cluster)) %>%
+  left_join(cage_conditions, by = "Cage.ID")
+
+# 10. Cluster dominante por jaula
+dominant_clusters <- proportions %>%
+  slice_max(prop_cluster, n = 1) %>%
+  arrange(cluster, desc(prop_cluster))
+
+print(dominant_clusters, n = 100)
+```
+
+### ALL vs ALL
+
+```{r}
+# 1. Obtener lista de Cage.IDs
+cage_ids <- names(cage_VARs)
+
+# 2. Inicializar matriz vacía
+n <- length(cage_ids)
+frobenius_mat <- matrix(NA, nrow = n, ncol = n, dimnames = list(cage_ids, cage_ids))
+
+# 3. Rellenar la matriz comparando cada par (i,j)
+for (i in seq_along(cage_ids)) {
+  for (j in seq_along(cage_ids)) {
+    if (i <= j) {  # Solo computar una vez y simétrico
+      mat_i <- cage_VARs[[cage_ids[i]]]
+      mat_j <- cage_VARs[[cage_ids[j]]]
+      
+      dist_val <- tryCatch({
+        diff_matrix <- compare_VAR_models(
+          model_A = mat_i,
+          model_B = mat_j,
+          exclude = c("Carryingpups"),
+          plot = FALSE
+        )
+        
+        if (!is.null(diff_matrix) && nrow(diff_matrix) > 0 && ncol(diff_matrix) > 0) {
+          norm(as.matrix(diff_matrix), type = "F")
+        } else {
+          NA
+        }
+      }, error = function(e) NA)
+      
+      frobenius_mat[i, j] <- dist_val
+      frobenius_mat[j, i] <- dist_val  # simétrico
+    }
+  }
+}
+
+# 4. Convertir a data.frame largo si deseas
+frobenius_df <- as.data.frame(as.table(frobenius_mat)) %>%
+  rename(CageA = Var1, CageB = Var2, Frobenius_Dist = Freq) %>%
+  filter(CageA != CageB)%>%
+  drop_na()
+
+# 5. Ver resultados
+head(frobenius_df)
+
+# Opcional: heatmap rápido
+library(pheatmap)
+pheatmap(frobenius_mat, 
+         main = "Distancia de Frobenius entre modelos VAR",
+         display_numbers = TRUE, 
+         clustering_method = "ward.D2",
+         fontsize_row = 10, 
+         fontsize_col = 10)
+```
+
+# correlations
+
+```{r}
+# Columnas de comportamientos y fenotipos
+beh_cols <- c("Onnest_bouts", "Offnest_bouts", "ABN_bouts", "Carryingpups_bouts", "Selfgrooming_bouts", "Eat_drink_bouts", "Kicking_bouts", "Groomingpups_bouts", "Build_bouts","Onnest_duration", "Offnest_duration", "ABN_duration", "Carryingpups_duration", "Selfgrooming_duration", "Eat_drink_duration", "Kicking_duration", "Groomingpups_duration", "Build_duration")
+
+
+df_maternal_summary <- maternal_df %>%
+  group_by(Cage.ID) %>%
+  filter(Group == "LBN") %>%
+  summarise(across(where(is.numeric), sum, na.rm = TRUE))
+
+
+df_maternal_summary <- df_maternal_summary %>%
+  select(Cage.ID, all_of(beh_cols))
+
+df_fenotipos_summary <- juvenile_all_completed %>%
+  group_by(CageID) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE))
+
+df_merged <- inner_join(
+  df_maternal_summary, 
+  df_fenotipos_summary,
+  by = c("Cage.ID" = "CageID")  # ← empareja nombres diferentes
+)
+
+pup_cols <- setdiff(colnames(df_merged), c("Cage.ID", beh_cols))
+
+pup_cols <- c("d.ear.c.open","tot.n.voc.p14","av.ep.dur.p14","flip.AUC.p7.10","norm.av.front.lat","d.transition","d.eye.l.open","d.walk")
+
+behav_data <- df_merged %>% select(all_of(beh_cols))
+pup_data <- df_merged %>% select(all_of(pup_cols))
+
+# Eliminar columnas con varianza 0
+behav_data <- behav_data %>% select(where(~ var(.x, na.rm=TRUE) > 0))
+pup_data <- pup_data %>% select(where(~ var(.x, na.rm=TRUE) > 0))
+
+# Correlaciones cruzadas
+cor_cross <- cor(behav_data, pup_data, use = "pairwise.complete.obs")
+
+# p-valores cruzados con doble bucle
+pvals_cross <- matrix(NA, nrow = ncol(behav_data), ncol = ncol(pup_data), dimnames = list(colnames(behav_data), colnames(pup_data)))
+
+for(i in 1:ncol(behav_data)){
+  for(j in 1:ncol(pup_data)){
+    x <- behav_data[[i]]
+    y <- pup_data[[j]]
+    if(sum(!is.na(x) & !is.na(y)) > 3){
+      pvals_cross[i,j] <- cor.test(x,y)$p.value
+    }
+  }
+}
+
+# Filtrar correlaciones: p < 0.05 y |r| > 0.5
+cor_cross_filtered <- cor_cross
+cor_cross_filtered[pvals_cross > 0.05 | abs(cor_cross) < 0.5] <- NA
+
+# Visualizar
+custom_colors <- colorRampPalette(c("blue", "yellow", "red"))(100)
+
+# Use the custom color gradient in corrplot
+corrplot(t(cor_cross_filtered),
+         method = "color",
+         col = custom_colors,
+         na.label = " ",
+         tl.cex = 0.8,
+         title = "",
+         mar = c(0, 0, 2, 0),
+         tl.srt = 45)
+
+```
+
+```{r}
+# Function to train models using only behavioral data
+models <- list()
+for (phenotype in colnames(pup_data)) {
+  formula <- as.formula(paste(phenotype, "~ ."))
+  print(formula)
+  model <- lm(formula, data = cbind(behav_data, pup_data[phenotype]))
+  print(model)
+  models[[phenotype]] <- model
+}
+
+# Summarize models
+summaries <- lapply(models, summary)
+
+# Print summaries
+for (phenotype in names(summaries)) {
+  cat("Summary for", phenotype, ":\n")
+  print(summaries[[phenotype]])
+  cat("\n")
+}
+
+# Predict phenotypes using only behavioral data
+predictions <- data.frame(Cage.ID = df_merged$Cage.ID)
+for (phenotype in names(models)) {
+  predictions[[phenotype]] <- predict(models[[phenotype]], newdata = behav_data)
+}
+
+# Print predictions
+print(predictions)
+
+# Generate heatmap using pheatmap
+predictions_heatmap_data <- predictions %>%
+  select(-Cage.ID)
+
+pheatmap(t(as.matrix(predictions_heatmap_data)),
+         main = "Heatmap of Predicted Phenotypes",
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         fontsize = 8,
+         fontsize_row = 8,
+         fontsize_col = 8)
+
+```
+
+### TEst
+
+```{r}
+# Crear una matriz simétrica de distancias
+frobenius_wide <- frobenius_df %>%
+  pivot_wider(names_from = CageB, values_from = Frobenius_Dist, values_fill = 0) %>%
+  column_to_rownames("CageA") %>%
+  as.matrix()
+
+# Asegurar que sea simétrica (por si acaso)
+frob_mat <- frobenius_wide + t(frobenius_wide)
+diag(frob_mat) <- 0
+
+# Crear objeto dist
+frob_dist <- as.dist(frob_mat)
+
+# Seleccionar y convertir a data.frame
+meta_df <- as.data.frame(clusters$proportions %>%
+  dplyr::select(CageID, cluster, Condition))
+
+# Eliminar filas duplicadas para CageID (por ejemplo, manteniendo la primera ocurrencia)
+meta_df <- meta_df[!duplicated(meta_df$CageID), ]
+
+# Ahora poner rownames
+rownames(meta_df) <- meta_df$CageID
+
+# Reordenar según frob_mat (supongo que frob_mat es matriz con rownames)
+meta_df <- meta_df[rownames(frob_mat), ]
+
+
+rownames(meta_df) <- meta_df$CageID
+meta_df <- meta_df[rownames(frob_mat), ]  # asegurar mismo orden
+
+```
+
+```{r}
+library(dplyr)
+
+# Filtrar meta_df para excluir Condition == "CONT"
+meta_df_filtered <- meta_df %>% filter(Condition != "CONT")
+
+# Filtrar la matriz de distancias para que solo queden cages no CONT
+cages_to_keep <- meta_df_filtered$CageID
+frob_mat_filtered <- frob_mat[cages_to_keep, cages_to_keep]
+
+# Funciones para calcular distancias con la matriz filtrada y el meta_df filtrado
+calc_mean_cluster_dist <- function(cage_id, cluster_id, frob_mat, meta_df) {
+  cluster_cages <- meta_df %>% filter(cluster == cluster_id) %>% pull(CageID)
+  cluster_cages <- setdiff(cluster_cages, cage_id)
+  if(length(cluster_cages) == 0) return(NA)
+  dists <- frob_mat[cage_id, cluster_cages]
+  mean(dists, na.rm = TRUE)
+}
+
+calc_mean_between_cluster_dist <- function(cage_id, cluster_id, frob_mat, meta_df) {
+  other_cages <- meta_df %>% filter(cluster != cluster_id) %>% pull(CageID)
+  if(length(other_cages) == 0) return(NA)
+  dists <- frob_mat[cage_id, other_cages]
+  mean(dists, na.rm = TRUE)
+}
+
+# Aplicar los cálculos a meta_df_filtered
+meta_df_filtered <- meta_df_filtered %>%
+  rowwise() %>%
+  mutate(
+    mean_cluster_dist = calc_mean_cluster_dist(CageID, cluster, frob_mat_filtered, meta_df_filtered),
+    mean_between_cluster_dist = calc_mean_between_cluster_dist(CageID, cluster, frob_mat_filtered, meta_df_filtered)
+  ) %>%
+  ungroup()
+
+print(meta_df_filtered)
+
+
+```
+
+# new var
+
+```{r}
+
+maternal_cluster_df <- maternal_full_df %>%
+  left_join(meta_df, by = c("Cage.ID" = "CageID"))
+
+maternal_cluster_df$cluster <- ifelse(is.na(maternal_cluster_df$cluster), "unknown", as.character(maternal_cluster_df$cluster))
+
+maternal_cluster_df$cluster <- factor(maternal_cluster_df$cluster)
+
+cluster_VARs <- fit_VAR_models(
+  df = maternal_cluster_df,
+  group_by_col = "cluster",
+  bin_size = 60,
+  auto_lag = TRUE,
+  lag_max = 5
+)
+
+maternal_cluster_df <- maternal_full_df %>%
+  left_join(meta_df, by = c("Cage.ID" = "CageID"))
+
+maternal_cluster_df$cluster <- ifelse(is.na(maternal_cluster_df$cluster), "unknown", as.character(maternal_cluster_df$cluster))
+
+maternal_cluster_df$cluster <- factor(maternal_cluster_df$cluster)
+
+cluster2_VARs <- fit_VAR_models(
+  df = maternal_cluster_df,
+  group_by_col = "cluster",
+  bin_size = 60,
+  auto_lag = TRUE,
+  lag_max = 5
+)
+
+cluster_VARs <- fit_VAR_models(
+  df = maternal_cluster_df,
+  group_by_col = "cluster",
+  bin_size = 60,
+  auto_lag = TRUE,
+  lag_max = 10
+)
+
+# Luego, por ejemplo, para graficar el cluster 0
+plot_VAR_graph(cluster_VARs[["0"]], beh_cols)
+
+# Para graficar el cluster 1
+plot_VAR_graph(cluster_VARs[["1"]], beh_cols)
+
+# Y así sucesivamente para cada cluster que tengas
+
+```
+
+# VAR comparision
+
+```{r}
+comparar_VARs_MANOVA_PCA <- function(list_VAR_A, list_VAR_B, n_pcs = 3, remove_const = TRUE) {
+  # Extraer coeficientes de un modelo VAR
+  extract_coefs <- function(var_model) {
+    coefs_list <- coef(var_model)
+    coef_vector <- unlist(lapply(coefs_list, function(mat) {
+      if (remove_const && "const" %in% rownames(mat)) {
+        mat <- mat[rownames(mat) != "const", , drop = FALSE]
+      }
+      mat[, "Estimate"]
+    }))
+    return(coef_vector)
+  }
+
+  # Obtener todos los coeficientes
+  coefs_A <- lapply(list_VAR_A, extract_coefs)
+  coefs_B <- lapply(list_VAR_B, extract_coefs)
+
+  # Igualar longitud
+  min_len <- min(sapply(c(coefs_A, coefs_B), length))
+  coefs_A <- lapply(coefs_A, function(x) x[1:min_len])
+  coefs_B <- lapply(coefs_B, function(x) x[1:min_len])
+
+  # Matriz completa
+  mat_A <- do.call(rbind, coefs_A)
+  mat_B <- do.call(rbind, coefs_B)
+  mat_total <- rbind(mat_A, mat_B)
+
+  # Etiquetas de grupo
+  grupo <- factor(c(rep("A", nrow(mat_A)), rep("B", nrow(mat_B))))
+
+ # Filtrar columnas constantes
+  mat_total <- mat_total[, apply(mat_total, 2, function(col) sd(col) > 0), drop = FALSE]
+  
+  # PCA
+  pca <- prcomp(mat_total, scale. = TRUE)
+  pcs <- pca$x[, 1:n_pcs, drop = FALSE]
+
+
+  df_manova <- data.frame(grupo, pcs)
+
+  # MANOVA
+  fit <- manova(as.matrix(df_manova[, -1]) ~ grupo, data = df_manova)
+  resumen <- summary(fit, test = "Hotelling-Lawley")
+
+  list(
+    manova = fit,
+    resumen = resumen,
+    p_value = resumen$stats[1, "Pr(>F)"],
+    df = df_manova,
+    pca = pca
+  )
+}
+
+
+
+a <- list(cage_VARs[["3"]], cage_VARs[["7"]])
+b <- list(cage_VARs[["1"]], cage_VARs[["A"]], cage_VARs[["C"]])
+
+
+resultado <- comparar_VARs_MANOVA_PCA(a, b, n_pcs = 3)
+resultado$p_value 
+```
+
+```{r}
+extract_coefs <- function(var_model) {
+  coefs_list <- coef(var_model)  # lista, cada elemento es matriz de coeficientes para variable endógena
+  coef_vector <- unlist(lapply(coefs_list, function(mat) {
+    # quitar fila 'const' si está y extraer columna "Estimate"
+    if ("const" %in% rownames(mat)) {
+      mat <- mat[rownames(mat) != "const", , drop=FALSE]
+    }
+    mat[, "Estimate"]
+  }))
+  return(coef_vector)
+}
+
+test_permutacion_VAR <- function(model_A, model_B, metric = c("MAE", "MSE", "STANDARDIZED"), n_perm = 10000, seed = 123, exponent = NULL) {
+  set.seed(seed)
+  metric <- match.arg(metric)
+  
+  extract_coefs_se <- function(model) {
+    coefs <- coef(model)
+    coef_vec <- c()
+    se_vec <- c()
+    
+    for (var in names(coefs)) {
+      mat <- coefs[[var]]
+      mat <- mat[rownames(mat) != "const", , drop = FALSE]
+      coef_vec <- c(coef_vec, mat[, "Estimate"])
+      se_vec <- c(se_vec, mat[, "Std. Error"])
+    }
+    list(coef = coef_vec, se = se_vec)
+  }
+  
+  vals_A <- extract_coefs_se(model_A)
+  vals_B <- extract_coefs_se(model_B)
+  
+  min_len <- min(length(vals_A$coef), length(vals_B$coef))
+  coefs_A <- vals_A$coef[1:min_len]
+  coefs_B <- vals_B$coef[1:min_len]
+  se_A <- vals_A$se[1:min_len]
+  se_B <- vals_B$se[1:min_len]
+  
+  # Filtrar coeficientes y errores no válidos o cero en errores
+  valid_idx <- which(!is.na(coefs_A) & !is.na(coefs_B) & !is.na(se_A) & !is.na(se_B) & se_A > 1e-6 & se_B > 1e-6)
+  coefs_A <- coefs_A[valid_idx]
+  coefs_B <- coefs_B[valid_idx]
+  se_A <- se_A[valid_idx]
+  se_B <- se_B[valid_idx]
+  
+  calc_diff <- function(a, b, se_a = NULL, se_b = NULL) {
+    if (!is.null(exponent)) {
+      mean(abs(a - b)^exponent)
+    } else if (metric == "MAE") {
+      mean(abs(a - b))
+    } else if (metric == "MSE") {
+      mean((a - b)^2)
+    } else if (metric == "STANDARDIZED") {
+      se_pooled <- sqrt((se_a^2 + se_b^2)/2)
+      mean(abs((a - b) / se_pooled))
+    }
+  }
+  
+  delta_obs <- calc_diff(coefs_A, coefs_B, se_A, se_B)
+  
+  combined <- c(coefs_A, coefs_B)
+  n <- length(coefs_A)
+  
+  deltas_perm <- replicate(n_perm, {
+    permuted <- sample(combined)
+    perm_A <- permuted[1:n]
+    perm_B <- permuted[(n + 1):(2 * n)]
+    calc_diff(perm_A, perm_B, se_A, se_B)
+  })
+  
+  p_val <- mean(deltas_perm >= delta_obs)
+  
+  list(
+    delta_observada = delta_obs,
+    p_value = p_val,
+    distribucion_perm = deltas_perm
+  )
+}
+
+# Prueba con exponent=3 o con metric="STANDARDIZED"
+test_permutacion_VAR(cage_VARs[["7"]], cage_VARs[["6"]], n_perm=10000, exponent=3)$p_value
+
+
+```
+
+```{r}
+model_A =cage_VARs[["7"]]
+model_B = cage_VARs[["6"]]
+
+# Ejemplo:
+AIC_A <- AIC(model_A)
+BIC_A <- BIC(model_A)
+
+AIC_B <- AIC(model_B)
+BIC_B <- BIC(model_B)
+
+cat("Modelo A - AIC:", AIC_A, "BIC:", BIC_A, "\n")
+cat("Modelo B - AIC:", AIC_B, "BIC:", BIC_B, "\n")
+
+if (AIC_A < AIC_B) {
+  cat("Modelo A tiene mejor AIC\n")
+} else {
+  cat("Modelo B tiene mejor AIC\n")
+}
+
+if (BIC_A < BIC_B) {
+  cat("Modelo A tiene mejor BIC\n")
+} else {
+  cat("Modelo B tiene mejor BIC\n")
+}
+
+```
+
+```{r}
+
+# Create a data frame with the given data
+data <-  fr
+  
+# Function to find the entry with the smallest Frobenius distance for each CageA
+find_min_frobenius <- function(data) {
+  # Split the data by CageA
+  split_data <- split(data, data$CageA)
+
+  # Find the entry with the smallest Frobenius_Dist for each CageA
+  result <- lapply(split_data, function(group) {
+    group[which.min(group$Frobenius_Dist), ]
+  })
+
+  # Combine the results into a single data frame
+  result_df <- do.call(rbind, result)
+
+  return(result_df)
+}
+
+# Find the most probable match for each CageA
+result <- find_min_frobenius(data)
+
+# Print the result
+print(result)
+
+```
