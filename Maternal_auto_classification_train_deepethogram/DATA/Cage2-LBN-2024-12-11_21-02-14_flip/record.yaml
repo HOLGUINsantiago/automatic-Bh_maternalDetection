@@ -7,15 +7,18 @@ keypoint:
   default: []
 label:
   all:
+  - Cage2-LBN-2024-12-11_21-02-14_flip_labels.csv
   - Cage2-LBN-2024-12-11_21-02-14_labels.csv
-  default: Cage2-LBN-2024-12-11_21-02-14_labels.csv
+  default: Cage2-LBN-2024-12-11_21-02-14_flip_labels.csv
 output:
-  all: []
-  default: []
+  all:
+  - Cage2-LBN-2024-12-11_21-02-14_flip_outputs.h5
+  default: Cage2-LBN-2024-12-11_21-02-14_flip_outputs.h5
 rgb:
   all:
   - Cage2-LBN-2024-12-11_21-02-14_flip.mp4
   default: Cage2-LBN-2024-12-11_21-02-14_flip.mp4
 stats:
-  all: []
-  default: []
+  all:
+  - stats.yaml
+  default: stats.yaml

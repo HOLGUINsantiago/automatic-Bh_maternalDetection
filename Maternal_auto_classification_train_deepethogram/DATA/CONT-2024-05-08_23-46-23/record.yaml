@@ -6,11 +6,13 @@ keypoint:
   all: []
   default: []
 label:
-  all: []
-  default: []
+  all:
+  - CONT-2024-05-08_23-46-23_labels.csv
+  default: CONT-2024-05-08_23-46-23_labels.csv
 output:
-  all: []
-  default: []
+  all:
+  - CONT-2024-05-08_23-46-23_outputs.h5
+  default: CONT-2024-05-08_23-46-23_outputs.h5
 rgb:
   all:
   - CONT-2024-05-08_23-46-23.mp4

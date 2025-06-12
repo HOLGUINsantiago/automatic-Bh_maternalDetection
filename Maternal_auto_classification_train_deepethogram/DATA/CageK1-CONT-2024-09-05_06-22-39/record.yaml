@@ -1,0 +1,23 @@
+flow:
+  all: []
+  default: []
+key: CageK1-CONT-2024-09-05_06-22-39
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - CageK1-CONT-2024-09-05_06-22-39_labels.csv
+  default: CageK1-CONT-2024-09-05_06-22-39_labels.csv
+output:
+  all:
+  - CageK1-CONT-2024-09-05_06-22-39_outputs.h5
+  default: CageK1-CONT-2024-09-05_06-22-39_outputs.h5
+rgb:
+  all:
+  - CageK1-CONT-2024-09-05_06-22-39.mp4
+  default: CageK1-CONT-2024-09-05_06-22-39.mp4
+stats:
+  all:
+  - stats.yaml
+  default: stats.yaml

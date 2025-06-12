@@ -6,8 +6,9 @@ keypoint:
   all: []
   default: []
 label:
-  all: []
-  default: []
+  all:
+  - CONT-2024-05-06_20-10-34_labels.csv
+  default: CONT-2024-05-06_20-10-34_labels.csv
 output:
   all: []
   default: []
@@ -16,5 +17,6 @@ rgb:
   - CONT-2024-05-06_20-10-34.mp4
   default: CONT-2024-05-06_20-10-34.mp4
 stats:
-  all: []
-  default: []
+  all:
+  - stats.yaml
+  default: stats.yaml

@@ -71,23 +71,19 @@ maternal_df$Transition <- maternal_df$Nest_exits_bouts + maternal_df$Nest_entry_
 maternal_df <- maternal_df %>%
   mutate(Day = floor(Time / 86400) + 1)
 
-# FILTRAR días 1 a 7
 maternal_df <- maternal_df %>%
   filter(Day >= 1 & Day <= 7)
 
-# Añadir formato POSIX para Start_time si existe (si no, se ignora este filtro para maternal_df)
 if ("Start_time" %in% colnames(maternal_df)) {
   maternal_df <- maternal_df %>%
     mutate(Start_time = ymd_hms(gsub("T", " ", Start_time))) %>%
     filter(!(hour(Start_time) >= 7 & hour(Start_time) < 20))
 }
 
-# Leer archivo completo de anotaciones
 maternal_full_df <- read.csv("D:/Stage_VAEVE_2025/LBN/behavioural_annotation.csv")
 maternal_full_df <- maternal_full_df %>%
   mutate(Start_time = ymd_hms(gsub("T", " ", Start_time)))
 
-# Calcular tiempo desde el inicio de grabación
 maternal_full_df$Time <- NA_real_
 
 maternal_full_df <- maternal_full_df %>%
@@ -102,12 +98,10 @@ maternal_full_df <- maternal_full_df %>%
   select(-start_0, -total_frames) %>%
   mutate(Day = floor(Time / 86400) + 1)
 
-# FILTRAR días 1 a 7 y Start_time fuera de 07:30 a 20:00
 maternal_full_df <- maternal_full_df %>%
   filter(Day >= 1 & Day <= 7) %>%
   filter(!(hour(Start_time) >= 7 & hour(Start_time) < 20))
 
-# Asegurar que Group es factor
 maternal_df$Group <- as.factor(maternal_df$Group)
 
 
@@ -2040,14 +2034,6 @@ global_VAR <- fit_VAR_models(
 beh_cols <- c("Onnest", "Offnest", "ABN", "Carryingpups", "Selfgrooming", "Eat_drink", "Kicking", "Groomingpups", "Build")
 
 plot_VAR_graph(cage_VARs[["7"]], beh_cols)
-plot_VAR_graph(cage_VARs[["9"]], beh_cols)
-plot_VAR_graph(cage_VARs[["3"]], beh_cols)
-plot_VAR_graph(cage_VARs[["A"]], beh_cols)
-
-
-plot_VAR_graph(group_VARs[["LBN"]], beh_cols)
-plot_VAR_graph(group_VARs[["CONT"]], beh_cols)
-
 ```
 
 ### Control vs LBN comparison
@@ -2091,170 +2077,6 @@ diff_results <- map_dfr(names(cage_VARs), function(cage_id) {
 # Añadir condición a cada jaula
 diff_results <- left_join(diff_results, cage_conditions, by = "Cage.ID")
 
-# Ordenar de más diferente a más similar a CONT
-diff_results_sorted <- diff_results %>% arrange(desc(Frobenius_Dist))
-
-print(diff_results_sorted)
-
-```
-
-### All cages comparison
-
-```{r}
-
-diff_results <- map_dfr(names(cage_VARs), function(cage_id) {
-  result <- tryCatch({
-    model <- cage_VARs[[cage_id]]
-    
-    # Extraer matriz de coeficientes
-    coef_list <- coef(model)
-    var_names <- names(coef_list)
-    pred_names <- rownames(coef_list[[1]])
-    
-    mat <- matrix(NA, nrow = length(pred_names), ncol = length(var_names),
-                  dimnames = list(pred_names, var_names))
-    
-    for (var in var_names) {
-      mat[, var] <- coef_list[[var]][, "Estimate"]
-    }
-
-    # Excluir comportamientos si es necesario
-    exclude <- c("Carryingpups")
-    exclude_lags <- paste0(exclude, ".l1")
-    mat <- mat[
-      !(rownames(mat) %in% exclude_lags) & rownames(mat) != "const",
-      !(colnames(mat) %in% exclude),
-      drop = FALSE
-    ]
-
-    dist_val <- norm(mat, type = "F")
-
-    data.frame(Cage.ID = cage_id, Frobenius_Dist = dist_val)
-  }, error = function(e) {
-    data.frame(Cage.ID = cage_id, Frobenius_Dist = NA)
-  })
-})
-
-diff_results <- left_join(diff_results, cage_conditions, by = "Cage.ID")
-diff_results_sorted <- diff_results %>% arrange(desc(Frobenius_Dist))
-
-print(diff_results_sorted)
-
-```
-
-### PCA
-
-```{r}
-
-
-# 1. Extraer y vectorizar matrices
-vectorized_matrices <- map_dfr(names(cage_VARs), function(cage_id) {
-  result <- tryCatch({
-    model <- cage_VARs[[cage_id]]
-    coef_list <- coef(model)
-    var_names <- names(coef_list)
-    pred_names <- rownames(coef_list[[1]])
-    
-    mat <- matrix(NA, nrow = length(pred_names), ncol = length(var_names),
-                  dimnames = list(pred_names, var_names))
-    
-    for (var in var_names) {
-      mat[, var] <- coef_list[[var]][, "Estimate"]
-    }
-    
-    # Excluir comportamientos si quieres
-    exclude <- c("Carryingpups")
-    exclude_lags <- paste0(exclude, ".l1")
-    mat <- mat[
-      !(rownames(mat) %in% exclude_lags) & rownames(mat) != "const",
-      !(colnames(mat) %in% exclude),
-      drop = FALSE
-    ]
-    
-    vec <- as.vector(mat)
-    names(vec) <- paste(rep(rownames(mat), times = ncol(mat)), rep(colnames(mat), each = nrow(mat)), sep = "_")
-    data.frame(Cage.ID = cage_id, t(vec))
-  }, error = function(e) {
-    message(paste("Error with cage", cage_id, ":", e$message))
-    return(NULL)
-  })
-})
-
-# 2. Añadir condición si tienes ese dataframe
-vectorized_matrices <- left_join(vectorized_matrices, cage_conditions, by = "Cage.ID")
-
-# 3. PCA
-pca_input <- vectorized_matrices %>% select(where(is.numeric)) %>% drop_na()
-row_names <- vectorized_matrices$Cage.ID[complete.cases(vectorized_matrices)]
-
-vectorized_matrices <- vectorized_matrices %>%
-  drop_na()
-
-pca_input <- vectorized_matrices %>%
-  select(where(is.numeric))
-
-# 2. Eliminar columnas con varianza 0
-var_zero <- apply(pca_input, 2, function(col) var(col) == 0)
-pca_input_filtered <- pca_input[, !var_zero]
-
-# 3. PCA
-pca_res <- FactoMineR::PCA(pca_input_filtered, scale.unit = TRUE, graph = FALSE)
-summary(pca_res)
-
-dim <- 4
-# 4. Coordenadas para clustering
-df_scores <- as.data.frame(pca_res$ind$coord[, 1:dim])
-df_scores$Cage.ID <- vectorized_matrices$Cage.ID[complete.cases(pca_input)] 
-df_scores <- left_join(df_scores, cage_conditions, by = "Cage.ID")
-
-# 5. Clustering jerárquico
-hc <- hclust(dist(df_scores[, 1:dim]), method = "ward.D2")
-dend <- as.dendrogram(hc)
-
-# 6. Clustering dinámico
-diss_matrix <- as.matrix(dist(df_scores[, 1:dim]))
-clusters <- cutree(hc, k = 3)
-df_scores$cluster <- factor(clusters)
-
-# 7. Dendrograma con colores
-ordered_clusters <- clusters[order.dendrogram(dend)]
-cluster_colors <- brewer.pal(length(unique(clusters)), "Set2")
-cluster_color_map <- setNames(cluster_colors, sort(unique(clusters)))
-branch_colors <- cluster_color_map[as.character(ordered_clusters)]
-
-dend <- color_branches(dend, k = length(unique(clusters)), col = cluster_colors)
-dend <- set(dend, "branches_lwd", 3)
-dend <- set(dend, "labels", as.character(ordered_clusters))
-dend <- set(dend, "labels_col", branch_colors)
-dend <- set(dend, "labels_cex", 1.2)
-
-plot(dend, main = "Dendrograma con clusters coloreados")
-legend("topright", legend = paste("Cluster", sort(unique(clusters))),
-       fill = cluster_colors, border = NA, bty = "n")
-
-# 8. PCA plot con colores de cluster y formas por condición
-ggplot(df_scores, aes(x = Dim.1, y = Dim.2, color = cluster, shape = Condition)) +
-  geom_point(size = 3, alpha = 0.8) +
-  geom_text_repel(aes(label = Cage.ID), size = 3) +
-  scale_shape_manual(values = c("LBN" = 16, "CONT" = 15)) +
-  labs(title = "Clusters sobre PCA", color = "Cluster", shape = "Condition") +
-  theme_minimal()
-
-# 9. Proporciones por jaula
-proportions <- df_scores %>%
-  group_by(Cage.ID, cluster) %>%
-  summarise(nb_obs = n(), .groups = 'drop') %>%
-  group_by(Cage.ID) %>%
-  mutate(total_obs = sum(nb_obs), prop_cluster = nb_obs / total_obs) %>%
-  arrange(Cage.ID, desc(prop_cluster)) %>%
-  left_join(cage_conditions, by = "Cage.ID")
-
-# 10. Cluster dominante por jaula
-dominant_clusters <- proportions %>%
-  slice_max(prop_cluster, n = 1) %>%
-  arrange(cluster, desc(prop_cluster))
-
-print(dominant_clusters, n = 100)
 ```
 
 ### ALL vs ALL
@@ -2301,11 +2123,8 @@ frobenius_df <- as.data.frame(as.table(frobenius_mat)) %>%
   filter(CageA != CageB)%>%
   drop_na()
 
-# 5. Ver resultados
 head(frobenius_df)
 
-# Opcional: heatmap rápido
-library(pheatmap)
 pheatmap(frobenius_mat, 
          main = "Distancia de Frobenius entre modelos VAR",
          display_numbers = TRUE, 
@@ -2314,7 +2133,9 @@ pheatmap(frobenius_mat,
          fontsize_col = 10)
 ```
 
-# correlations
+# Linear analysis
+
+## Correlations
 
 ```{r}
 # Columnas de comportamientos y fenotipos
@@ -2386,6 +2207,8 @@ corrplot(t(cor_cross_filtered),
 
 ```
 
+## Predictions
+
 ```{r}
 # Function to train models using only behavioral data
 models <- list()
@@ -2429,342 +2252,4 @@ pheatmap(t(as.matrix(predictions_heatmap_data)),
          fontsize = 8,
          fontsize_row = 8,
          fontsize_col = 8)
-
-```
-
-### TEst
-
-```{r}
-# Crear una matriz simétrica de distancias
-frobenius_wide <- frobenius_df %>%
-  pivot_wider(names_from = CageB, values_from = Frobenius_Dist, values_fill = 0) %>%
-  column_to_rownames("CageA") %>%
-  as.matrix()
-
-# Asegurar que sea simétrica (por si acaso)
-frob_mat <- frobenius_wide + t(frobenius_wide)
-diag(frob_mat) <- 0
-
-# Crear objeto dist
-frob_dist <- as.dist(frob_mat)
-
-# Seleccionar y convertir a data.frame
-meta_df <- as.data.frame(clusters$proportions %>%
-  dplyr::select(CageID, cluster, Condition))
-
-# Eliminar filas duplicadas para CageID (por ejemplo, manteniendo la primera ocurrencia)
-meta_df <- meta_df[!duplicated(meta_df$CageID), ]
-
-# Ahora poner rownames
-rownames(meta_df) <- meta_df$CageID
-
-# Reordenar según frob_mat (supongo que frob_mat es matriz con rownames)
-meta_df <- meta_df[rownames(frob_mat), ]
-
-
-rownames(meta_df) <- meta_df$CageID
-meta_df <- meta_df[rownames(frob_mat), ]  # asegurar mismo orden
-
-```
-
-```{r}
-library(dplyr)
-
-# Filtrar meta_df para excluir Condition == "CONT"
-meta_df_filtered <- meta_df %>% filter(Condition != "CONT")
-
-# Filtrar la matriz de distancias para que solo queden cages no CONT
-cages_to_keep <- meta_df_filtered$CageID
-frob_mat_filtered <- frob_mat[cages_to_keep, cages_to_keep]
-
-# Funciones para calcular distancias con la matriz filtrada y el meta_df filtrado
-calc_mean_cluster_dist <- function(cage_id, cluster_id, frob_mat, meta_df) {
-  cluster_cages <- meta_df %>% filter(cluster == cluster_id) %>% pull(CageID)
-  cluster_cages <- setdiff(cluster_cages, cage_id)
-  if(length(cluster_cages) == 0) return(NA)
-  dists <- frob_mat[cage_id, cluster_cages]
-  mean(dists, na.rm = TRUE)
-}
-
-calc_mean_between_cluster_dist <- function(cage_id, cluster_id, frob_mat, meta_df) {
-  other_cages <- meta_df %>% filter(cluster != cluster_id) %>% pull(CageID)
-  if(length(other_cages) == 0) return(NA)
-  dists <- frob_mat[cage_id, other_cages]
-  mean(dists, na.rm = TRUE)
-}
-
-# Aplicar los cálculos a meta_df_filtered
-meta_df_filtered <- meta_df_filtered %>%
-  rowwise() %>%
-  mutate(
-    mean_cluster_dist = calc_mean_cluster_dist(CageID, cluster, frob_mat_filtered, meta_df_filtered),
-    mean_between_cluster_dist = calc_mean_between_cluster_dist(CageID, cluster, frob_mat_filtered, meta_df_filtered)
-  ) %>%
-  ungroup()
-
-print(meta_df_filtered)
-
-
-```
-
-# new var
-
-```{r}
-
-maternal_cluster_df <- maternal_full_df %>%
-  left_join(meta_df, by = c("Cage.ID" = "CageID"))
-
-maternal_cluster_df$cluster <- ifelse(is.na(maternal_cluster_df$cluster), "unknown", as.character(maternal_cluster_df$cluster))
-
-maternal_cluster_df$cluster <- factor(maternal_cluster_df$cluster)
-
-cluster_VARs <- fit_VAR_models(
-  df = maternal_cluster_df,
-  group_by_col = "cluster",
-  bin_size = 60,
-  auto_lag = TRUE,
-  lag_max = 5
-)
-
-maternal_cluster_df <- maternal_full_df %>%
-  left_join(meta_df, by = c("Cage.ID" = "CageID"))
-
-maternal_cluster_df$cluster <- ifelse(is.na(maternal_cluster_df$cluster), "unknown", as.character(maternal_cluster_df$cluster))
-
-maternal_cluster_df$cluster <- factor(maternal_cluster_df$cluster)
-
-cluster2_VARs <- fit_VAR_models(
-  df = maternal_cluster_df,
-  group_by_col = "cluster",
-  bin_size = 60,
-  auto_lag = TRUE,
-  lag_max = 5
-)
-
-cluster_VARs <- fit_VAR_models(
-  df = maternal_cluster_df,
-  group_by_col = "cluster",
-  bin_size = 60,
-  auto_lag = TRUE,
-  lag_max = 10
-)
-
-# Luego, por ejemplo, para graficar el cluster 0
-plot_VAR_graph(cluster_VARs[["0"]], beh_cols)
-
-# Para graficar el cluster 1
-plot_VAR_graph(cluster_VARs[["1"]], beh_cols)
-
-# Y así sucesivamente para cada cluster que tengas
-
-```
-
-# VAR comparision
-
-```{r}
-comparar_VARs_MANOVA_PCA <- function(list_VAR_A, list_VAR_B, n_pcs = 3, remove_const = TRUE) {
-  # Extraer coeficientes de un modelo VAR
-  extract_coefs <- function(var_model) {
-    coefs_list <- coef(var_model)
-    coef_vector <- unlist(lapply(coefs_list, function(mat) {
-      if (remove_const && "const" %in% rownames(mat)) {
-        mat <- mat[rownames(mat) != "const", , drop = FALSE]
-      }
-      mat[, "Estimate"]
-    }))
-    return(coef_vector)
-  }
-
-  # Obtener todos los coeficientes
-  coefs_A <- lapply(list_VAR_A, extract_coefs)
-  coefs_B <- lapply(list_VAR_B, extract_coefs)
-
-  # Igualar longitud
-  min_len <- min(sapply(c(coefs_A, coefs_B), length))
-  coefs_A <- lapply(coefs_A, function(x) x[1:min_len])
-  coefs_B <- lapply(coefs_B, function(x) x[1:min_len])
-
-  # Matriz completa
-  mat_A <- do.call(rbind, coefs_A)
-  mat_B <- do.call(rbind, coefs_B)
-  mat_total <- rbind(mat_A, mat_B)
-
-  # Etiquetas de grupo
-  grupo <- factor(c(rep("A", nrow(mat_A)), rep("B", nrow(mat_B))))
-
- # Filtrar columnas constantes
-  mat_total <- mat_total[, apply(mat_total, 2, function(col) sd(col) > 0), drop = FALSE]
-  
-  # PCA
-  pca <- prcomp(mat_total, scale. = TRUE)
-  pcs <- pca$x[, 1:n_pcs, drop = FALSE]
-
-
-  df_manova <- data.frame(grupo, pcs)
-
-  # MANOVA
-  fit <- manova(as.matrix(df_manova[, -1]) ~ grupo, data = df_manova)
-  resumen <- summary(fit, test = "Hotelling-Lawley")
-
-  list(
-    manova = fit,
-    resumen = resumen,
-    p_value = resumen$stats[1, "Pr(>F)"],
-    df = df_manova,
-    pca = pca
-  )
-}
-
-
-
-a <- list(cage_VARs[["3"]], cage_VARs[["7"]])
-b <- list(cage_VARs[["1"]], cage_VARs[["A"]], cage_VARs[["C"]])
-
-
-resultado <- comparar_VARs_MANOVA_PCA(a, b, n_pcs = 3)
-resultado$p_value 
-```
-
-```{r}
-extract_coefs <- function(var_model) {
-  coefs_list <- coef(var_model)  # lista, cada elemento es matriz de coeficientes para variable endógena
-  coef_vector <- unlist(lapply(coefs_list, function(mat) {
-    # quitar fila 'const' si está y extraer columna "Estimate"
-    if ("const" %in% rownames(mat)) {
-      mat <- mat[rownames(mat) != "const", , drop=FALSE]
-    }
-    mat[, "Estimate"]
-  }))
-  return(coef_vector)
-}
-
-test_permutacion_VAR <- function(model_A, model_B, metric = c("MAE", "MSE", "STANDARDIZED"), n_perm = 10000, seed = 123, exponent = NULL) {
-  set.seed(seed)
-  metric <- match.arg(metric)
-  
-  extract_coefs_se <- function(model) {
-    coefs <- coef(model)
-    coef_vec <- c()
-    se_vec <- c()
-    
-    for (var in names(coefs)) {
-      mat <- coefs[[var]]
-      mat <- mat[rownames(mat) != "const", , drop = FALSE]
-      coef_vec <- c(coef_vec, mat[, "Estimate"])
-      se_vec <- c(se_vec, mat[, "Std. Error"])
-    }
-    list(coef = coef_vec, se = se_vec)
-  }
-  
-  vals_A <- extract_coefs_se(model_A)
-  vals_B <- extract_coefs_se(model_B)
-  
-  min_len <- min(length(vals_A$coef), length(vals_B$coef))
-  coefs_A <- vals_A$coef[1:min_len]
-  coefs_B <- vals_B$coef[1:min_len]
-  se_A <- vals_A$se[1:min_len]
-  se_B <- vals_B$se[1:min_len]
-  
-  # Filtrar coeficientes y errores no válidos o cero en errores
-  valid_idx <- which(!is.na(coefs_A) & !is.na(coefs_B) & !is.na(se_A) & !is.na(se_B) & se_A > 1e-6 & se_B > 1e-6)
-  coefs_A <- coefs_A[valid_idx]
-  coefs_B <- coefs_B[valid_idx]
-  se_A <- se_A[valid_idx]
-  se_B <- se_B[valid_idx]
-  
-  calc_diff <- function(a, b, se_a = NULL, se_b = NULL) {
-    if (!is.null(exponent)) {
-      mean(abs(a - b)^exponent)
-    } else if (metric == "MAE") {
-      mean(abs(a - b))
-    } else if (metric == "MSE") {
-      mean((a - b)^2)
-    } else if (metric == "STANDARDIZED") {
-      se_pooled <- sqrt((se_a^2 + se_b^2)/2)
-      mean(abs((a - b) / se_pooled))
-    }
-  }
-  
-  delta_obs <- calc_diff(coefs_A, coefs_B, se_A, se_B)
-  
-  combined <- c(coefs_A, coefs_B)
-  n <- length(coefs_A)
-  
-  deltas_perm <- replicate(n_perm, {
-    permuted <- sample(combined)
-    perm_A <- permuted[1:n]
-    perm_B <- permuted[(n + 1):(2 * n)]
-    calc_diff(perm_A, perm_B, se_A, se_B)
-  })
-  
-  p_val <- mean(deltas_perm >= delta_obs)
-  
-  list(
-    delta_observada = delta_obs,
-    p_value = p_val,
-    distribucion_perm = deltas_perm
-  )
-}
-
-# Prueba con exponent=3 o con metric="STANDARDIZED"
-test_permutacion_VAR(cage_VARs[["7"]], cage_VARs[["6"]], n_perm=10000, exponent=3)$p_value
-
-
-```
-
-```{r}
-model_A =cage_VARs[["7"]]
-model_B = cage_VARs[["6"]]
-
-# Ejemplo:
-AIC_A <- AIC(model_A)
-BIC_A <- BIC(model_A)
-
-AIC_B <- AIC(model_B)
-BIC_B <- BIC(model_B)
-
-cat("Modelo A - AIC:", AIC_A, "BIC:", BIC_A, "\n")
-cat("Modelo B - AIC:", AIC_B, "BIC:", BIC_B, "\n")
-
-if (AIC_A < AIC_B) {
-  cat("Modelo A tiene mejor AIC\n")
-} else {
-  cat("Modelo B tiene mejor AIC\n")
-}
-
-if (BIC_A < BIC_B) {
-  cat("Modelo A tiene mejor BIC\n")
-} else {
-  cat("Modelo B tiene mejor BIC\n")
-}
-
-```
-
-```{r}
-
-# Create a data frame with the given data
-data <-  fr
-  
-# Function to find the entry with the smallest Frobenius distance for each CageA
-find_min_frobenius <- function(data) {
-  # Split the data by CageA
-  split_data <- split(data, data$CageA)
-
-  # Find the entry with the smallest Frobenius_Dist for each CageA
-  result <- lapply(split_data, function(group) {
-    group[which.min(group$Frobenius_Dist), ]
-  })
-
-  # Combine the results into a single data frame
-  result_df <- do.call(rbind, result)
-
-  return(result_df)
-}
-
-# Find the most probable match for each CageA
-result <- find_min_frobenius(data)
-
-# Print the result
-print(result)
-
 ```

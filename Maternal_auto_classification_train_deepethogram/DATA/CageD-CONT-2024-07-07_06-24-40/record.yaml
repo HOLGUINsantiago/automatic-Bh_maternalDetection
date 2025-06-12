@@ -1,0 +1,22 @@
+flow:
+  all: []
+  default: []
+key: CageD- CONT-2024-07-07_06-24-40
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - CageD- CONT-2024-07-07_06-24-40_labels.csv
+  default: CageD- CONT-2024-07-07_06-24-40_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - CageD- CONT-2024-07-07_06-24-40.mp4
+  default: CageD- CONT-2024-07-07_06-24-40.mp4
+stats:
+  all:
+  - stats.yaml
+  default: stats.yaml

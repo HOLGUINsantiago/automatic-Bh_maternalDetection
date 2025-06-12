@@ -6,15 +6,18 @@ keypoint:
   all: []
   default: []
 label:
-  all: []
-  default: []
+  all:
+  - Cage8-CONT-2024-12-13_07-07-33_labels.csv
+  default: Cage8-CONT-2024-12-13_07-07-33_labels.csv
 output:
-  all: []
-  default: []
+  all:
+  - Cage8-CONT-2024-12-13_07-07-33_outputs.h5
+  default: Cage8-CONT-2024-12-13_07-07-33_outputs.h5
 rgb:
   all:
   - Cage8-CONT-2024-12-13_07-07-33.mp4
   default: Cage8-CONT-2024-12-13_07-07-33.mp4
 stats:
-  all: []
-  default: []
+  all:
+  - stats.yaml
+  default: stats.yaml
