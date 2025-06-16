@@ -33,8 +33,8 @@ library(FactoMineR)
 library(factoextra)
 library(ggrepel)
 library(randomForest)
-library(cluster)     # For clustering
-library(dendextend)  # For nicer dendrograms
+library(cluster)     
+library(dendextend)  
 library(pheatmap)
 library(dynamicTreeCut)
 library(dbscan)
@@ -44,91 +44,139 @@ library(igraph)
 library(tidygraph)
 library(corrplot)
 library(vegan)
-
+library(readxl)
+library(here)
+library(package)
 ```
 
 # Data preparation
 
-## Importing data sets :
+## Importing data-sets :
 
-Some pups were eliminated because of the lack of data existing on them
+-   Data–sets most contain headers and be on csv format.
+
+<!-- -->
+
+-   Maternal cage column name must be "CageID", maternal cage pup id column name must be "PupID", adult and juvenile pup's IDs key columns name must be "id"
+
+-   For data merging, maternal cage name is added to the actual id
+
+-   actual cage for adult and ado df must be named "cage"
+
+### Importing function and other declarations
 
 ```{r}
-juvenile_df <- read.csv2("D:/Stage_VAEVE_2025/Analysis of results/LBN/Veave - metadatafile-juvenile-all-full.csv", stringsAsFactors=TRUE)
+import_csv <- function(..., sep = ";", stringsAsFactors = TRUE, header = TRUE, encoding = "UTF-8") {
+  path <- here(...)  # Constructs the full path from parts
+  read.csv(path, sep = sep, stringsAsFactors = stringsAsFactors, header = header, fileEncoding = encoding)
+}
+
+deadPups <- c("C1-3", "C7-1")
+```
+
+### Juvenile data
+
+```{r}
+juvenile_df <- import_csv("pups_data","juvenile","Veave - metadatafile-juvenile-all-full.csv")  # Load juvenile metadata file with semicolon separator
 
 juvenile_df <- juvenile_df %>%
   mutate(
-    CageID = trimws(CageID),
-    CageID = sub("(?i)^cage\\s*", "", CageID, perl = TRUE)
+    CageID = trimws(CageID),  # Remove leading/trailing whitespaces
+    CageID = sub("(?i)^cage\\s*", "", CageID, perl = TRUE)  # Remove "Cage" prefix 
   )
 
-juvenile_df <- subset(juvenile_df, Project %in% c("VEAVE"))
+juvenile_df <- subset(juvenile_df, Project %in% c("VEAVE"))  # Keep only rows from the VEAVE project
 
-juvenile_df_only <- subset(juvenile_df, Cohort %in% c("Cohort 0", "Cohort 1", "Cohort 2"))
+juvenile_df_only <- subset(juvenile_df, Cohort %in% c("Cohort 0", "Cohort 1", "Cohort 2"))  # Filter specific cohorts
 
-maternal_df <- read.csv("D:/Stage_VAEVE_2025/LBN/Resume_df.csv")
-maternal_df$Transition <- maternal_df$Nest_exits_bouts + maternal_df$Nest_entry_bouts
+ids_a_eliminar <- deadPups  # List of PupIDs to remove : dead pups
+juvenile_df <- juvenile_df %>% 
+  filter(!(PupID %in% ids_a_eliminar))  # Filter out specific PupIDs
+```
+
+### Adolescent data
+
+```{r}
+ado_df <- import_csv("pups_data","ado","...")  
+```
+
+### adult data
+
+```{r}
+adult_df <- import_csv("pups_data","adult","...") 
+```
+
+### Mapping IDs
+
+```{r}
+# Load the pups mapping file (contains cage, pup_id, maternal_Cage, etc.)
+mapps <- import_csv("pups_data", "...")
+
+# Create a standardized Pup_label per individual, prefixed with "C" only if needed
+mapps$Pup_label <- ifelse(
+  startsWith(as.character(mapps$maternal_Cage), "C"),
+  paste0(mapps$maternal_Cage, "-", mapps$pup_id),
+  paste0("C", mapps$maternal_Cage, "-", mapps$pup_id)
+)
+
+# Join mapps to ado_df using keys: cage and pup_id
+ado_df <- ado_df %>%
+  left_join(mapps %>% select(cage, pup_id, Pup_label),
+            by = c("cage", "pup_id"))
+
+# Join mapps to adult_df using same keys
+adult_df <- adult_df %>%
+  left_join(mapps %>% select(cage, pup_id, Pup_label),
+            by = c("cage", "pup_id"))
+
+```
+
+### Maternal data
+
+```{r}
+
+maternal_df <- import_csv("maternal_data","Resume_df.csv")  
+
+maternal_df$Transition <- maternal_df$Nest_exits_bouts + maternal_df$Nest_entry_bouts  # Calculate total transitions
+
 maternal_df <- maternal_df %>%
-  mutate(Day = floor(Time / 86400) + 1)
+  mutate(Day = floor(Time / 86400) + 1)  # Convert time (in seconds) to day number (1-indexed)
 
 maternal_df <- maternal_df %>%
-  filter(Day >= 1 & Day <= 7)
+  filter(Day >= 1 & Day <= 7)  # Keep only days 1 to 7
 
 if ("Start_time" %in% colnames(maternal_df)) {
   maternal_df <- maternal_df %>%
-    mutate(Start_time = ymd_hms(gsub("T", " ", Start_time))) %>%
-    filter(!(hour(Start_time) >= 7 & hour(Start_time) < 20))
+    mutate(Start_time = ymd_hms(gsub("T", " ", Start_time))) %>%  # Convert Start_time from ISO format to POSIXct
+    filter(!(hour(Start_time) == 7 & minute(Start_time) >= 30 | hour(Start_time) > 7 & hour(Start_time) < 20))
+  # Remove daytime (7:30 to 19:59)
 }
 
-maternal_full_df <- read.csv("D:/Stage_VAEVE_2025/LBN/behavioural_annotation.csv")
-maternal_full_df <- maternal_full_df %>%
-  mutate(Start_time = ymd_hms(gsub("T", " ", Start_time)))
+maternal_full_df <- import_csv("maternal_data","behavioural_annotation.csv")  # Load full maternal annotation data
 
-maternal_full_df$Time <- NA_real_
+maternal_full_df <- maternal_full_df %>%
+  mutate(Start_time = ymd_hms(gsub("T", " ", Start_time)))  # Convert Start_time to POSIXct format
+
+maternal_full_df$Time <- NA_real_  # Initialize Time column
 
 maternal_full_df <- maternal_full_df %>%
   group_by(Cage) %>%
   mutate(
-    start_0 = min(Start_time, na.rm = TRUE),
-    total_frames = max(frame, na.rm = TRUE),
-    Time = as.numeric(difftime(Start_time, start_0, units = "secs")) +
-      frame * Recording_duration / total_frames
+    start_0 = min(Start_time, na.rm = TRUE),  # Define the starting timestamp per cage
+    total_frames = max(frame, na.rm = TRUE),  # Get total number of frames per cage
+    Time = as.numeric(difftime(Start_time, start_0, units = "secs")) +  # Compute elapsed time since start
+      frame * Recording_duration / total_frames  # Adjust using frame index and recording duration
   ) %>%
   ungroup() %>%
   select(-start_0, -total_frames) %>%
-  mutate(Day = floor(Time / 86400) + 1)
+  mutate(Day = floor(Time / 86400) + 1)  # Compute the day number from total seconds
 
 maternal_full_df <- maternal_full_df %>%
-  filter(Day >= 1 & Day <= 7) %>%
-  filter(!(hour(Start_time) >= 7 & hour(Start_time) < 20))
+  filter(Day >= 1 & Day <= 7) %>%  # Keep days 1 to 7
+  filter(!(hour(Start_time) == 7 & minute(Start_time) >= 30 | hour(Start_time) > 7 & hour(Start_time) < 20))
+ # Remove data from light phase (7:30–19:59)
 
-maternal_df$Group <- as.factor(maternal_df$Group)
-
-
-ids_a_eliminar <- c("C1-3", "C7-1") 
-juvenile_df <- juvenile_df %>% 
-  filter(!(PupID %in% ids_a_eliminar))
-
-ado_df <- read.csv("D:/Stage_VAEVE_2025/Analysis of results/LBN/Ado-SIT-data.csv", sep=";", stringsAsFactors=TRUE)
-
-juvenile_cages_temp <- juvenile_df %>%
-  dplyr::select(ID.blind, CageID) %>%
-  dplyr::rename(Dam_cage = CageID)
-
-ado_df <- ado_df %>%
-  rename(ID.blind = Blind.ID)
-
-ado_df <- ado_df %>%
-  left_join(juvenile_df %>% dplyr::select(ID.blind, CageID) %>% rename(Dam_cage = CageID), 
-            by = "ID.blind")
-```
-
-### NT
-
-```{r}
-library(readxl)
-Nt_df <- read_excel("D:/Stage_VAEVE_2025/Veave - Analyse NTs_221124-R.xlsx", sheet = "NT-R-stack")
-
+maternal_df$Group <- as.factor(maternal_df$Group)  # Ensure Group is treated as a factor
 
 ```
 
@@ -137,66 +185,62 @@ Nt_df <- read_excel("D:/Stage_VAEVE_2025/Veave - Analyse NTs_221124-R.xlsx", she
 Nonparametric Missing Value Imputation using Random Forest : The function 'missForest' in this package is used to impute missing values particularly in the case of mixed-type data. It uses a random forest trained on the observed values of a data matrix to predict the missing values. It can be used to impute continuous and/or categorical data including complex interactions and non-linear relations. It yields an out-of-bag (OOB) imputation error estimate without the need of a test set or elaborate cross-validation. It can be run in parallel to save computation time.
 
 ```{r}
-juvenile_df[] <- lapply(juvenile_df, function(col) {
-  if (is.character(col)) as.factor(col) else col
-})
-
-missing_pct <- colMeans(is.na(juvenile_df)) * 100
-missing_df <- data.frame(Column = names(missing_pct), Missing_Percentage = round(missing_pct, 2))
-kable(missing_df, format = "markdown")
-
-juvenile_df_only[] <- lapply(juvenile_df_only, function(col) {
-  if (is.character(col)) as.factor(col) else col
-})
-
-missing_pct <- colMeans(is.na(juvenile_df_only)) * 100
-missing_df <- data.frame(Column = names(missing_pct), Missing_Percentage = round(missing_pct, 2))
-kable(missing_df, format = "markdown")
-
-process_data <- function(df, df_name = "df") {
+process_missing_data <- function(df, df_name = "df") {
+  # Convert character columns to factors
+  df[] <- lapply(df, function(col) {
+    if (is.character(col)) as.factor(col) else col
+  })
+  
+  # Calculate and print missing percentages
   missing_pct <- colMeans(is.na(df)) * 100
+  missing_df <- data.frame(Column = names(missing_pct), Missing_Percentage = round(missing_pct, 2))
+  cat("\n[", df_name, "] Missing data percentages:\n")
+  print(kable(missing_df, format = "markdown"))
   
+  # Identify and remove columns with >30% missing data
   to_remove_missing <- names(missing_pct[missing_pct > 30])
-  cat("\n[", df_name, "] Columnas eliminadas por >30% missing:\n", to_remove_missing, "\n")
-  
+  cat("\n[", df_name, "] Columns removed due to >30% missing:\n", to_remove_missing, "\n")
   df_clean <- df[, !(names(df) %in% to_remove_missing)]
   
-  apply_mf <- any(colMeans(is.na(df_clean)) * 100 <= 30)
-  if (apply_mf) {
-    cat("[", df_name, "] Aplicando missForest...\n")
+  # Check if any columns remain to impute
+  if (any(colMeans(is.na(df_clean)) * 100 > 0)) {
+    cat("[", df_name, "] Applying missForest imputation...\n")
     
-    # Identificar columnas problemáticas
+    # Identify factor columns with too many levels (>53)
     too_many_levels <- sapply(df_clean, function(col) is.factor(col) && nlevels(col) > 53)
     problematic_cols <- names(df_clean)[too_many_levels]
     
-    # Separar columnas a excluir temporalmente
+    # Separate problematic columns and data for imputation
     df_problematic <- df_clean[, problematic_cols, drop = FALSE]
     df_for_imputation <- df_clean[, !too_many_levels, drop = FALSE]
     
-    # Aplicar missForest
+    # Impute missing data with missForest
     imputed_result <- missForest(df_for_imputation)
     df_imputed <- imputed_result$ximp
     
-    # Volver a unir las columnas problemáticas (en el orden original)
-    df_final <- df[, names(df) %in% colnames(df_imputed) | names(df) %in% problematic_cols]
-    df_final[names(df_imputed)] <- df_imputed
-    df_final[problematic_cols] <- df_problematic
+    # Recombine imputed and problematic columns, preserving original column order
+    df_final <- df_clean[, c(names(df_imputed), problematic_cols)]
+    df_final[, names(df_imputed)] <- df_imputed
+    df_final[, problematic_cols] <- df_problematic
   } else {
+    cat("[", df_name, "] No missing data to impute.\n")
     df_final <- df_clean
   }
   
   return(df_final)
 }
 
-juvenile_all_completed  <- process_data(juvenile_df, "juvenile_df")
-juvenile_unic_completed <- process_data(juvenile_df_only, "juvenile_df_only")
+# Example: apply on juvenile_df, ado_df, adult_df
+juvenile_all_completed <- process_missing_data(juvenile_df, "juvenile_df")
+ado_all_completed      <- process_missing_data(ado_df, "ado_df")
+adult_all_completed    <- process_missing_data(adult_df, "adult_df")
 ```
 
 # Functions creation
 
 ## Maternal analysis
 
-### CONT vs LBN boxplot
+### CONT vs LBN box-plot
 
 ```{r}
 
@@ -260,10 +304,9 @@ plot_behavior_boxplot <- function(df, title, y_label, base_colors, value_column)
 
 ```
 
-### CONT vs LBN day by day evolution boxplots
+### CONT vs LBN day by day evolution box-plots
 
 ```{r}
-
 
 plot_duration_ratio_with_wilcox <- function(df, y_var, title, y_label, colors) {
   y_var_sym <- sym(y_var)
@@ -446,10 +489,6 @@ analyser_clusters_pca_mat <- function(df_all_corrected, vars_interes, nombreDime
     clusters <- cutree(hc, k = k)
     message(paste("Clustering avec k =", k))
   }
-  
-  # Construction du dendrogramme coloré
-  library(dendextend)
-  library(RColorBrewer)
   
   dend <- as.dendrogram(hc)
   ordered_clusters <- clusters[order.dendrogram(dend)]
@@ -729,7 +768,7 @@ plot_variable_box <- function(df, df_condition, var_name, fill_colors, y_label) 
 }
 ```
 
-### PCA
+### PCA- pups
 
 ```{r}
 
@@ -1451,7 +1490,7 @@ plot_VAR_graph <- function(var_model, var_name_labels = NULL,
 
 ```{r}
 
-compare_VAR_models <- function(model_A, model_B, exclude = NULL, plot = TRUE, title = "Diferencias entre coeficientes") {
+compare_VAR_models <- function(model_A, model_B, exclude = NULL, plot = TRUE, title = "Differences") {
   
   # Función interna para extraer matriz de coeficientes
   extract_estimate_matrix <- function(var_model) {
@@ -1828,70 +1867,6 @@ walk(condition_impacted_normal, ~{
 
 ```
 
-## Specific maternal impacts
-
-```{r}
-generer_boxplot_cage <- function(df, var_plot, full_results) {
-  df_plot <- df %>%
-    filter(!is.na(.data[[var_plot]]), !is.na(CageID), !is.na(Condition)) %>%
-    mutate(
-      CageID = as.factor(CageID),
-      Group = paste0(Condition, "_", CageID)
-    )
-
-  group_levels <- df_plot %>%
-    distinct(Condition, CageID, Group) %>%
-    arrange(desc(Condition), CageID) %>%
-    pull(Group)
-
-  df_plot$Group <- factor(df_plot$Group, levels = group_levels)
-
-  pval <- full_results %>%
-    filter(Variable == var_plot, Facteur == "Condition") %>%
-    pull(P_adj_global) %>%
-    first()
-
-  p_label <- if (length(pval) == 0 || is.na(pval)) {
-    "p = NA"
-  } else if (pval > 0.05) {
-    "NS"
-  } else {
-    paste0("p = ", formatC(pval, format = "e", digits = 2))
-  }
-
-  ggplot(df_plot, aes(x = Group, y = .data[[var_plot]], fill = Condition)) +
-    geom_boxplot(outlier.shape = NA) +
-    geom_jitter(
-      shape = 21, size = 2, stroke = 0.3,
-      position = position_jitter(width = 0.15),
-      color = "black", aes(fill = Condition)
-    ) +
-    labs(
-      title = paste0(var_plot, " (", p_label, ")"),
-      y = var_plot,
-      x = "Cages",
-      fill = "Condition"
-    ) +
-    scale_fill_manual(values = c("LBN" = "#E69F00", "CONT" = "#56B4E9")) +
-    theme_minimal() +   theme(     panel.grid = element_blank()    ) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-}
-
-
-generer_panel_boxplots <- function(df, vars_selectionnees, full_results, ncol = 2) {
-  plots <- lapply(vars_selectionnees, function(var) {
-    generer_boxplot_cage(df, var, full_results)
-  })
-  wrap_plots(plots, ncol = ncol)
-}
-
-# Génération du panel avec p-values dans les titres
-panel <- generer_panel_boxplots(juvenile_df, cage_impacted_strict, full_results, ncol = 2)
-panel
-
-print()
-```
-
 ## PCA
 
 ### All very important variables - true data
@@ -1958,48 +1933,6 @@ cluster_rf_analysis(juvenile_all_completed, unique(c(cage_impacted_normal, cage_
 analyser_clusters_pca(juvenile_all_completed, cage_impacted_normal, 4, 6)
 ```
 
-# Dams
-
-## PCA clustering
-
-```{r}
-
-maternal_means <- maternal_df %>%
-  group_by(Cage.ID, Group) %>%
-  summarise(across(where(is.numeric), mean, na.rm = TRUE), .groups = "drop")
-
-meta_info <- maternal_df %>%
-  group_by(Cage.ID) %>%
-  summarise(
-    PupID = first(PupID),
-    Group = first(Group),
-    .groups = "drop"
-  )
-
-# 3. Join pour enrichir avec PupID
-maternal_means_full <- maternal_means %>%
-  left_join(meta_info, by = "Cage.ID")
-
-maternal_cleaned <- maternal_means_full %>%
-  mutate(Group = coalesce(Group.x, Group.y)) %>%  # Choisir un seul "Group"
-  group_by(Cage.ID, Group) %>%
-  summarise(across(where(is.numeric), mean, na.rm = TRUE), .groups = "drop")
-
-maternal_cleaned <- maternal_cleaned %>%
-  dplyr::select(-c("Recording_duration", "Day", "Time"))
-
-res_auto <- analyser_clusters_pca_mat(maternal_cleaned, colnames(maternal_cleaned),2, 5)
-```
-
-```{r}
-analyser_clusters_pca(juvenile_all_completed, colnames(juvenile_all_completed), 5, -1)
-
-```
-
-# Adolescent data
-
-## All variables testing
-
 # Maternal pattern search
 
 ## VAR
@@ -2014,7 +1947,6 @@ group_VARs <- fit_VAR_models(
   lag_max = 10
 )
 
-# Modelos por jaula
 cage_VARs <- fit_VAR_models(
   df = maternal_full_df,
   group_by_col = "Cage.ID",
@@ -2023,7 +1955,6 @@ cage_VARs <- fit_VAR_models(
   lag_max = 5
 )
 
-# Modelo global sin agrupación
 global_VAR <- fit_VAR_models(
   df = maternal_full_df,
   bin_size = 60,
@@ -2040,6 +1971,7 @@ plot_VAR_graph(cage_VARs[["7"]], beh_cols)
 
 ```{r}
 
+# Compare VAR models "A" and "1" excluding variables "Carryingpups" and "Kicking", generate plot with title "1 vs A"
 diff_matrix <- compare_VAR_models(
   model_A = cage_VARs[["A"]],
   model_B = cage_VARs[["1"]],
@@ -2048,13 +1980,15 @@ diff_matrix <- compare_VAR_models(
   plot = TRUE
 )
 
+# Extract unique Cage IDs and their experimental Groups, rename Group column to Condition
 cage_conditions <- maternal_full_df %>%
   distinct(Cage.ID, Group) %>%
   rename(Condition = Group)
 
-# Lista para guardar resultados de comparación con CONT
+# Initialize a data frame to store comparison results between each cage VAR model and the control group VAR model "CONT"
 diff_results <- map_dfr(names(cage_VARs), function(cage_id) {
   result <- tryCatch({
+    # Compare VAR model of the current cage with the control group VAR model excluding "Carryingpups"
     diff_matrix <- compare_VAR_models(
       model_A = cage_VARs[[cage_id]],
       model_B = group_VARs[["CONT"]],
@@ -2062,19 +1996,22 @@ diff_results <- map_dfr(names(cage_VARs), function(cage_id) {
       plot = FALSE
     )
     
+    # Calculate the Frobenius norm of the difference matrix if it exists and is non-empty; otherwise assign NA
     dist_val <- if (!is.null(diff_matrix) && nrow(diff_matrix) > 0 && ncol(diff_matrix) > 0) {
       norm(as.matrix(diff_matrix), type = "F")
     } else {
       NA
     }
     
+    # Return a data frame with Cage ID and the computed Frobenius distance
     data.frame(Cage.ID = cage_id, Frobenius_Dist = dist_val)
   }, error = function(e) {
+    # If error occurs during comparison, return NA for that cage ID
     data.frame(Cage.ID = cage_id, Frobenius_Dist = NA)
   })
 })
 
-# Añadir condición a cada jaula
+# Join the diff_results with cage_conditions to add experimental Condition information for each cage
 diff_results <- left_join(diff_results, cage_conditions, by = "Cage.ID")
 
 ```
@@ -2082,55 +2019,62 @@ diff_results <- left_join(diff_results, cage_conditions, by = "Cage.ID")
 ### ALL vs ALL
 
 ```{r}
-# 1. Obtener lista de Cage.IDs
+# 1. Get the list of Cage IDs from the cage_VARs list
 cage_ids <- names(cage_VARs)
 
-# 2. Inicializar matriz vacía
+# 2. Initialize an empty square matrix with NA, with row and column names as cage IDs
 n <- length(cage_ids)
 frobenius_mat <- matrix(NA, nrow = n, ncol = n, dimnames = list(cage_ids, cage_ids))
 
-# 3. Rellenar la matriz comparando cada par (i,j)
+# 3. Fill the matrix by computing pairwise Frobenius distances between VAR models
 for (i in seq_along(cage_ids)) {
   for (j in seq_along(cage_ids)) {
-    if (i <= j) {  # Solo computar una vez y simétrico
+    if (i <= j) {  # Compute only upper triangle and diagonal (matrix is symmetric)
       mat_i <- cage_VARs[[cage_ids[i]]]
       mat_j <- cage_VARs[[cage_ids[j]]]
       
+      # Calculate Frobenius distance of difference matrix, handling errors gracefully
       dist_val <- tryCatch({
         diff_matrix <- compare_VAR_models(
           model_A = mat_i,
           model_B = mat_j,
-          exclude = c("Carryingpups"),
+          exclude = c("Carryingpups"),  # Exclude this variable from comparison
           plot = FALSE
         )
         
         if (!is.null(diff_matrix) && nrow(diff_matrix) > 0 && ncol(diff_matrix) > 0) {
-          norm(as.matrix(diff_matrix), type = "F")
+          norm(as.matrix(diff_matrix), type = "F")  # Frobenius norm of difference matrix
         } else {
-          NA
+          NA  # Return NA if difference matrix is null or empty
         }
       }, error = function(e) NA)
       
+      # Assign the computed distance to both symmetric positions in the matrix
       frobenius_mat[i, j] <- dist_val
-      frobenius_mat[j, i] <- dist_val  # simétrico
+      frobenius_mat[j, i] <- dist_val
     }
   }
 }
 
-# 4. Convertir a data.frame largo si deseas
+# 4. Convert the matrix to a tidy data frame in long format
 frobenius_df <- as.data.frame(as.table(frobenius_mat)) %>%
   rename(CageA = Var1, CageB = Var2, Frobenius_Dist = Freq) %>%
-  filter(CageA != CageB)%>%
-  drop_na()
+  filter(CageA != CageB) %>%  # Remove self-comparisons
+  drop_na()  # Remove rows with NA distances
 
+# Show first rows of the data frame
 head(frobenius_df)
 
-pheatmap(frobenius_mat, 
-         main = "Distancia de Frobenius entre modelos VAR",
-         display_numbers = TRUE, 
-         clustering_method = "ward.D2",
-         fontsize_row = 10, 
-         fontsize_col = 10)
+# 5. Plot heatmap of Frobenius distances between VAR models
+pheatmap(
+  frobenius_mat, 
+  main = "Frobenius Distance Between VAR Models",
+  display_numbers = TRUE,      # Display numerical values on the heatmap
+  clustering_method = "ward.D2",
+  fontsize_row = 10, 
+  fontsize_col = 10
+)
+
 ```
 
 # Linear analysis
