@@ -37,6 +37,9 @@ Make sure to have cuda and conda installed on your PC
     
     `deepethogram`
 
+If you use DeepEthogram within Jupyter Notebook or install any packages beyond DeepEthogram's dependencies, you may experience a loss of functionality in DeepEthogram.
+We recommend creating two separate conda environments: one for Jupyter Notebook and another exclusively for DeepEthogram.
+
 ## DeepEthogram training
 We trained the open source package DeepEtogram using different labeled videos. 
 The DeepEthogram project [Maternal_auto_classification_train_deepethogram](Maternal_auto_classification_train_deepethogram) can be use for training different models. In it, complex training files can used for training with different model configurations.
@@ -61,6 +64,26 @@ You can process training results with [read metrics script](utils\validation\rea
 Different analysis for maternal and pup's data are available on [AnalyseR file](results_analysis.Rmd)
 
 ## Data availability
-Pretrained models, and annotated videos are available on demand by contacting our [Neuropsi team](https://neuropsi.cnrs.fr/departements/cnn/equipe-sylvie-granon/)
+Pretrained models, and annotated videos are available on demand by contacting Dr. Marion Rivalan ([marion.rivalan@cnrs.fr](mailto:marion.rivalan@cnrs.fr)) from [NeuroPSI Sylvie Granon team](https://neuropsi.cnrs.fr/departements/cnn/equipe-sylvie-granon/)
 
+
+## Typical errors
+- Assert error on Bout Lengths :
+  - Change the asserts block on process function, defining a predeterminated bout_length
+    ```{python}
+    def __init__(self, thresholds: np.ndarray, bout_lengths: list, **kwargs):
+            super().__init__(thresholds, **kwargs)
+
+            if bout_lengths is None or len(thresholds) != len(bout_lengths):
+                print(f"[WARNING] Ajustando bout_lengths automáticamente: thresholds={len(thresholds)}, bout_lengths={len(bout_lengths) if bout_lengths else 'None'}")
+                bout_lengths = [10] * len(thresholds)
+                self.bout_lengths = bout_lengths
+
+        def process(self, probabilities: np.ndarray) -> np.ndarray:
+            T, K = probabilities.shape
+            if (not hasattr(self, 'bout_lengths') or self.bout_lengths is None or K != len(self.bout_lengths)):
+                print(f"[WARNING] Ajustando bout_lengths automáticamente")
+                bout_lengths = [10] * K
+                self.bout_lengths = bout_lengths
+    ```
 ### Good maternal video processing !!!!!

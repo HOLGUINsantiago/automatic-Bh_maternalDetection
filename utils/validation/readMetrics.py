@@ -1,27 +1,59 @@
 import h5py
 import numpy as np
+import pandas as pd
 
-path = r'D:\LBN\Maternal_auto_classification_train_deepethogram\models\250610_173633_feature_extractor_train\classification_metrics.h5'
-
-with h5py.File(path, 'r') as f:
-    print("Raíz:", list(f.keys()))
-    
+def extraire_meilleure_f1(path_h5, mode='last', output_csv=None):
+    """
+    mode: 'last', 'max_count', 'best_avg'
+    """
     class_names = ['background', 'Onnest', 'Offnest', 'ABN', 'Carryingpups',
                    'Selfgrooming', 'Eat_drink', "kicking", 'Groomingpups', 'Build']
 
-    for split in ['train', 'val']:
+    with h5py.File(path_h5, 'r') as f:
+        print("Contenu du fichier :", list(f.keys()))
+        split = 'val'
         group = f[split]
-        print(f"\n--- Métricas por comportamiento ({split}) última época ---")
-        
-        f1 = group['f1_by_class'][:]      # shape (epochs, clases)
-        accuracy = group['accuracy_by_class'][:]  # shape (epochs, clases)
 
-        f1_last_epoch = f1[-1]  # última fila
-        accuracy_last_epoch = accuracy[-1]
+        f1 = group['f1_by_class'][:]  # (epochs, classes)
+        f1_mean_nobg = group['f1_class_mean_nobg'][:]  # (epochs,)
+        nb_epochs = f1.shape[0]
 
+        if mode == 'last':
+            best_epoch = nb_epochs - 1
+            print("🔚 Mode sélectionné : dernière époque")
+        elif mode == 'max_count':
+            counts = [(f1[i, 1:] > f1_mean_nobg[i]).sum() for i in range(nb_epochs)]
+            best_epoch = int(np.argmax(counts))
+            print(f"📊 Mode sélectionné : max_count -> meilleure époque = {best_epoch} (avec {counts[best_epoch]} classes au-dessus de la moyenne)")
+        elif mode == 'best_avg':
+            best_epoch = int(np.argmax(f1_mean_nobg))
+            print(f"📈 Mode sélectionné : best_avg -> meilleure époque = {best_epoch} (F1 moy. nobg = {f1_mean_nobg[best_epoch]:.4f})")
+        else:
+            raise ValueError("Mode invalide. Utilise 'last', 'max_count' ou 'best_avg'.")
+
+        # Extraire F1 à la meilleure époque
+        f1_best = f1[best_epoch]
+        print(f"\n--- F1 par comportement (val, époque {best_epoch}) ---")
         for i, name in enumerate(class_names):
-            print(f"{name}: F1 = {f1_last_epoch[i]:.4f}, Accuracy = {accuracy_last_epoch[i]:.4f}")
+            print(f"{name}: F1 = {f1_best[i]:.4f}")
 
-        print(f"\nF1 medio (incluyendo background) última época: {group['f1_class_mean'][-1]}")
-        print(f"F1 medio (sin background) última época: {group['f1_class_mean_nobg'][-1]}")
-        print(f"F1 overall última época: {group['f1_overall'][-1]}")
+        # Sauvegarde CSV si demandé
+        if output_csv:
+            df_out = pd.DataFrame({
+                'class': class_names,
+                'f1_val': f1_best
+            })
+            df_out.to_csv(output_csv, index=False)
+            print(f"\n✅ Résultats enregistrés dans : {output_csv}")
+
+        return best_epoch, f1_best
+
+
+# Exemple d'utilisation
+if __name__ == "__main__":
+    model = r"D:\LBN\Maternal_auto_classification_train_LBN_deepethogram\models\250710_151619_sequence_train"
+    path = model +  r'\classification_metrics.h5'
+    mode = 'best_avg' 
+    output_csv = r'D:\LBN\val_f1_by_class.csv'
+
+    extraire_meilleure_f1(path, mode=mode, output_csv=output_csv)

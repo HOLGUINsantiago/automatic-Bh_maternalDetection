@@ -3,5 +3,8 @@
 *.pt
 *.ckpt
 *.h5
-*.png
 *.tiff
+.vscode
+.RData
+.Rhistory
+__pycache__

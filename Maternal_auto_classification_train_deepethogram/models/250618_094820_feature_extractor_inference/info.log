@@ -1,0 +1,1362 @@
+[2025-06-18 09:48:20,702] INFO [deepethogram.feature_extractor.inference.feature_extractor_inference:473] args: d:/LBN/Maternal_auto_classification_TS7_deepethogram/infering.py
+[2025-06-18 09:48:20,702] INFO [deepethogram.feature_extractor.inference.feature_extractor_inference:475] configuration used in inference: 
+[2025-06-18 09:48:20,768] INFO [deepethogram.feature_extractor.inference.feature_extractor_inference:476] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 8
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 618077952000
+    mean:
+    - 0.42517412266678273
+    - 0.43137161373889366
+    - 0.36341115380866434
+    std:
+    - 0.21811947189196618
+    - 0.22076338169887563
+    - 0.21714027118257334
+feature_extractor:
+  arch: resnet18
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 1
+  curriculum: false
+  inputs: both
+  weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+  n_flow: 10
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 200
+    test: 20
+  num_epochs: 10
+  loss_weight_exp: 1.0
+flow_generator:
+  type: flow_generator
+  flow_loss: MotionNet
+  flow_max: 10
+  input_images: 11
+  flow_sparsity: false
+  smooth_weight_multiplier: 1.0
+  sparsity_weight: 0.0
+  loss: MotionNet
+  max: 5
+  n_rgb: 11
+  arch: TinyMotionNet
+  weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+  'n': 10
+inference:
+  directory_list:
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_20-08-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_20-18-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_20-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_20-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_20-48-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_20-58-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_21-08-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_21-18-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_21-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_21-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_21-48-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_22-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_22-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_22-48-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_22-58-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_23-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-08_23-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_04-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_04-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_04-58-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_05-08-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_05-18-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_05-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_05-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_05-48-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_05-58-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_06-08-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_06-18-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_06-48-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_07-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-09_20-28-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-10_04-48-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-CONT-2024-12-10_05-18-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-44-40_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-14-40_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_22-21-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_23-41-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_20-38-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_21-28-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_21-58-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-18-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-48-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_22-58-35_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-08_23-18-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_05-48-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_07-08-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_20-48-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_21-28-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_21-38-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-09_21-48-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_05-38-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_05-48-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_05-58-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_06-28-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_20-28-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-10_22-58-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_20-42-14_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_21-02-14_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-12-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_22-52-14_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-11_23-42-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-12_20-12-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-12_21-42-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage2-LBN-2024-12-12_22-52-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_21-38-35_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-08_22-28-35_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-09_07-28-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_20-08-42_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-08-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_21-28-42_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_22-38-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-10_22-58-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_04-38-42_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_07-28-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-11_22-42-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-12-15_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_04-52-15_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-12_05-42-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-13_20-03-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-13_22-03-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-13_22-13-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage3-LBN-2024-12-14_06-23-41_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_20-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_21-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_22-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-12_23-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_00-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_04-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-02-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-12-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-32-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-42-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_05-52-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_07-22-17
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_20-43-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-14_07-23-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-15_22-01-54
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-15_23-11-54
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-15_23-41-54
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_04-41-55
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_06-01-55
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_21-54-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_23-24-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_06-24-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_07-24-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_22-04-46
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_22-44-46
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_23-34-46
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-18_00-04-46
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-18_06-24-46
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-19_00-04-46
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-19_05-14-46
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-19_23-55-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_02-15-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_02-25-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_02-35-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_02-45-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_02-55-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_03-05-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_03-15-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_03-25-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_03-35-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_03-45-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_03-55-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_04-05-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_04-15-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_04-25-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_04-35-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_04-45-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_04-55-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_05-05-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_05-15-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_05-25-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-20_05-35-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-13_20-13-44
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-13_20-33-44
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-15_20-33-48
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-15_22-13-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-15_22-53-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-15_23-03-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_20-03-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_20-13-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_20-23-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_20-33-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_20-43-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_20-53-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_21-03-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_21-13-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_21-23-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_21-33-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_21-43-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_21-53-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_22-03-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_22-13-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_22-23-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_22-33-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_22-43-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_22-53-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_23-03-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_23-13-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_23-23-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_23-33-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_23-43-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-16_23-53-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-17_00-03-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-17_04-03-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-17_05-33-51
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-17_06-53-52
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-17_21-37-19
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-18_05-27-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-18_05-57-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-18_20-07-22
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-18_20-17-22
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-19_04-17-22
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-19_05-37-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-19_06-07-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-19_07-07-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-19_20-20-00
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-20_02-00-06
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_20-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_21-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_22-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-05_23-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_04-53-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-03-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-13-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-23-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-33-20_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-43-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_05-53-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-03-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-13-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-23-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-33-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-43-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_06-53-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-03-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-13-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-23-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_07-33-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_20-14-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_21-54-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_22-24-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_23-04-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-06_23-14-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_04-54-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_05-44-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_06-14-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_06-44-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_06-54-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_20-04-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_20-24-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_20-44-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_21-04-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_21-54-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_22-54-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-07_23-54-50_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_04-54-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_05-34-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_05-54-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_07-34-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_21-44-52
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-08_23-14-52
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_05-04-53
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_05-24-53
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_05-44-53
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_21-16-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_21-56-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_22-26-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_23-06-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-09_23-36-36
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_04-26-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_04-56-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_05-16-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_05-26-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_06-16-37
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_21-36-38
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-10_22-46-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-06-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-16-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-26-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-36-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-46-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_04-56-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-06-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-16-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-26-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-36-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-46-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_05-56-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-06-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-16-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-26-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-36-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-46-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageA-LBN-2024-07-12_06-56-42
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_20-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_21-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_22-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-24-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-34-41_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-44-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageC-LBN-2024-07-06_23-54-41
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_20-04-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_20-14-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_20-24-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_20-34-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_20-44-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_20-54-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-04-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-14-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-24-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-34-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-44-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_21-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_22-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_22-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_22-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_22-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_22-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_22-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-06_23-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_04-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_05-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_05-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_05-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_06-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_06-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_06-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_06-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_07-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_07-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_07-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-07_07-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-08_23-12-13
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-10_21-32-14
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-12_06-12-15
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageD-CONT-2024-07-13_06-22-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-03_20-11-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_06-12-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_06-22-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_06-32-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_06-42-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_06-52-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_07-02-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_07-12-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_07-22-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_07-32-39
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_20-07-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_20-17-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_20-27-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_20-37-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_20-47-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_20-57-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_21-07-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_21-17-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_21-27-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-05_21-37-43
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-07_22-06-44
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-10_06-26-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK1-CONT-2024-09-10_07-06-49
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-25-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-16_21-55-50_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_04-25-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-35-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_blur
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_bright_contrast
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_combo123
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_combo124
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_combo234
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_flip
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_05-55-50_zoom_crop
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-17_20-05-50
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CageK2-LBN-2024-09-18_20-55-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-00-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-10-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-20-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_20-30-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_21-00-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_22-00-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_22-10-34
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_22-40-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_23-20-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-06_23-40-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_04-00-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_04-50-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_05-30-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_06-20-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_06-50-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_07-10-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_07-20-35
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_20-56-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_22-06-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_22-26-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_22-46-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_23-06-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_23-36-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-07_23-46-20
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_04-06-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_04-16-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_04-46-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_05-06-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_06-36-21
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_22-06-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-08_23-46-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-09_05-16-23
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\CONT-2024-05-09_06-56-23
+  ignore_error: true
+  overwrite: true
+  use_loaded_model_cfg: true
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+  min_bout_per_behavior:
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+run:
+  type: inference
+  model: feature_extractor
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250618_094820_feature_extractor_inference
+sequence:
+  filter_length: 15
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-18 09:48:20,775] INFO [deepethogram.feature_extractor.inference.feature_extractor_inference:481] Latent name used in HDF5 file: resnet18
+[2025-06-18 09:48:21,301] INFO [deepethogram.data.augs.get_gpu_transforms:246] GPU transforms: {'train': Sequential(
+  (0): ToFloat()
+  (1): VideoSequential(
+    (RandomHorizontalFlip_0): RandomHorizontalFlip(p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomRotation_1): RandomRotation(degrees=10, p=0.5, p_batch=1.0, same_on_batch=False, resample=bilinear, align_corners=True)
+    (ColorJitter_2): ColorJitter(brightness=0.25, contrast=0.1, saturation=0.1, hue=0.1, p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomGrayscale_3): RandomGrayscale(p=0.5, p_batch=1.0, same_on_batch=False)
+  )
+  (2): NormalizeVideo()
+  (3): StackClipInChannels()
+), 'val': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'test': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'denormalize': Sequential(
+  (0): UnstackClip()
+  (1): DenormalizeVideo()
+)}
+[2025-06-18 09:48:21,302] INFO [deepethogram.feature_extractor.inference.feature_extractor_inference:515] gpu_transform: Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+)
+[2025-06-18 09:48:22,458] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-18 09:48:23,682] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-18 09:48:23,682] INFO [deepethogram.feature_extractor.train.build_model_from_cfg:220] feature extractor weightfile: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-18 09:48:23,770] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component spatial from file D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-18 09:48:23,916] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component flow from file D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-18 09:48:25,295] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+[2025-06-18 09:48:25,295] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt...
+[2025-06-18 09:48:25,305] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component fusion from file D:\LBN\Maternal_auto_classification_TS7_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-18 09:48:25,370] INFO [deepethogram.feature_extractor.inference.feature_extractor_inference:545] best epoch from loaded file: 7
+[2025-06-18 09:48:25,370] INFO [deepethogram.feature_extractor.inference.feature_extractor_inference:552] thresholds: [0.5        0.50758693 0.49753769 0.66335025 0.98995075 0.6733995
+ 0.56788241 0.03024774 0.83418744 0.78394121]
+[2025-06-18 09:48:27,169] INFO [deepethogram.feature_extractor.inference.extract:383] inference batch size: 8
+[2025-06-18 09:48:52,932] INFO [deepethogram.feature_extractor.inference.print_debug_statement:128] images shape: torch.Size([8, 33, 224, 224])
+[2025-06-18 09:48:52,932] INFO [deepethogram.feature_extractor.inference.print_debug_statement:129] logits shape: torch.Size([8, 10])
+[2025-06-18 09:48:52,932] INFO [deepethogram.feature_extractor.inference.print_debug_statement:130] spatial_features shape: torch.Size([8, 512])
+[2025-06-18 09:48:52,932] INFO [deepethogram.feature_extractor.inference.print_debug_statement:131] flow_features shape: torch.Size([8, 512])
+[2025-06-18 09:48:52,952] INFO [deepethogram.feature_extractor.inference.print_debug_statement:133] spatial: min 0.0 mean 1.040297269821167 max 3.1029021739959717 shape torch.Size([8, 512])
+[2025-06-18 09:48:52,953] INFO [deepethogram.feature_extractor.inference.print_debug_statement:135] flow   : min 0.0 mean 0.3188268542289734 max 19.33990478515625 shape torch.Size([8, 512])
+[2025-06-18 09:48:52,961] INFO [deepethogram.feature_extractor.inference.print_debug_statement:144] channel min:  tensor([-0.0075, -0.0178, -0.0121, -0.0075, -0.0178, -0.0121, -0.0075, -0.0178,
+        -0.0121, -0.0075, -0.0178, -0.0121, -0.0075, -0.0178, -0.0121, -1.8054,
+        -1.8119, -1.6736, -1.8234, -1.8119, -1.6736, -1.8414, -1.8119, -1.6736,
+        -1.8414, -1.8119, -1.6736, -1.8414, -1.8119, -1.6736, -1.8414, -1.8119,
+        -1.6736], device='cuda:0')
+[2025-06-18 09:48:52,962] INFO [deepethogram.feature_extractor.inference.print_debug_statement:145] channel mean: tensor([-0.0075, -0.0178, -0.0121, -0.0075, -0.0178, -0.0121, -0.0075, -0.0178,
+        -0.0121, -0.0075, -0.0178, -0.0121, -0.0075, -0.0178, -0.0121, -0.1660,
+        -0.1920,  0.1120, -0.1538, -0.2125,  0.1326, -0.1546, -0.2117,  0.1330,
+        -0.1515, -0.2145,  0.1370, -0.1538, -0.2127,  0.1310, -0.1568, -0.2058,
+         0.1203], device='cuda:0')
+[2025-06-18 09:48:52,964] INFO [deepethogram.feature_extractor.inference.print_debug_statement:146] channel max : tensor([-0.0075, -0.0178, -0.0121, -0.0075, -0.0178, -0.0121, -0.0075, -0.0178,
+        -0.0121, -0.0075, -0.0178, -0.0121, -0.0075, -0.0178, -0.0121,  2.6354,
+         2.5757,  2.9317,  2.6354,  2.5757,  2.9317,  2.6354,  2.5757,  2.9317,
+         2.6354,  2.5757,  2.9317,  2.6354,  2.5757,  2.9317,  2.6354,  2.5757,
+         2.9317], device='cuda:0')
+[2025-06-18 09:48:52,966] INFO [deepethogram.feature_extractor.inference.print_debug_statement:147] channel std : tensor([0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+        0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.2758, 1.2607, 1.2800,
+        1.2847, 1.2446, 1.3000, 1.2851, 1.2444, 1.3006, 1.2874, 1.2414, 1.3058,
+        1.2867, 1.2422, 1.3056, 1.2823, 1.2496, 1.2866], device='cuda:0')
+[2025-06-18 09:49:03,877] INFO [deepethogram.feature_extractor.inference.extract:416] probabilities: torch.Size([1780, 10])
+[2025-06-18 09:49:03,877] INFO [deepethogram.feature_extractor.inference.extract:416] logits: torch.Size([1780, 10])
+[2025-06-18 09:49:03,877] INFO [deepethogram.feature_extractor.inference.extract:416] spatial_features: torch.Size([1780, 512])
+[2025-06-18 09:49:03,877] INFO [deepethogram.feature_extractor.inference.extract:416] flow_features: torch.Size([1780, 512])
+[2025-06-18 09:49:03,877] INFO [deepethogram.feature_extractor.inference.extract:416] debug: torch.Size([1780])
+[2025-06-18 09:49:03,892] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19614935822637106
+[2025-06-18 09:49:30,842] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19097311858128965
+[2025-06-18 09:49:56,961] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.09793577981651376
+[2025-06-18 09:50:23,048] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 09:50:49,753] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1348890432363929
+[2025-06-18 09:51:16,060] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 09:51:42,823] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19513991163475702
+[2025-06-18 09:52:09,368] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18261798672471063
+[2025-06-18 09:52:35,847] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19269475598666264
+[2025-06-18 09:53:02,631] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 09:53:29,219] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.11546592140739347
+[2025-06-18 09:53:56,009] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 09:54:22,718] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1612462398450321
+[2025-06-18 09:54:49,253] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 09:55:16,033] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17541098286114026
+[2025-06-18 09:55:42,508] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19331443011861021
+[2025-06-18 09:56:09,085] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 09:56:35,667] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22077109234305023
+[2025-06-18 09:57:02,039] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 09:57:28,485] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 09:57:56,055] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 09:58:22,751] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 09:58:49,950] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 09:59:17,031] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 09:59:43,632] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1724971231300345
+[2025-06-18 10:00:09,990] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:00:36,306] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:01:03,646] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:01:30,107] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2579397344145598
+[2025-06-18 10:01:56,286] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29324995212751725
+[2025-06-18 10:02:22,715] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:02:49,307] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25503000271881276
+[2025-06-18 10:03:16,039] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:03:40,961] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.21965781233613493
+[2025-06-18 10:04:08,007] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23791069771209727
+[2025-06-18 10:04:35,346] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22522298755991824
+[2025-06-18 10:05:00,271] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.36031364412765216
+[2025-06-18 10:05:24,102] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.35976520433760345
+[2025-06-18 10:05:47,845] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3455226942320951
+[2025-06-18 10:06:14,238] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3459374271684631
+[2025-06-18 10:06:40,387] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.36705004931079904
+[2025-06-18 10:07:07,271] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3309223309981607
+[2025-06-18 10:07:34,319] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.34938611448902823
+[2025-06-18 10:08:01,252] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.34551825480987725
+[2025-06-18 10:08:27,987] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24003629264600906
+[2025-06-18 10:08:54,197] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23880535944294334
+[2025-06-18 10:09:20,546] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23787936382792005
+[2025-06-18 10:09:47,013] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.241371961776552
+[2025-06-18 10:10:13,815] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24293907978595009
+[2025-06-18 10:10:40,360] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24862185884800928
+[2025-06-18 10:11:07,281] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2779528750585857
+[2025-06-18 10:11:34,332] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2435276204181319
+[2025-06-18 10:12:01,224] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:12:28,590] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2612562864162096
+[2025-06-18 10:12:56,098] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23189808009353313
+[2025-06-18 10:13:25,302] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19783602560195063
+[2025-06-18 10:13:53,375] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17625444488344527
+[2025-06-18 10:14:20,318] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29659784821168944
+[2025-06-18 10:14:48,293] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:15:16,836] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.273119727647844
+[2025-06-18 10:15:45,104] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.20759905850165872
+[2025-06-18 10:16:14,187] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3240784178566666
+[2025-06-18 10:16:43,142] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3364497612352746
+[2025-06-18 10:17:12,238] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.20783227198264384
+[2025-06-18 10:17:40,589] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 10:18:09,487] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29312796208530806
+[2025-06-18 10:18:40,340] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29312796208530806
+[2025-06-18 10:19:08,775] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29312796208530806
+[2025-06-18 10:19:35,414] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29284848484848486
+[2025-06-18 10:20:02,133] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29301775147928993
+[2025-06-18 10:20:27,681] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2934601664684899
+[2025-06-18 10:20:54,518] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29301775147928993
+[2025-06-18 10:21:21,329] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2931076178960097
+[2025-06-18 10:21:48,348] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.31440492590109737
+[2025-06-18 10:22:15,367] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2584149006333087
+[2025-06-18 10:22:42,309] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3349515239378393
+[2025-06-18 10:23:09,495] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3694980942789809
+[2025-06-18 10:23:36,470] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.32359626007563336
+[2025-06-18 10:24:03,309] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.37074344578509755
+[2025-06-18 10:24:29,856] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24874705512187764
+[2025-06-18 10:24:56,501] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24234927556459188
+[2025-06-18 10:25:23,175] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.21800310398344544
+[2025-06-18 10:25:50,381] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22901056676272816
+[2025-06-18 10:26:17,439] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.336553896282936
+[2025-06-18 10:26:44,731] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2638848735369871
+[2025-06-18 10:27:11,840] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18981393882056136
+[2025-06-18 10:27:38,807] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.44821064033604757
+[2025-06-18 10:28:05,539] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4453551899369229
+[2025-06-18 10:28:32,568] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.435373231402375
+[2025-06-18 10:28:59,117] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.35188141706095155
+[2025-06-18 10:29:25,564] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3514631457124026
+[2025-06-18 10:29:52,358] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3733789452971271
+[2025-06-18 10:30:18,689] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.37146110026640156
+[2025-06-18 10:30:45,099] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.40487612866477407
+[2025-06-18 10:31:11,643] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3866661079293521
+[2025-06-18 10:31:38,496] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.36769988590775465
+[2025-06-18 10:32:05,291] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3609000507805306
+[2025-06-18 10:32:31,852] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3425817043448821
+[2025-06-18 10:32:58,647] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3632759925492134
+[2025-06-18 10:33:25,443] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3557785724963122
+[2025-06-18 10:33:52,400] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.38370660496049813
+[2025-06-18 10:34:19,644] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3317353349128841
+[2025-06-18 10:34:46,886] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19186601776187184
+[2025-06-18 10:35:14,092] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2819968328136716
+[2025-06-18 10:35:40,677] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.28319607539730296
+[2025-06-18 10:36:07,405] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.27182743380371016
+[2025-06-18 10:36:34,209] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29563991563991565
+[2025-06-18 10:37:06,165] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19625978544505654
+[2025-06-18 10:37:37,429] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19946614217476819
+[2025-06-18 10:38:04,370] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1981497295758611
+[2025-06-18 10:38:31,348] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24918032786885247
+[2025-06-18 10:38:58,311] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17562337179010049
+[2025-06-18 10:39:25,063] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3648340543366248
+[2025-06-18 10:39:52,341] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2765135197421062
+[2025-06-18 10:40:19,518] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2391872702919407
+[2025-06-18 10:40:46,747] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1681640625
+[2025-06-18 10:41:13,682] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16698564593301435
+[2025-06-18 10:41:40,528] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1623499142367067
+[2025-06-18 10:42:07,305] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1640107430617726
+[2025-06-18 10:42:34,291] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1579020979020979
+[2025-06-18 10:43:00,888] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16323725055432373
+[2025-06-18 10:43:28,067] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16885406464250735
+[2025-06-18 10:43:55,146] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.168013468013468
+[2025-06-18 10:44:22,460] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1658100656550999
+[2025-06-18 10:44:48,580] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16828809871111217
+[2025-06-18 10:45:15,238] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24394880562989396
+[2025-06-18 10:45:42,188] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2711232054469305
+[2025-06-18 10:46:09,232] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2222941909600654
+[2025-06-18 10:46:36,141] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23209398568439538
+[2025-06-18 10:47:02,446] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26036335693215173
+[2025-06-18 10:47:27,444] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1758228905597327
+[2025-06-18 10:47:53,601] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2830380338249808
+[2025-06-18 10:48:19,973] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.30264270534086435
+[2025-06-18 10:48:46,660] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3015771650754554
+[2025-06-18 10:49:13,678] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.30375292956154537
+[2025-06-18 10:49:40,505] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.31228570363094266
+[2025-06-18 10:50:07,312] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.30535242169599097
+[2025-06-18 10:50:34,529] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.31829459474173083
+[2025-06-18 10:51:01,903] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3972913175821054
+[2025-06-18 10:51:28,855] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.39178849469635957
+[2025-06-18 10:51:55,806] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4206666753888196
+[2025-06-18 10:52:22,808] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4221646531554624
+[2025-06-18 10:52:50,022] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.39667643592910434
+[2025-06-18 10:53:17,195] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.41992262912344847
+[2025-06-18 10:53:44,578] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4240853345666338
+[2025-06-18 10:54:11,753] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4210202881476025
+[2025-06-18 10:54:39,062] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1698400892525102
+[2025-06-18 10:55:06,609] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.15013390465988216
+[2025-06-18 10:55:33,999] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.36707193932896287
+[2025-06-18 10:56:00,966] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3698514386186587
+[2025-06-18 10:56:27,958] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3725884160454084
+[2025-06-18 10:56:54,761] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.37836315855409935
+[2025-06-18 10:57:21,964] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2963455258723012
+[2025-06-18 10:57:48,524] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3623130626002142
+[2025-06-18 10:58:15,489] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3024041303776389
+[2025-06-18 10:58:42,474] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3812661118075735
+[2025-06-18 10:59:09,738] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.14799196787148594
+[2025-06-18 10:59:36,987] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3190034380513018
+[2025-06-18 11:00:06,173] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26820430490253994
+[2025-06-18 11:00:33,335] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2695478718788018
+[2025-06-18 11:01:00,461] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3212467398805094
+[2025-06-18 11:01:27,849] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3041720698888809
+[2025-06-18 11:01:54,891] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3063072163809906
+[2025-06-18 11:02:21,638] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.28933676342512615
+[2025-06-18 11:02:48,606] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.30463106031166054
+[2025-06-18 11:03:15,352] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.27178224998610556
+[2025-06-18 11:03:43,163] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4493265213157037
+[2025-06-18 11:04:10,132] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.45086363344000857
+[2025-06-18 11:04:37,078] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4649375465044262
+[2025-06-18 11:05:04,129] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4388580322817786
+[2025-06-18 11:05:30,911] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4211288836709849
+[2025-06-18 11:05:57,909] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.43835422406654845
+[2025-06-18 11:06:23,393] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3996128721788966
+[2025-06-18 11:06:48,108] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.42688491651057986
+[2025-06-18 11:07:13,723] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.28488174697945434
+[2025-06-18 11:07:39,013] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.09676113360323887
+[2025-06-18 11:08:06,502] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19940961484396963
+[2025-06-18 11:08:33,759] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:09:00,953] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3332642569264233
+[2025-06-18 11:09:27,853] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3316800127615299
+[2025-06-18 11:09:52,652] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4169442298135736
+[2025-06-18 11:10:19,686] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.40574351672522174
+[2025-06-18 11:10:46,836] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.35131679196054877
+[2025-06-18 11:11:13,025] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3279868693639141
+[2025-06-18 11:11:40,199] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.32194028414455855
+[2025-06-18 11:12:07,164] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.32774808500518127
+[2025-06-18 11:12:34,393] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:13:01,768] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:13:28,982] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17801418439716313
+[2025-06-18 11:13:55,512] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1288135593220339
+[2025-06-18 11:14:22,916] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19676487579433855
+[2025-06-18 11:14:49,821] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:15:17,034] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:15:41,348] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:16:07,834] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:16:34,598] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:17:01,192] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2798735587399555
+[2025-06-18 11:17:27,611] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19969092441697106
+[2025-06-18 11:17:54,176] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.28811844050503405
+[2025-06-18 11:18:17,734] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:18:41,806] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3080340826611153
+[2025-06-18 11:19:08,139] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:19:34,590] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.33822188121558044
+[2025-06-18 11:20:00,933] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:20:27,606] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26073917795800144
+[2025-06-18 11:20:54,243] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19966292134831462
+[2025-06-18 11:21:22,259] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.12224565102793886
+[2025-06-18 11:21:48,986] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:22:15,693] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.15016501650165015
+[2025-06-18 11:22:42,822] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:23:09,770] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:23:36,768] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:24:03,291] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:24:30,128] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:24:56,880] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:25:23,709] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:25:50,476] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:26:16,856] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18611764705882355
+[2025-06-18 11:26:43,745] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:27:10,322] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:27:36,673] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:28:03,284] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:28:29,439] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:28:56,163] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:29:23,279] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17347949080622346
+[2025-06-18 11:29:50,066] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17554523787677806
+[2025-06-18 11:30:16,415] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:30:43,052] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19951135383730959
+[2025-06-18 11:31:09,611] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.13649711683105126
+[2025-06-18 11:31:36,421] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:32:03,193] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:32:29,794] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17246322243155268
+[2025-06-18 11:32:56,356] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26006487159121117
+[2025-06-18 11:33:22,715] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19627473806752038
+[2025-06-18 11:33:49,111] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1483702737940026
+[2025-06-18 11:34:15,353] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:34:41,336] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24519187675070028
+[2025-06-18 11:35:07,409] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:35:32,939] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.198820608317815
+[2025-06-18 11:35:57,902] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19960518894529047
+[2025-06-18 11:36:22,868] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:36:47,989] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:37:12,778] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19963390594198818
+[2025-06-18 11:37:37,805] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:38:02,718] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19737827715355805
+[2025-06-18 11:38:27,475] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18597623089983023
+[2025-06-18 11:38:52,150] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:39:17,285] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:39:42,112] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:40:06,578] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:40:31,390] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:40:56,318] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:41:21,494] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:41:45,827] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:42:11,164] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19917963224893917
+[2025-06-18 11:42:36,248] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22590486686509675
+[2025-06-18 11:43:01,579] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:43:26,723] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17933604336043357
+[2025-06-18 11:43:51,713] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:44:17,259] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:44:41,757] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:45:06,773] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19849131796185598
+[2025-06-18 11:45:31,281] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.039964077233947015
+[2025-06-18 11:45:56,412] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:46:21,061] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:46:45,639] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16427061224071282
+[2025-06-18 11:47:10,326] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:47:35,105] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18976545842217485
+[2025-06-18 11:47:59,528] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:48:24,104] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:48:48,197] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22203709920776493
+[2025-06-18 11:49:15,209] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:49:40,295] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:50:06,178] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.280029171036091
+[2025-06-18 11:50:32,872] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2666335509508941
+[2025-06-18 11:50:59,474] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:51:25,785] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18380885249041543
+[2025-06-18 11:51:52,456] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:52:18,818] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:52:45,336] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:53:11,772] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.11793870136843783
+[2025-06-18 11:53:38,406] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19701754385964915
+[2025-06-18 11:54:04,827] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:54:30,932] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:54:57,356] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.12033898305084745
+[2025-06-18 11:55:23,764] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:55:50,167] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:56:16,481] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:56:42,995] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19561351511558983
+[2025-06-18 11:57:09,491] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 11:57:35,757] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:58:02,382] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19812084417461695
+[2025-06-18 11:58:28,152] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:58:52,873] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26498094633216895
+[2025-06-18 11:59:19,301] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 11:59:45,816] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19601181683899557
+[2025-06-18 12:00:12,271] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17726675427069644
+[2025-06-18 12:00:38,789] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:01:05,397] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:01:36,615] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.14308390022675738
+[2025-06-18 12:02:04,546] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1532612097707015
+[2025-06-18 12:02:31,233] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:02:58,215] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1871345029239766
+[2025-06-18 12:03:23,300] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:03:49,986] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:04:16,861] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 12:04:43,529] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:05:09,889] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.0996847234164517
+[2025-06-18 12:05:36,882] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:06:03,725] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:06:30,544] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:06:57,140] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:07:24,405] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.39077406529368675
+[2025-06-18 12:07:48,574] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:08:15,665] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19901790872328134
+[2025-06-18 12:08:42,323] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:09:09,292] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.33277560664011546
+[2025-06-18 12:09:36,440] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2543158780478259
+[2025-06-18 12:10:03,391] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:10:29,980] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26559870090321047
+[2025-06-18 12:10:56,811] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4252103384476803
+[2025-06-18 12:11:23,363] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3635629359149505
+[2025-06-18 12:11:49,935] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:12:16,903] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2525588089791523
+[2025-06-18 12:12:43,809] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:13:10,558] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24311926605504586
+[2025-06-18 12:13:37,311] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:14:04,106] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:14:30,781] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:14:57,703] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:15:24,748] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:15:51,747] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2484509345794393
+[2025-06-18 12:16:18,879] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2792123677186441
+[2025-06-18 12:16:45,689] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3539431450752518
+[2025-06-18 12:17:12,644] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:17:39,430] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:18:06,030] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2632738088362691
+[2025-06-18 12:18:33,025] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:18:59,707] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:19:26,921] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:19:53,857] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:20:20,622] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4000182333097988
+[2025-06-18 12:20:47,146] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.37882330665438235
+[2025-06-18 12:21:13,778] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3988206850450329
+[2025-06-18 12:21:40,142] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3607480969534297
+[2025-06-18 12:22:06,766] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.37640642203651353
+[2025-06-18 12:22:33,500] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3592350488682817
+[2025-06-18 12:22:59,701] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.39788771638888365
+[2025-06-18 12:23:26,322] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3691038212634874
+[2025-06-18 12:23:52,898] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:24:19,948] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:24:46,693] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:25:13,682] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:25:40,778] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:26:08,282] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:26:36,763] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:27:03,643] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3549075619053058
+[2025-06-18 12:27:30,414] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.36048448421230417
+[2025-06-18 12:27:56,914] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:28:24,250] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:28:50,819] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23842420689205915
+[2025-06-18 12:29:17,420] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3500998186533795
+[2025-06-18 12:29:43,998] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:30:10,248] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19706055261610816
+[2025-06-18 12:30:36,996] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.171898197242842
+[2025-06-18 12:31:03,723] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19750513648371001
+[2025-06-18 12:31:30,598] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2787928221859707
+[2025-06-18 12:31:57,973] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3199890680908082
+[2025-06-18 12:32:25,118] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2144458564037397
+[2025-06-18 12:32:51,744] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3167740210040525
+[2025-06-18 12:33:18,555] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3687022734802891
+[2025-06-18 12:33:45,509] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.31607557724016566
+[2025-06-18 12:34:12,389] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.27537321521360053
+[2025-06-18 12:34:39,710] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.34421662140651915
+[2025-06-18 12:35:07,324] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26942374933192526
+[2025-06-18 12:35:34,277] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3313021928411094
+[2025-06-18 12:36:01,126] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26607783841353383
+[2025-06-18 12:36:27,774] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26490463530227715
+[2025-06-18 12:36:54,412] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2648751354636914
+[2025-06-18 12:37:20,954] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23038391766524394
+[2025-06-18 12:37:47,334] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23105822475194415
+[2025-06-18 12:38:14,329] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.21345982056397825
+[2025-06-18 12:38:40,811] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22212794106775324
+[2025-06-18 12:39:07,108] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2480697116931787
+[2025-06-18 12:39:33,518] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26540020877837744
+[2025-06-18 12:40:00,341] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:40:27,490] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29516806722689076
+[2025-06-18 12:40:54,106] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.36559996252572785
+[2025-06-18 12:41:20,655] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3320107888587615
+[2025-06-18 12:41:47,082] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19866666666666666
+[2025-06-18 12:42:13,816] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19283088235294116
+[2025-06-18 12:42:40,850] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.28205370595945023
+[2025-06-18 12:43:07,369] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22831727834475696
+[2025-06-18 12:43:33,907] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3843757925930694
+[2025-06-18 12:44:00,632] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.32595234980988425
+[2025-06-18 12:44:27,290] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23580014534842988
+[2025-06-18 12:44:53,720] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26496059830185587
+[2025-06-18 12:45:20,134] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2845013249437823
+[2025-06-18 12:45:46,386] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3843315719589163
+[2025-06-18 12:46:12,579] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18637690513639332
+[2025-06-18 12:46:38,722] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:47:04,566] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:47:30,881] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25685963531257766
+[2025-06-18 12:47:57,314] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18286516853932583
+[2025-06-18 12:48:23,927] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2857358015615771
+[2025-06-18 12:48:50,125] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3020831540586241
+[2025-06-18 12:49:16,500] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:49:42,655] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:50:09,092] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.34450241230702827
+[2025-06-18 12:50:35,308] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19959793222286043
+[2025-06-18 12:51:01,656] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:51:27,877] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.26812431994340136
+[2025-06-18 12:51:54,138] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.27730685017203627
+[2025-06-18 12:52:20,689] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19825783972125435
+[2025-06-18 12:52:47,260] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.29285714285714287
+[2025-06-18 12:53:13,635] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:53:40,009] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.27628865979381445
+[2025-06-18 12:54:06,556] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.4519231889451912
+[2025-06-18 12:54:32,960] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25199514460222344
+[2025-06-18 12:54:59,522] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1806768757667851
+[2025-06-18 12:55:25,775] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19928016124388137
+[2025-06-18 12:55:51,978] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.35841046809469557
+[2025-06-18 12:56:18,562] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:56:44,854] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.37086013536066204
+[2025-06-18 12:57:11,308] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3079462848330759
+[2025-06-18 12:57:38,066] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1972318339100346
+[2025-06-18 12:58:04,505] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2509091192329801
+[2025-06-18 12:58:31,065] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23319772992557905
+[2025-06-18 12:58:57,644] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19305993690851736
+[2025-06-18 12:59:24,508] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 12:59:51,064] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19003336640379406
+[2025-06-18 13:00:17,845] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:00:44,233] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:01:10,679] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:01:37,091] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:02:03,661] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19937993235625706
+[2025-06-18 13:02:30,387] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1945969884853853
+[2025-06-18 13:02:56,902] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19863713798977853
+[2025-06-18 13:03:23,407] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.28901705171341796
+[2025-06-18 13:03:49,843] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1811394044022443
+[2025-06-18 13:04:16,750] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:04:43,369] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.278638764146711
+[2025-06-18 13:05:09,843] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19661164205039097
+[2025-06-18 13:05:36,513] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19799656554092732
+[2025-06-18 13:06:02,514] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.328645576361272
+[2025-06-18 13:06:29,320] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2414110227077808
+[2025-06-18 13:06:55,655] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23726926963107786
+[2025-06-18 13:07:22,012] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2467095523803633
+[2025-06-18 13:07:48,631] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23113624471217195
+[2025-06-18 13:08:14,670] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.21748058671268336
+[2025-06-18 13:08:40,989] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24837855206907147
+[2025-06-18 13:09:07,429] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18668418945926335
+[2025-06-18 13:09:33,631] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.20779278908954718
+[2025-06-18 13:10:00,268] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19609784507862552
+[2025-06-18 13:10:26,711] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.20707547169811322
+[2025-06-18 13:10:53,425] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2159841450340252
+[2025-06-18 13:11:19,807] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25447507453351087
+[2025-06-18 13:11:46,221] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2192982485996123
+[2025-06-18 13:12:12,761] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.28891488518856295
+[2025-06-18 13:12:39,343] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19966216216216215
+[2025-06-18 13:13:05,983] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:13:32,336] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16
+[2025-06-18 13:13:58,966] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:14:25,559] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:14:51,726] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.07661932802216834
+[2025-06-18 13:15:18,164] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:15:44,937] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:16:11,482] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19309060902710554
+[2025-06-18 13:16:38,154] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:17:04,544] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:17:30,881] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:17:57,241] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:18:23,423] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3251893610903748
+[2025-06-18 13:18:50,337] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:19:17,130] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:19:43,387] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:20:09,737] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:20:36,120] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19222597778850797
+[2025-06-18 13:21:02,570] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:21:29,429] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:21:55,687] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:22:21,934] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2986068173141444
+[2025-06-18 13:22:48,349] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17587259438475988
+[2025-06-18 13:23:15,269] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:23:41,709] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25292338938062875
+[2025-06-18 13:24:07,921] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17160209346084962
+[2025-06-18 13:24:34,262] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1383957922419461
+[2025-06-18 13:25:00,925] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:25:27,693] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19805491990846683
+[2025-06-18 13:25:53,983] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18447042018807286
+[2025-06-18 13:26:20,232] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:26:46,871] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:27:13,589] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:27:39,941] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.31392009896447637
+[2025-06-18 13:28:06,375] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25801496077358144
+[2025-06-18 13:28:32,958] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17775175644028102
+[2025-06-18 13:29:00,520] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:29:28,136] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:29:56,634] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:30:24,513] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:30:50,945] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:31:17,573] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1123076923076923
+[2025-06-18 13:31:44,344] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1673129686332184
+[2025-06-18 13:32:10,974] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.13765926349569474
+[2025-06-18 13:32:37,598] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19066104427632394
+[2025-06-18 13:33:04,381] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.13644997889404814
+[2025-06-18 13:33:31,340] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:33:58,556] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.09937958262831359
+[2025-06-18 13:34:25,494] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:34:52,168] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:35:18,512] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:35:44,674] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:36:11,300] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:36:37,472] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.11413724183877413
+[2025-06-18 13:37:04,244] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19872122762148337
+[2025-06-18 13:37:30,917] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1960620525059666
+[2025-06-18 13:37:57,657] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:38:23,891] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:38:50,810] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:39:17,218] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22384872778486048
+[2025-06-18 13:39:44,207] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:40:10,736] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.18787357292594475
+[2025-06-18 13:40:37,921] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19681528662420383
+[2025-06-18 13:41:05,287] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22100520694666917
+[2025-06-18 13:41:32,435] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.33457628338488493
+[2025-06-18 13:42:00,049] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3393063910591375
+[2025-06-18 13:42:27,603] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3253547477071144
+[2025-06-18 13:42:54,297] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.32711992075052077
+[2025-06-18 13:43:20,715] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3215339166410563
+[2025-06-18 13:43:48,701] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3228296161113332
+[2025-06-18 13:44:13,935] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.34429121823743813
+[2025-06-18 13:44:39,849] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.32587122891156606
+[2025-06-18 13:45:05,771] WARNING [deepethogram.feature_extractor.inference.extract:439] error calculating f1: Found input variables with inconsistent numbers of samples: [1782, 1779]
+[2025-06-18 13:45:31,207] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2
+[2025-06-18 13:45:57,305] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3238098743771013
+[2025-06-18 13:46:23,964] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.32520554266886786
+[2025-06-18 13:46:50,012] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.30458459486916156
+[2025-06-18 13:47:15,403] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3027141358498449
+[2025-06-18 13:47:40,429] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2952864963289462
+[2025-06-18 13:48:05,575] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2999932805826021
+[2025-06-18 13:48:30,559] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.30945174264591035
+[2025-06-18 13:48:58,531] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3178833900374337
+[2025-06-18 13:49:23,374] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2785288763167137
+[2025-06-18 13:49:48,026] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3272321363642975
+[2025-06-18 13:50:14,281] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.13745173745173744
+[2025-06-18 13:50:39,718] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:51:07,030] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:51:34,978] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1
+[2025-06-18 13:52:02,963] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2746084212759708
+[2025-06-18 13:52:30,194] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3102967617662958
+[2025-06-18 13:52:56,530] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3404602952458215
+[2025-06-18 13:53:22,954] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19325463743676222
+[2025-06-18 13:53:48,345] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.19283083026353073
+[2025-06-18 13:54:13,680] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.12220975883342682
+[2025-06-18 13:54:42,067] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1987527114967462
+[2025-06-18 13:55:07,594] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2673676975004873
+[2025-06-18 13:55:32,916] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17029972752043596
+[2025-06-18 13:55:58,332] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2491612086237674
+[2025-06-18 13:56:24,055] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.27872839602248767
+[2025-06-18 13:56:50,841] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.25261452543617724
+[2025-06-18 13:57:16,931] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2890133873938086
+[2025-06-18 13:57:42,412] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.244281846405684
+[2025-06-18 13:58:08,423] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.1316831683168317
+[2025-06-18 13:58:34,239] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.22811102145207465
+[2025-06-18 13:59:00,655] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23682749270296383
+[2025-06-18 13:59:26,044] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.27570335164662385
+[2025-06-18 13:59:51,486] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.24326807776774767
+[2025-06-18 14:00:17,197] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23177765507643397
+[2025-06-18 14:00:42,645] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16743940990516332
+[2025-06-18 14:01:08,395] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.10373831775700934
+[2025-06-18 14:01:34,254] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.17544554455445543
+[2025-06-18 14:02:00,076] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.31555600531649874
+[2025-06-18 14:02:26,069] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.2465413480299626
+[2025-06-18 14:02:53,921] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.16943866943866945
+[2025-06-18 14:03:21,950] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.3784554337644408
+[2025-06-18 14:03:49,651] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.23189354261833647
+[2025-06-18 14:04:17,705] INFO [deepethogram.feature_extractor.inference.extract:437] macro F1: 0.15848806366047746

@@ -1,0 +1,232 @@
+[2025-06-25 16:38:18,966] INFO [deepethogram.feature_extractor.train.feature_extractor_train:66] args: d:/LBN/Maternal_auto_classification_train_deepethogram/complexTraining_FE.py
+[2025-06-25 16:38:18,966] INFO [deepethogram.feature_extractor.train.feature_extractor_train:71] configuration used ~~~~~
+[2025-06-25 16:38:18,966] INFO [deepethogram.feature_extractor.train.feature_extractor_train:72] split:
+  reload: false
+  file: D:\LBN\Maternal_auto_classification_train_deepethogram\SPLITS\split_1.yaml
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 694834329600
+    mean:
+    - 0.4213915600330549
+    - 0.426960783932345
+    - 0.365874038370559
+    std:
+    - 0.224414912593986
+    - 0.2267886049471975
+    - 0.22340896343317201
+feature_extractor:
+  arch: resnet50
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 1
+  curriculum: false
+  inputs: both
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm\flow\checkpoint.pt
+  n_flow: 10
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 1000
+    test: 20
+  num_epochs: 100
+  lr: 0.0001
+  scheduler: plateau
+  min_lr: 5.0e-07
+  stopping_type: learning_rate
+  milestones:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  weight_loss: true
+  patience: 3
+  early_stopping_begins: 0
+  viz_metrics: true
+  viz_examples: 10
+  reduction_factor: 0.1
+  loss_weight_exp: 1.0
+  loss_gamma: 1.0
+  label_smoothing: 0.05
+  oversampling_exp: 0.0
+  regularization:
+    style: l2_sp
+    alpha: 1.0e-05
+    beta: 0.001
+flow_generator:
+  type: flow_generator
+  flow_loss: MotionNet
+  flow_max: 10
+  input_images: 11
+  flow_sparsity: false
+  smooth_weight_multiplier: 1.0
+  sparsity_weight: 0.0
+  loss: MotionNet
+  max: 5
+  n_rgb: 11
+  arch: MotionNet
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+  'n': 10
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+inference:
+  directory_list: all
+  ignore_error: true
+  overwrite: false
+  use_loaded_model_cfg: true
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+run:
+  type: train
+  model: feature_extractor
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250625_163818_feature_extractor_train
+sequence:
+  filter_length: 15
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-25 16:38:20,649] INFO [deepethogram.projects.get_weightfile_from_cfg:1080] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-25 16:38:20,649] INFO [deepethogram.feature_extractor.train.feature_extractor_train:79] loading flow generator from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-25 16:38:20,649] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt...
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-17_23-07-19
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-00-00
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-10-00
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-50-00
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_21-00-00
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-10-01
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-30-01
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_23-00-01
+[2025-06-25 16:38:21,261] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-20_02-10-06
+[2025-06-25 16:38:50,791] INFO [deepethogram.data.utils.make_loss_weight:115] Class counts: [     0 725135 399902 249265  11691  82897 256878    474  35784  62304]
+[2025-06-25 16:38:50,791] INFO [deepethogram.data.utils.make_loss_weight:116] Pos weight: [          inf    0.55078847    1.81201644    3.51138748   95.18775126
+   12.56540044    3.37768513 2371.42827004   30.42552537   17.04909797]
+[2025-06-25 16:38:50,791] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight, weighted: [   0.            0.55078846    1.8120165     3.5113876    95.18775
+   12.5654        3.377685   2371.4282       30.425526     17.049097  ]
+[2025-06-25 16:38:50,791] INFO [deepethogram.data.utils.make_loss_weight:118] Softmax weight: [0.         0.00060937 0.00110496 0.00177271 0.03779616 0.00533041
+ 0.00172017 0.93222558 0.01234839 0.00709224]
+[2025-06-25 16:38:50,791] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight transformed: [0.         0.00060937 0.00110496 0.00177271 0.03779616 0.00533041
+ 0.00172017 0.9322256  0.01234839 0.00709224]
+[2025-06-25 16:38:52,227] INFO [deepethogram.projects.get_weightfile_from_cfg:1080] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm\flow\checkpoint.pt
+[2025-06-25 16:38:52,227] INFO [deepethogram.feature_extractor.train.build_model_from_cfg:220] feature extractor weightfile: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm\flow\checkpoint.pt
+[2025-06-25 16:38:52,369] INFO [deepethogram.feature_extractor.models.CNN.get_cnn:91] Custom bias: Parameter containing:
+tensor([ 0.0000,  0.5964, -0.5944, -1.2560, -4.5559, -2.5309, -1.2172, -7.7712,
+        -3.4153, -2.8361], requires_grad=True)
+[2025-06-25 16:38:52,369] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component spatial from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm\flow\checkpoint.pt
+[2025-06-25 16:38:53,072] INFO [deepethogram.feature_extractor.models.CNN.get_cnn:91] Custom bias: Parameter containing:
+tensor([ 0.0000,  0.5964, -0.5944, -1.2560, -4.5559, -2.5309, -1.2172, -7.7712,
+        -3.4153, -2.8361], requires_grad=True)
+[2025-06-25 16:38:53,072] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component flow from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm\flow\checkpoint.pt
+[2025-06-25 16:38:54,806] INFO [deepethogram.projects.get_weightfile_from_cfg:1080] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-25 16:38:54,806] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt...
+[2025-06-25 16:38:54,931] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component fusion from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm\flow\checkpoint.pt
+[2025-06-25 16:38:55,274] INFO [deepethogram.feature_extractor.train.get_metrics:632] key metric: f1_class_mean_nobg
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-17_23-07-19
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-00-00
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-10-00
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-50-00
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_21-00-00
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-10-01
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-30-01
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_23-00-01
+[2025-06-25 16:38:55,789] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-20_02-10-06
+[2025-06-25 16:39:23,502] INFO [deepethogram.data.utils.make_loss_weight:115] Class counts: [     0 723724 399946 256287  10793  80811 253408    466  38998  62326]
+[2025-06-25 16:39:23,502] INFO [deepethogram.data.utils.make_loss_weight:116] Pos weight: [          inf    0.55192449    1.80829162    3.38245014  103.06420828
+   12.89866479    3.43223971 2409.22532189   27.80057952   17.02080993]
+[2025-06-25 16:39:23,508] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight, weighted: [   0.            0.55192447    1.8082917     3.38245     103.06421
+   12.898664      3.4322398  2409.2253       27.80058      17.02081   ]
+[2025-06-25 16:39:23,508] INFO [deepethogram.data.utils.make_loss_weight:118] Softmax weight: [0.         0.00059962 0.00108504 0.00169325 0.04020742 0.00537004
+ 0.00171249 0.9312417  0.01112772 0.00696272]
+[2025-06-25 16:39:23,508] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight transformed: [0.         0.00059962 0.00108504 0.00169325 0.04020742 0.00537004
+ 0.00171249 0.9312417  0.01112771 0.00696272]
+[2025-06-25 16:39:23,508] INFO [deepethogram.feature_extractor.losses.__init__:100] Focal loss: gamma 1.00 smoothing: 0.05
+[2025-06-25 16:39:23,542] INFO [deepethogram.losses.get_regularization_loss:205] Regularization: L2_SP. Pretrained file: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm\checkpoint.pt alpha: 1e-05 beta: 0.001
+[2025-06-25 16:39:25,827] INFO [deepethogram.data.augs.get_gpu_transforms:246] GPU transforms: {'train': Sequential(
+  (0): ToFloat()
+  (1): VideoSequential(
+    (RandomHorizontalFlip_0): RandomHorizontalFlip(p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomRotation_1): RandomRotation(degrees=10, p=0.5, p_batch=1.0, same_on_batch=False, resample=bilinear, align_corners=True)
+    (ColorJitter_2): ColorJitter(brightness=0.25, contrast=0.1, saturation=0.1, hue=0.1, p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomGrayscale_3): RandomGrayscale(p=0.5, p_batch=1.0, same_on_batch=False)
+  )
+  (2): NormalizeVideo()
+  (3): StackClipInChannels()
+), 'val': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'test': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'denormalize': Sequential(
+  (0): UnstackClip()
+  (1): DenormalizeVideo()
+)}
+[2025-06-25 16:39:25,828] INFO [deepethogram.base.__init__:95] scheduler mode: max
+[2025-06-25 16:39:25,828] INFO [deepethogram.base.get_train_sampler:171] not using oversampling
+[2025-06-25 16:39:26,226] INFO [deepethogram.base.configure_optimizers:227] learning rate: 0.0001
+[2025-06-25 23:54:58,818] INFO [deepethogram.callbacks.on_train_epoch_end:257] Stopping criterion reached! setting trainer.should_stop=True

@@ -1,46 +1,60 @@
 import os
 import pandas as pd
 
-def chercher_fichiers_comportement(dossier, pattern_fin='_output.csv', comportements_recherches=None):
+def chercher_fichiers_comportement(dossier,
+                                    pattern_fin='_outputs_labels_predictions.csv',
+                                    comportements_recherches=None,
+                                    output_csv=None,
+                                    mot_clef_fichier=None):
     if comportements_recherches is None:
         comportements_recherches = []
 
-    dossiers_avec_comportement = []
+    video_names = []
 
     for racine, _, fichiers in os.walk(dossier):
         for fichier in fichiers:
-            if any(f.endswith('labels.csv') for f in fichiers):
+            if not fichier.endswith(pattern_fin):
                 continue
-            if fichier.endswith(pattern_fin):
-                chemin_complet = os.path.join(racine, fichier)
+            if mot_clef_fichier and mot_clef_fichier not in fichier:
+                continue
 
-                try:
-                    df = pd.read_csv(chemin_complet)
+            chemin_complet = os.path.join(racine, fichier)
 
-                    # Vérifie que les colonnes demandées existent
-                    colonnes_valides = [c for c in comportements_recherches if c in df.columns]
+            try:
+                df = pd.read_csv(chemin_complet)
+                colonnes_valides = [c for c in comportements_recherches if c in df.columns]
 
-                    if not colonnes_valides:
-                        continue  # Aucun des comportements n'est présent dans ce fichier
+                if not colonnes_valides:
+                    continue
 
-                    # Vérifie s'il y a au moins un "1" dans l'une des colonnes
-                    if (df[colonnes_valides] == 1).any().any():
-                        dossier_parent = os.path.basename(os.path.dirname(chemin_complet))
-                        dossiers_avec_comportement.append((dossier_parent, fichier))
+                if (df[colonnes_valides] == 1).any().all():
+                    video_name = fichier.replace(pattern_fin, "")
+                    video_names.append(video_name)
 
-                except Exception as e:
-                    print(f"Erreur lors du traitement de {chemin_complet} : {e}")
+            except Exception as e:
+                print(f"Erreur lors du traitement de {chemin_complet} : {e}")
 
-    return dossiers_avec_comportement
+    if output_csv:
+        pd.DataFrame({'video_name': video_names}).to_csv(output_csv, index=False)
+        print(f"[💾] Résultats enregistrés dans : {output_csv}")
 
-# Exemple d'utilisation :
+    return video_names
+
+
 if __name__ == "__main__":
-    dossier = "D:\LBN\Maternal_behaviour_results"  
-    pattern = "_outputs_labels_predictions.csv"
-    comportements = ["Carryingpups", "Groomingpups"]
+    dossier = r"D:\LBN\Maternal_auto_classification_train_deepethogram\DATA"
+    comportements = ["Carryingpups"]
+    mot_clef = ""
+    output_csv_path = f"D:\\LBN\\videos_with_{comportements[0]}_{mot_clef}.csv"
 
-    resultats = chercher_fichiers_comportement(dossier, pattern, comportements)
+    resultats = chercher_fichiers_comportement(
+        dossier,
+        pattern_fin='.csv',
+        comportements_recherches=comportements,
+        output_csv=output_csv_path,
+        mot_clef_fichier=None
+    )
 
-    print("\nFichiers contenant les comportements recherchés :")
-    for dossier_parent, fichier in resultats:
-        print(f"- {dossier_parent} / {fichier}")
+    print("\nVidéos contenant les comportements recherchés :")
+    for name in resultats:
+        print(f"- {name}")

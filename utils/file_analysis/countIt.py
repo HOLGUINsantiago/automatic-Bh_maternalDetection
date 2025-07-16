@@ -39,10 +39,10 @@ for root, _, files in os.walk(base_dir):
                     counts_lbn += counts
 
 # Mostrar resultados
-print("\nTotal de 1s por comportamiento en archivos CONT:")
+print("\nTotal de frames por comportamiento en archivos CONT:")
 print(counts_cont.astype(int))
 
-print("\nTotal de 1s por comportamiento en archivos LBN:")
+print("\nTotal de frames por comportamiento en archivos LBN:")
 print(counts_lbn.astype(int))
 
 

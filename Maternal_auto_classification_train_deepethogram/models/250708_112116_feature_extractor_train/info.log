@@ -1,0 +1,371 @@
+[2025-07-08 11:21:16,260] INFO [__main__.feature_extractor_train:66] args: C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\feature_extractor\train.py project.path=D:\LBN\Maternal_auto_classification_train_deepethogram feature_extractor.weights=D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt flow_generator.weights=D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+[2025-07-08 11:21:16,260] INFO [__main__.feature_extractor_train:71] configuration used ~~~~~
+[2025-07-08 11:21:16,276] INFO [__main__.feature_extractor_train:72] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 694834329600
+    mean:
+    - 0.4213915600330549
+    - 0.426960783932345
+    - 0.365874038370559
+    std:
+    - 0.224414912593986
+    - 0.2267886049471975
+    - 0.22340896343317201
+train:
+  lr: 0.0001
+  scheduler: plateau
+  num_epochs: 20
+  steps_per_epoch:
+    train: 1000
+    val: 1000
+    test: null
+  min_lr: 5.0e-07
+  stopping_type: learning_rate
+  milestones:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  weight_loss: true
+  patience: 3
+  early_stopping_begins: 0
+  viz_metrics: true
+  viz_examples: 10
+  reduction_factor: 0.1
+  loss_weight_exp: 1.0
+  loss_gamma: 1.0
+  label_smoothing: 0.05
+  oversampling_exp: 0.0
+  regularization:
+    style: l2_sp
+    alpha: 1.0e-05
+    beta: 0.001
+flow_generator:
+  type: flow_generator
+  flow_loss: MotionNet
+  flow_max: 10
+  input_images: 11
+  flow_sparsity: false
+  smooth_weight_multiplier: 1.0
+  sparsity_weight: 0.0
+  loss: MotionNet
+  max: 5
+  n_rgb: 11
+  arch: TinyMotionNet
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+feature_extractor:
+  arch: resnet18
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 1
+  curriculum: false
+  inputs: both
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+postprocessor:
+  min_bout_length: 10
+  type: min_bout_per_behavior
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+run:
+  type: train
+  model: feature_extractor
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250708_112116_feature_extractor_train
+sequence:
+  filter_length: 15
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-07-08 11:21:18,069] INFO [deepethogram.projects.get_weightfile_from_cfg:1081] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+[2025-07-08 11:21:18,069] INFO [__main__.feature_extractor_train:79] loading flow generator from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+[2025-07-08 11:21:18,069] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt...
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage1-LBN-2024-09-01_21-05-28
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-17_23-07-19
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-00-00
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-10-00
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-50-00
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_21-00-00
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-10-01
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-30-01
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_23-00-01
+[2025-07-08 11:21:18,834] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-20_02-10-06
+[2025-07-08 11:21:19,875] INFO [deepethogram.data.utils.get_split_from_records:488] Getting split from records...None
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-09_04-18-34 assigned to split val
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-10_23-08-38 assigned to split val
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-12_05-02-14 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-12_05-12-14 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-12_23-32-14 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-13_05-52-14 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-13_22-23-39 assigned to split val
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-CONT-2024-12-14_07-23-40 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-LBN-2024-09-01_21-35-28 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-LBN-2024-09-03_00-02-56 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-LBN-2024-09-03_23-51-56 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-LBN-2024-09-04_00-01-56 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-LBN-2024-09-05_05-42-38 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage1-LBN-2024-09-06_04-57-42 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage2-LBN-2024-12-09_22-58-39 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage2-LBN-2024-12-10_05-18-39 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage2-LBN-2024-12-10_21-58-40 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage2-LBN-2024-12-11_21-12-14 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage2-LBN-2024-12-12_05-32-14 assigned to split val
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage2-LBN-2024-12-12_21-02-15 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage2-LBN-2024-12-12_23-42-15 assigned to split val
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage3-LBN-2024-12-09_20-18-39 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage3-LBN-2024-12-11_04-48-42 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage3-LBN-2024-12-11_07-08-42 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage3-LBN-2024-12-12_07-22-15 assigned to split val
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage3-LBN-2024-12-12_22-52-16 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage3-LBN-2024-12-14_04-23-41 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-13_06-32-17 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-13_21-03-41 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-14_07-13-42 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-15_20-51-54 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-15_22-11-54 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-15_23-21-54 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-16_20-14-36 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage6-CONT-2024-12-20_06-15-14 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-13_06-42-18 assigned to split train
+[2025-07-08 11:21:19,928] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-13_21-33-43 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-13_22-33-43 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-13_23-13-42 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-13_23-43-42 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-14_00-03-42 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-14_07-03-43 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-14_07-23-43 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-17_22-14-50 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-17_22-44-50 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-18_04-14-50 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage7-LBN-2024-12-19_06-24-50 assigned to split train
+[2025-07-08 11:21:19,942] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-12_22-37-32 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-12_22-57-32 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-13_06-37-33 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-15_04-03-47 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-15_06-43-47 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-15_20-13-48 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-15_23-13-49 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-16_00-03-49 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-16_06-03-49 assigned to split train
+[2025-07-08 11:21:19,943] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-17_22-27-19 assigned to split train
+[2025-07-08 11:21:19,944] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-18_21-27-22 assigned to split train
+[2025-07-08 11:21:19,944] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-18_23-47-22 assigned to split train
+[2025-07-08 11:21:19,944] INFO [deepethogram.data.utils.update_split:452] file Cage8-CONT-2024-12-19_04-57-23 assigned to split val
+[2025-07-08 11:21:19,944] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-13_23-33-43 assigned to split train
+[2025-07-08 11:21:19,944] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-14_21-53-45 assigned to split train
+[2025-07-08 11:21:19,944] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-15_05-43-46 assigned to split train
+[2025-07-08 11:21:19,945] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-15_05-53-46 assigned to split train
+[2025-07-08 11:21:19,945] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-15_07-23-46 assigned to split train
+[2025-07-08 11:21:19,945] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-15_21-13-48 assigned to split val
+[2025-07-08 11:21:19,945] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-16_06-53-48 assigned to split train
+[2025-07-08 11:21:19,945] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-17_05-03-51 assigned to split train
+[2025-07-08 11:21:19,945] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-18_04-47-21 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-18_06-17-21 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file Cage9-LBN-2024-12-18_21-57-23 assigned to split val
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-06_22-54-42 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-08_20-34-52 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-08_23-34-52 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-09_06-54-53 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-10_20-36-38 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-11_04-46-39 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-11_06-06-39 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageA-LBN-2024-07-11_23-56-41 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-07_06-34-41 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-08_22-12-14 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-09_05-22-15 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-09_05-32-15 assigned to split val
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-09_07-02-15 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-09_21-42-16 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-10_05-02-17 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-10_06-02-17 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-10_21-02-15 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-10_22-52-15 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-13_06-02-21 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageC-LBN-2024-07-13_06-32-21 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-08_20-52-13 assigned to split val
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-08_22-22-13 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-08_23-32-13 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-09_04-12-14 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-09_05-52-14 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-10_04-42-16 assigned to split val
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-10_05-12-16 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-10_05-32-16 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-10_21-42-14 assigned to split train
+[2025-07-08 11:21:19,946] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-10_22-12-14 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-11_07-12-14 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-11_20-22-15 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-11_22-52-15 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-11_23-42-15 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-12_20-42-20 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-12_21-22-20 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageD-CONT-2024-07-13_05-32-20 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-03_21-21-56 assigned to split train
+[2025-07-08 11:21:19,951] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-04_21-52-39 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-05_04-02-39 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-06_07-07-43 assigned to split val
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-06_23-36-43 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-07_04-46-43 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-07_22-26-44 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-07_22-46-43 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-07_23-56-43 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-08_04-16-44 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-09_05-46-49 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK1-CONT-2024-09-09_06-36-49 assigned to split train
+[2025-07-08 11:21:19,952] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-03_20-41-57 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-03_23-51-58 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-04_07-01-58 assigned to split val
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-04_07-11-58 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-14_20-23-28 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-14_23-33-28 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-15_05-33-28 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-15_05-53-28 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-15_06-23-28 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-15_07-23-29 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-16_22-05-50 assigned to split train
+[2025-07-08 11:21:19,953] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-17_05-25-50 assigned to split train
+[2025-07-08 11:21:19,954] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-17_06-55-50 assigned to split train
+[2025-07-08 11:21:19,954] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-17_20-35-50 assigned to split val
+[2025-07-08 11:21:19,954] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-18_21-25-56 assigned to split train
+[2025-07-08 11:21:19,954] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-19_04-15-56 assigned to split train
+[2025-07-08 11:21:19,954] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-19_22-25-56 assigned to split val
+[2025-07-08 11:21:19,954] INFO [deepethogram.data.utils.update_split:452] file CageK2-LBN-2024-09-20_20-45-57 assigned to split train
+[2025-07-08 11:22:31,192] INFO [deepethogram.data.utils.make_loss_weight:116] Class counts: [    39 835374 503527 315583  12244  90317 310035    525  36700  71178]
+[2025-07-08 11:22:31,192] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight: [34314.35897436     0.60203573     1.65784953     3.24071956
+   108.30243385    13.81779731     3.31660619  2548.14095238
+    35.46591281    17.80214392]
+[2025-07-08 11:22:31,192] INFO [deepethogram.data.utils.make_loss_weight:118] Pos weight, weighted: [34314.36           0.60203576     1.6578496      3.2407196
+   108.30244       13.817798       3.3166063   2548.1409
+    35.46591       17.802143  ]
+[2025-07-08 11:22:31,192] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight: [0.92602293 0.00004323 0.00007172 0.00011444 0.0029496  0.00039987
+ 0.00011649 0.06879027 0.00098406 0.00050739]
+[2025-07-08 11:22:31,192] INFO [deepethogram.data.utils.make_loss_weight:120] Softmax weight transformed: [0.92602295 0.00004323 0.00007172 0.00011444 0.0029496  0.00039987
+ 0.00011649 0.06879027 0.00098406 0.00050739]
+[2025-07-08 11:22:34,064] INFO [deepethogram.projects.get_weightfile_from_cfg:1081] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-07-08 11:22:34,064] INFO [__main__.build_model_from_cfg:220] feature extractor weightfile: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-07-08 11:22:34,197] INFO [deepethogram.feature_extractor.models.CNN.get_cnn:91] Custom bias: Parameter containing:
+tensor([-10.4433,   0.5074,  -0.5055,  -1.1758,  -4.6849,  -2.6260,  -1.1989,
+         -7.8431,  -3.5686,  -2.8793], requires_grad=True)
+[2025-07-08 11:22:34,197] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component spatial from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-07-08 11:22:35,833] INFO [deepethogram.feature_extractor.models.CNN.get_cnn:91] Custom bias: Parameter containing:
+tensor([-10.4433,   0.5074,  -0.5055,  -1.1758,  -4.6849,  -2.6260,  -1.1989,
+         -7.8431,  -3.5686,  -2.8793], requires_grad=True)
+[2025-07-08 11:22:35,833] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component flow from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-07-08 11:22:38,861] INFO [deepethogram.projects.get_weightfile_from_cfg:1081] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+[2025-07-08 11:22:38,861] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt...
+[2025-07-08 11:22:38,876] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component fusion from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-07-08 11:22:39,579] INFO [__main__.get_metrics:632] key metric: f1_class_mean_nobg
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage1-LBN-2024-09-01_21-05-28
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-17_23-07-19
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-00-00
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-10-00
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-50-00
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_21-00-00
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-10-01
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-30-01
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_23-00-01
+[2025-07-08 11:22:40,783] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-20_02-10-06
+[2025-07-08 11:22:42,423] INFO [deepethogram.data.utils.get_split_from_records:488] Getting split from records...None
+[2025-07-08 11:23:33,766] INFO [deepethogram.data.utils.make_loss_weight:116] Class counts: [    39 835374 503527 315583  12244  90317 310035    525  36700  71178]
+[2025-07-08 11:23:33,766] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight: [34314.35897436     0.60203573     1.65784953     3.24071956
+   108.30243385    13.81779731     3.31660619  2548.14095238
+    35.46591281    17.80214392]
+[2025-07-08 11:23:33,766] INFO [deepethogram.data.utils.make_loss_weight:118] Pos weight, weighted: [34314.36           0.60203576     1.6578496      3.2407196
+   108.30244       13.817798       3.3166063   2548.1409
+    35.46591       17.802143  ]
+[2025-07-08 11:23:33,766] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight: [0.92602293 0.00004323 0.00007172 0.00011444 0.0029496  0.00039987
+ 0.00011649 0.06879027 0.00098406 0.00050739]
+[2025-07-08 11:23:33,766] INFO [deepethogram.data.utils.make_loss_weight:120] Softmax weight transformed: [0.92602295 0.00004323 0.00007172 0.00011444 0.0029496  0.00039987
+ 0.00011649 0.06879027 0.00098406 0.00050739]
+[2025-07-08 11:23:33,766] INFO [deepethogram.feature_extractor.losses.__init__:100] Focal loss: gamma 1.00 smoothing: 0.05
+[2025-07-08 11:23:33,827] INFO [deepethogram.losses.get_regularization_loss:205] Regularization: L2_SP. Pretrained file: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200415_125824_hidden_two_stream_kinetics_degf\checkpoint.pt alpha: 1e-05 beta: 0.001
+[2025-07-08 11:23:34,535] INFO [deepethogram.data.augs.get_gpu_transforms:246] GPU transforms: {'train': Sequential(
+  (0): ToFloat()
+  (1): VideoSequential(
+    (RandomHorizontalFlip_0): RandomHorizontalFlip(p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomRotation_1): RandomRotation(degrees=10, p=0.5, p_batch=1.0, same_on_batch=False, resample=bilinear, align_corners=True)
+    (ColorJitter_2): ColorJitter(brightness=0.25, contrast=0.1, saturation=0.1, hue=0.1, p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomGrayscale_3): RandomGrayscale(p=0.5, p_batch=1.0, same_on_batch=False)
+  )
+  (2): NormalizeVideo()
+  (3): StackClipInChannels()
+), 'val': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'test': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'denormalize': Sequential(
+  (0): UnstackClip()
+  (1): DenormalizeVideo()
+)}
+[2025-07-08 11:23:34,535] INFO [deepethogram.base.__init__:95] scheduler mode: max
+[2025-07-08 11:23:34,535] INFO [deepethogram.base.get_train_sampler:171] not using oversampling
+[2025-07-08 11:23:34,888] INFO [deepethogram.base.configure_optimizers:227] learning rate: 0.0001
+[2025-07-08 19:28:00,156] INFO [deepethogram.callbacks.on_train_epoch_end:257] Stopping criterion reached! setting trainer.should_stop=True

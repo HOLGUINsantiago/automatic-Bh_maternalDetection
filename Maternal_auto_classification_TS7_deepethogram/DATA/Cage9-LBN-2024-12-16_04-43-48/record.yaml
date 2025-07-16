@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: Cage9-LBN-2024-12-16_04-43-48
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage9-LBN-2024-12-16_04-43-48.mp4
+  default: Cage9-LBN-2024-12-16_04-43-48.mp4
+stats:
+  all: []
+  default: []

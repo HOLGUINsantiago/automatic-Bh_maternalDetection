@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: Cage2-LBN-2024-12-09_05-28-35
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage2-LBN-2024-12-09_05-28-35.mp4
+  default: Cage2-LBN-2024-12-09_05-28-35.mp4
+stats:
+  all: []
+  default: []

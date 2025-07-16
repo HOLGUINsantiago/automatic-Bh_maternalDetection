@@ -1,0 +1,22 @@
+flow:
+  all: []
+  default: []
+key: Cage6-CONT-2024-12-18_20-34-46
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage6-CONT-2024-12-18_20-34-46_labels.csv
+  default: Cage6-CONT-2024-12-18_20-34-46_labels.csv
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage6-CONT-2024-12-18_20-34-46.mp4
+  default: Cage6-CONT-2024-12-18_20-34-46.mp4
+stats:
+  all:
+  - stats.yaml
+  default: stats.yaml

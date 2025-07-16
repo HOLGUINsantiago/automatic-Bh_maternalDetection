@@ -1,0 +1,158 @@
+[2025-06-17 15:39:13,053] INFO [deepethogram.gui.main.initialize_project:1021] loaded project configuration: split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+run:
+  type: gui
+  model: null
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250617_153913
+label_view_width: 31
+control_arrow_jump: 31
+vertical_arrow_jump: 3
+cmap: deepethogram
+unlabeled_alpha: 0.1
+prediction_opacity: 0.2
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    'N': 618077952000
+    mean:
+    - 0.42517412266678273
+    - 0.43137161373889366
+    - 0.36341115380866434
+    std:
+    - 0.21811947189196618
+    - 0.22076338169887563
+    - 0.21714027118257334
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+sequence:
+  filter_length: 15
+train:
+  loss_weight_exp: 1.0
+
+[2025-06-17 15:39:13,056] INFO [deepethogram.gui.main.initialize_project:1022] cwd: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250617_153913
+[2025-06-17 15:39:22,552] INFO [deepethogram.gui.main.project_loaded_buttons:175] Number finalized labels: 577
+[2025-06-17 15:39:34,612] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\CageK2-LBN-2024-09-18_20-55-56\\CageK2-LBN-2024-09-18_20-55-56_labels.csv', 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\CageK2-LBN-2024-09-18_20-55-56\\CageK2-LBN-2024-09-18_20-55-56_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\CageK2-LBN-2024-09-18_20-55-56\\CageK2-LBN-2024-09-18_20-55-56.mp4', 'keypoint': None, 'key': 'CageK2-LBN-2024-09-18_20-55-56'}
+[2025-06-17 15:39:34,680] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 15:39:37,837] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 15:41:07,411] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_06-56-23\\CONT-2024-05-09_06-56-23_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_06-56-23\\CONT-2024-05-09_06-56-23_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_06-56-23\\CONT-2024-05-09_06-56-23.mp4', 'keypoint': None, 'key': 'CONT-2024-05-09_06-56-23'}
+[2025-06-17 15:41:07,454] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 15:41:09,761] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 15:41:56,123] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-17 15:41:56,260] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_06-56-23/CONT-2024-05-09_06-56-23.mp4
+[2025-06-17 15:42:03,016] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_05-16-23\\CONT-2024-05-09_05-16-23_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_05-16-23\\CONT-2024-05-09_05-16-23_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_05-16-23\\CONT-2024-05-09_05-16-23.mp4', 'keypoint': None, 'key': 'CONT-2024-05-09_05-16-23'}
+[2025-06-17 15:42:03,065] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 15:42:05,296] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 15:43:24,550] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-17 15:43:24,589] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_05-16-23/CONT-2024-05-09_05-16-23.mp4
+[2025-06-17 15:46:13,720] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-17 15:46:13,730] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-09_05-16-23/CONT-2024-05-09_05-16-23.mp4
+[2025-06-17 15:46:36,247] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-08_23-46-23\\CONT-2024-05-08_23-46-23_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-08_23-46-23\\CONT-2024-05-08_23-46-23_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-08_23-46-23\\CONT-2024-05-08_23-46-23.mp4', 'keypoint': None, 'key': 'CONT-2024-05-08_23-46-23'}
+[2025-06-17 15:46:36,274] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 15:46:38,186] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 15:48:54,464] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-17 15:48:54,464] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-08_23-46-23/CONT-2024-05-08_23-46-23.mp4
+[2025-06-17 15:48:59,684] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-08_22-06-23\\CONT-2024-05-08_22-06-23_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-08_22-06-23\\CONT-2024-05-08_22-06-23_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CONT-2024-05-08_22-06-23\\CONT-2024-05-08_22-06-23.mp4', 'keypoint': None, 'key': 'CONT-2024-05-08_22-06-23'}
+[2025-06-17 15:48:59,732] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 15:49:01,305] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 15:51:50,946] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-17 15:55:25,257] ERROR [deepethogram.gui.main.initialize_video:251] Error initializing video: unknown file extension: csv
+Traceback (most recent call last):
+  File "C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\gui\main.py", line 215, in initialize_video
+    self.ui.videoPlayer.videoView.initialize_video(videofile)
+  File "C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\gui\custom_widgets.py", line 84, in initialize_video
+    self.vid = VideoReader(videofile)
+  File "C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\vidio\read.py", line 263, in VideoReader
+    raise ValueError('unknown file extension: {}'.format(ext))
+ValueError: unknown file extension: csv
+[2025-06-17 15:55:25,268] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-17 15:57:13,355] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-17 15:58:28,875] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-17 15:58:53,501] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-CONT-2024-12-09_07-28-34\\Cage1-CONT-2024-12-09_07-28-34_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-CONT-2024-12-09_07-28-34\\Cage1-CONT-2024-12-09_07-28-34_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-CONT-2024-12-09_07-28-34\\Cage1-CONT-2024-12-09_07-28-34.mp4', 'keypoint': None, 'key': 'Cage1-CONT-2024-12-09_07-28-34'}
+[2025-06-17 15:58:53,675] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 15:58:55,754] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:01:18,265] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-17 16:01:18,281] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-CONT-2024-12-09_07-28-34/Cage1-CONT-2024-12-09_07-28-34.mp4
+[2025-06-17 16:01:26,026] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_20-14-40\\Cage1-LBN-2024-08-30_20-14-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_20-14-40\\Cage1-LBN-2024-08-30_20-14-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_20-14-40\\Cage1-LBN-2024-08-30_20-14-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-30_20-14-40'}
+[2025-06-17 16:01:26,053] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 16:01:27,304] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:02:10,492] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-17 16:02:10,493] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_20-14-40/Cage1-LBN-2024-08-30_20-14-40.mp4
+[2025-06-17 16:02:24,467] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_21-44-40\\Cage1-LBN-2024-08-30_21-44-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_21-44-40\\Cage1-LBN-2024-08-30_21-44-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_21-44-40\\Cage1-LBN-2024-08-30_21-44-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-30_21-44-40'}
+[2025-06-17 16:02:24,502] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 16:02:26,961] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:04:09,671] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-17 16:04:09,687] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_21-44-40/Cage1-LBN-2024-08-30_21-44-40.mp4
+[2025-06-17 16:04:23,677] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_22-14-40\\Cage1-LBN-2024-08-30_22-14-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_22-14-40\\Cage1-LBN-2024-08-30_22-14-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_22-14-40\\Cage1-LBN-2024-08-30_22-14-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-30_22-14-40'}
+[2025-06-17 16:04:23,719] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 16:04:26,369] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:05:21,093] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_23-24-40\\Cage1-LBN-2024-08-30_23-24-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_23-24-40\\Cage1-LBN-2024-08-30_23-24-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-30_23-24-40\\Cage1-LBN-2024-08-30_23-24-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-30_23-24-40'}
+[2025-06-17 16:05:21,125] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 16:05:23,341] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:05:59,095] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_04-44-40\\Cage1-LBN-2024-08-31_04-44-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_04-44-40\\Cage1-LBN-2024-08-31_04-44-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_04-44-40\\Cage1-LBN-2024-08-31_04-44-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-31_04-44-40'}
+[2025-06-17 16:05:59,141] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 16:06:01,329] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:06:55,775] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_05-04-40\\Cage1-LBN-2024-08-31_05-04-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_05-04-40\\Cage1-LBN-2024-08-31_05-04-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_05-04-40\\Cage1-LBN-2024-08-31_05-04-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-31_05-04-40'}
+[2025-06-17 16:06:55,822] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 16:06:58,333] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:07:25,697] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_05-24-40\\Cage1-LBN-2024-08-31_05-24-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_05-24-40\\Cage1-LBN-2024-08-31_05-24-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage1-LBN-2024-08-31_05-24-40\\Cage1-LBN-2024-08-31_05-24-40.mp4', 'keypoint': None, 'key': 'Cage1-LBN-2024-08-31_05-24-40'}
+[2025-06-17 16:07:25,758] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-17 16:07:28,282] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-17 16:08:50,732] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-17 16:08:52,967] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-17 16:09:55,217] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-17 16:10:03,684] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-17 16:11:03,707] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...

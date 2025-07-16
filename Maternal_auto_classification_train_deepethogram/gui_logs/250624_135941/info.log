@@ -1,0 +1,216 @@
+[2025-06-24 13:59:41,072] INFO [deepethogram.gui.main.initialize_project:1021] loaded project configuration: split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+run:
+  type: gui
+  model: null
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250624_135941
+label_view_width: 31
+control_arrow_jump: 31
+vertical_arrow_jump: 3
+cmap: deepethogram
+unlabeled_alpha: 0.1
+prediction_opacity: 0.2
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    'N': 694834329600
+    mean:
+    - 0.4213915600330549
+    - 0.426960783932345
+    - 0.365874038370559
+    std:
+    - 0.224414912593986
+    - 0.2267886049471975
+    - 0.22340896343317201
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+sequence:
+  filter_length: 15
+train:
+  loss_weight_exp: 1.0
+
+[2025-06-24 13:59:41,080] INFO [deepethogram.gui.main.initialize_project:1022] cwd: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250624_135941
+[2025-06-24 13:59:42,765] INFO [deepethogram.gui.main.project_loaded_buttons:175] Number finalized labels: 679
+[2025-06-24 13:59:50,084] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-13_20-33-41\\Cage6-CONT-2024-12-13_20-33-41_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-13_20-33-41\\Cage6-CONT-2024-12-13_20-33-41.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-13_20-33-41'}
+[2025-06-24 13:59:50,121] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 13:59:52,577] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:00:42,225] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:00:42,242] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_20-33-41\Cage6-CONT-2024-12-13_20-33-41.mp4
+[2025-06-24 14:00:42,306] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-13_21-53-41\\Cage6-CONT-2024-12-13_21-53-41_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-13_21-53-41\\Cage6-CONT-2024-12-13_21-53-41.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-13_21-53-41'}
+[2025-06-24 14:00:42,326] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:00:43,671] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:02:17,474] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:02:17,506] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-13_21-53-41\Cage6-CONT-2024-12-13_21-53-41.mp4
+[2025-06-24 14:02:17,610] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-14_06-13-42\\Cage6-CONT-2024-12-14_06-13-42_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-14_06-13-42\\Cage6-CONT-2024-12-14_06-13-42.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-14_06-13-42'}
+[2025-06-24 14:02:17,630] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:02:18,999] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:03:51,255] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:03:51,278] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-14_06-13-42\Cage6-CONT-2024-12-14_06-13-42.mp4
+[2025-06-24 14:03:51,334] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_20-01-54\\Cage6-CONT-2024-12-15_20-01-54_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_20-01-54\\Cage6-CONT-2024-12-15_20-01-54.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-15_20-01-54'}
+[2025-06-24 14:03:51,360] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:03:52,742] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:05:27,473] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:05:27,489] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-15_20-01-54\Cage6-CONT-2024-12-15_20-01-54.mp4
+[2025-06-24 14:05:27,585] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_21-51-54\\Cage6-CONT-2024-12-15_21-51-54_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_21-51-54\\Cage6-CONT-2024-12-15_21-51-54.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-15_21-51-54'}
+[2025-06-24 14:05:27,615] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:05:28,982] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:06:45,207] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:06:45,226] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-15_21-51-54\Cage6-CONT-2024-12-15_21-51-54.mp4
+[2025-06-24 14:06:45,288] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_22-41-54\\Cage6-CONT-2024-12-15_22-41-54_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_22-41-54\\Cage6-CONT-2024-12-15_22-41-54.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-15_22-41-54'}
+[2025-06-24 14:06:45,310] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:06:46,691] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:08:00,972] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:08:00,988] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-15_22-41-54\Cage6-CONT-2024-12-15_22-41-54.mp4
+[2025-06-24 14:08:01,052] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_23-01-54\\Cage6-CONT-2024-12-15_23-01-54_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-15_23-01-54\\Cage6-CONT-2024-12-15_23-01-54.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-15_23-01-54'}
+[2025-06-24 14:08:01,073] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:08:02,461] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:09:54,252] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:09:54,268] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-15_23-01-54\Cage6-CONT-2024-12-15_23-01-54.mp4
+[2025-06-24 14:09:54,332] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_07-01-55\\Cage6-CONT-2024-12-16_07-01-55_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_07-01-55\\Cage6-CONT-2024-12-16_07-01-55.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-16_07-01-55'}
+[2025-06-24 14:09:54,354] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:09:55,721] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:10:22,690] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:10:22,712] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_07-01-55\Cage6-CONT-2024-12-16_07-01-55.mp4
+[2025-06-24 14:10:22,815] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_20-34-36\\Cage6-CONT-2024-12-16_20-34-36_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_20-34-36\\Cage6-CONT-2024-12-16_20-34-36.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-16_20-34-36'}
+[2025-06-24 14:10:22,836] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:10:24,205] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:12:42,784] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:12:42,803] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_20-34-36\Cage6-CONT-2024-12-16_20-34-36.mp4
+[2025-06-24 14:12:42,888] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_21-04-36\\Cage6-CONT-2024-12-16_21-04-36_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_21-04-36\\Cage6-CONT-2024-12-16_21-04-36.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-16_21-04-36'}
+[2025-06-24 14:12:42,910] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:12:44,282] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:13:25,720] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:13:25,758] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_21-04-36\Cage6-CONT-2024-12-16_21-04-36.mp4
+[2025-06-24 14:13:25,846] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_21-24-36\\Cage6-CONT-2024-12-16_21-24-36_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_21-24-36\\Cage6-CONT-2024-12-16_21-24-36.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-16_21-24-36'}
+[2025-06-24 14:13:25,909] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:13:27,276] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:14:45,844] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:14:45,844] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_21-24-36\Cage6-CONT-2024-12-16_21-24-36.mp4
+[2025-06-24 14:14:45,908] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_23-04-36\\Cage6-CONT-2024-12-16_23-04-36_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-16_23-04-36\\Cage6-CONT-2024-12-16_23-04-36.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-16_23-04-36'}
+[2025-06-24 14:14:45,929] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:14:47,313] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:19:12,277] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:19:12,287] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-16_23-04-36\Cage6-CONT-2024-12-16_23-04-36.mp4
+[2025-06-24 14:19:12,356] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-17_04-14-36\\Cage6-CONT-2024-12-17_04-14-36_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-17_04-14-36\\Cage6-CONT-2024-12-17_04-14-36.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-17_04-14-36'}
+[2025-06-24 14:19:12,377] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:19:13,756] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:20:03,413] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:20:03,413] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_04-14-36\Cage6-CONT-2024-12-17_04-14-36.mp4
+[2025-06-24 14:20:03,492] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-17_06-14-36\\Cage6-CONT-2024-12-17_06-14-36_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-17_06-14-36\\Cage6-CONT-2024-12-17_06-14-36.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-17_06-14-36'}
+[2025-06-24 14:20:03,502] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:20:04,882] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:21:10,579] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:21:10,612] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_06-14-36\Cage6-CONT-2024-12-17_06-14-36.mp4
+[2025-06-24 14:21:10,706] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-17_20-24-46\\Cage6-CONT-2024-12-17_20-24-46_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage6-CONT-2024-12-17_20-24-46\\Cage6-CONT-2024-12-17_20-24-46.mp4', 'keypoint': None, 'key': 'Cage6-CONT-2024-12-17_20-24-46'}
+[2025-06-24 14:21:10,722] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:21:12,095] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:22:14,177] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 14:22:53,871] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 14:24:35,737] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:24:35,756] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage6-CONT-2024-12-17_20-24-46\Cage6-CONT-2024-12-17_20-24-46.mp4
+[2025-06-24 14:24:35,909] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_04-07-32\\Cage8-CONT-2024-12-13_04-07-32_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_04-07-32\\Cage8-CONT-2024-12-13_04-07-32.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-13_04-07-32'}
+[2025-06-24 14:24:35,940] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:24:37,330] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:26:02,465] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:26:02,496] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-13_04-07-32\Cage8-CONT-2024-12-13_04-07-32.mp4
+[2025-06-24 14:26:02,664] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_06-07-33\\Cage8-CONT-2024-12-13_06-07-33_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_06-07-33\\Cage8-CONT-2024-12-13_06-07-33.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-13_06-07-33'}
+[2025-06-24 14:26:02,683] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:26:04,058] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:27:15,335] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:27:15,351] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-13_06-07-33\Cage8-CONT-2024-12-13_06-07-33.mp4
+[2025-06-24 14:27:15,520] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_07-07-33\\Cage8-CONT-2024-12-13_07-07-33_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_07-07-33\\Cage8-CONT-2024-12-13_07-07-33.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-13_07-07-33'}
+[2025-06-24 14:27:15,524] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:27:16,929] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:28:22,174] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:28:22,193] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-13_07-07-33\Cage8-CONT-2024-12-13_07-07-33.mp4
+[2025-06-24 14:28:22,248] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_21-03-44\\Cage8-CONT-2024-12-13_21-03-44_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-13_21-03-44\\Cage8-CONT-2024-12-13_21-03-44.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-13_21-03-44'}
+[2025-06-24 14:28:22,274] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:28:23,652] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:28:42,094] INFO [deepethogram.gui.main.get_selected_models:1136] {'flow_generator': {'no pretrained weights': None, '200221_115158_TinyMotionNet': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200221_115158_TinyMotionNet\\checkpoint.pt', '250507_172617_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250507_172617_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt', '250602_134424_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_134424_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt'}, 'feature_extractor': {'no pretrained weights': None, '200415_125824_hidden_two_stream_kinetics_degf': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200415_125824_hidden_two_stream_kinetics_degf\\checkpoint.pt', '250515_172551_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250515_172551_feature_extractor_train\\lightning_checkpoints\\epoch=16-step=16999.ckpt', '250602_161402_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161402_feature_extractor_train\\checkpoint.pt', '250602_161815_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161815_feature_extractor_train\\lightning_checkpoints\\epoch=14-step=14999.ckpt', '250603_092630_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_092630_feature_extractor_train\\lightning_checkpoints\\epoch=17-step=17999.ckpt', '250612_101251_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250612_101251_feature_extractor_train\\lightning_checkpoints\\epoch=7-step=7999.ckpt', '250619_164645_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250619_164645_feature_extractor_train\\lightning_checkpoints\\epoch=0-step=999.ckpt', '250620_091727_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250620_091727_feature_extractor_train\\lightning_checkpoints\\epoch=0-step=999.ckpt', '250620_095137_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250620_095137_feature_extractor_train\\lightning_checkpoints\\epoch=3-step=3999.ckpt', '250620_115626_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250620_115626_feature_extractor_train\\lightning_checkpoints\\epoch=18-step=18999.ckpt'}, 'sequence': {'': None, 'no pretrained weights': None, '250603_145653_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_145653_sequence_train\\lightning_checkpoints\\epoch=28-step=9685.ckpt', '250616_145332_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250616_145332_sequence_train\\lightning_checkpoints\\epoch=24-step=16349.ckpt'}}
+[2025-06-24 14:29:42,639] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 14:51:40,637] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 14:52:58,150] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:52:58,158] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-13_21-03-44\Cage8-CONT-2024-12-13_21-03-44.mp4
+[2025-06-24 14:52:58,364] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-15_04-13-47\\Cage8-CONT-2024-12-15_04-13-47_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-15_04-13-47\\Cage8-CONT-2024-12-15_04-13-47.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-15_04-13-47'}
+[2025-06-24 14:52:58,393] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:52:59,862] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:54:31,434] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 14:54:31,434] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-15_04-13-47\Cage8-CONT-2024-12-15_04-13-47.mp4
+[2025-06-24 14:54:31,512] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-17_07-03-52\\Cage8-CONT-2024-12-17_07-03-52_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-17_07-03-52\\Cage8-CONT-2024-12-17_07-03-52.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-17_07-03-52'}
+[2025-06-24 14:54:31,529] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 14:54:32,890] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 14:55:37,612] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 15:12:56,995] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 15:13:57,001] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 15:28:33,149] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 15:31:33,694] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-24 15:31:33,709] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage8-CONT-2024-12-17_07-03-52\Cage8-CONT-2024-12-17_07-03-52.mp4
+[2025-06-24 15:31:33,915] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': None, 'output': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-17_23-07-19\\Cage8-CONT-2024-12-17_23-07-19_outputs.h5', 'rgb': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\DATA\\Cage8-CONT-2024-12-17_23-07-19\\Cage8-CONT-2024-12-17_23-07-19.mp4', 'keypoint': None, 'key': 'Cage8-CONT-2024-12-17_23-07-19'}
+[2025-06-24 15:31:33,950] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: resnet18
+[2025-06-24 15:31:35,410] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : resnet18
+[2025-06-24 15:32:37,302] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 15:33:20,987] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 15:34:20,979] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 15:36:38,713] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 15:37:38,709] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 15:40:02,069] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 15:41:02,061] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 15:42:48,540] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-24 15:43:48,538] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-24 16:11:44,204] INFO [deepethogram.gui.main.sequence_train:501] Training finished. If you see error messages above, training did not complete successfully.
+[2025-06-24 16:11:44,204] INFO [deepethogram.gui.main.sequence_train:506] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2025-06-24 16:11:46,482] INFO [deepethogram.gui.main.project_loaded_buttons:175] Number finalized labels: 700

@@ -1,0 +1,23 @@
+flow:
+  all: []
+  default: []
+key: Cage1-LBN-2024-08-31_06-14-40-stereotypie
+keypoint:
+  all: []
+  default: []
+label:
+  all:
+  - Cage1-LBN-2024-08-31_06-14-40-stereotypie_labels.csv
+  default: Cage1-LBN-2024-08-31_06-14-40-stereotypie_labels.csv
+output:
+  all:
+  - Cage1-LBN-2024-08-31_06-14-40-stereotypie_outputs.h5
+  default: Cage1-LBN-2024-08-31_06-14-40-stereotypie_outputs.h5
+rgb:
+  all:
+  - Cage1-LBN-2024-08-31_06-14-40-stereotypie.mp4
+  default: Cage1-LBN-2024-08-31_06-14-40-stereotypie.mp4
+stats:
+  all:
+  - stats.yaml
+  default: stats.yaml

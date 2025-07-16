@@ -1,0 +1,509 @@
+[2025-06-19 13:23:42,827] INFO [__main__.feature_extractor_inference:473] args: C:\Users\TeamGranon\anaconda3\envs\deg_solo\lib\site-packages\deepethogram\feature_extractor\inference.py project.path=D:\LBN\Maternal_auto_classification_train_deepethogram inference.overwrite=True feature_extractor.weights=D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt flow_generator.weights=D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt inference.directory_list=[D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-44-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-54-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-14-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-24-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-54-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-24-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-34-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-44-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-14-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-34-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-44-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-54-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_00-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-14-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-24-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-34-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-54-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-14-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-34-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-44-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-54-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-14-40-stereotypie,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-24-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-34-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-44-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-54-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-04-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-24-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-34-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-44-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-54-40,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_00-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_00-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-55-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-05-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-15-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-25-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-35-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-45-28,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-55-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-05-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-15-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-25-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-35-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-45-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-55-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_00-05-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_00-15-29,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-52-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-02-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-52-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-02-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-52-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-02-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-52-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_00-02-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_00-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-52-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-02-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-52-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-02-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-52-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-02-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-12-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-22-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-32-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-42-56,D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-52-56]
+[2025-06-19 13:23:42,827] INFO [__main__.feature_extractor_inference:475] configuration used in inference: 
+[2025-06-19 13:23:42,850] INFO [__main__.feature_extractor_inference:476] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 675269913600
+    mean:
+    - 0.4222093413583818
+    - 0.4279406932145969
+    - 0.36511059715897476
+    std:
+    - 0.2231115239390951
+    - 0.22555331806847045
+    - 0.22208480446455378
+feature_extractor:
+  arch: resnet18
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 1
+  curriculum: false
+  inputs: both
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 200
+    test: 20
+  num_epochs: 10
+  loss_weight_exp: 1.0
+flow_generator:
+  type: flow_generator
+  flow_loss: MotionNet
+  flow_max: 10
+  input_images: 11
+  flow_sparsity: false
+  smooth_weight_multiplier: 1.0
+  sparsity_weight: 0.0
+  loss: MotionNet
+  max: 5
+  n_rgb: 11
+  arch: TinyMotionNet
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+inference:
+  directory_list:
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_20-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_21-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_22-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-30_23-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_00-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_04-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-14-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_05-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-14-40-stereotypie
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_06-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-04-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-24-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-34-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-44-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_07-54-40
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_20-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_21-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_22-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-08-31_23-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_00-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_00-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_04-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_05-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_06-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_07-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_20-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_21-55-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-05-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-15-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-25-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-35-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-45-28
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_22-55-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-05-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-15-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-25-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-35-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-45-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-01_23-55-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_00-05-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_00-15-29
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_20-52-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-02-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_21-52-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-02-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_22-52-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-02-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-02_23-52-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_00-02-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_00-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_04-52-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-02-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_05-52-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-02-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_06-52-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-02-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-12-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-22-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-32-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-42-56
+  - D:\LBN\Maternal_auto_classification_train_deepethogram\DATA\Cage1-LBN-2024-09-03_07-52-56
+  ignore_error: true
+  overwrite: true
+  use_loaded_model_cfg: true
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+run:
+  type: inference
+  model: feature_extractor
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250619_132342_feature_extractor_inference
+sequence:
+  filter_length: 15
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-19 13:23:42,857] INFO [__main__.feature_extractor_inference:481] Latent name used in HDF5 file: resnet18
+[2025-06-19 13:23:42,955] INFO [deepethogram.data.augs.get_gpu_transforms:246] GPU transforms: {'train': Sequential(
+  (0): ToFloat()
+  (1): VideoSequential(
+    (RandomHorizontalFlip_0): RandomHorizontalFlip(p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomRotation_1): RandomRotation(degrees=10, p=0.5, p_batch=1.0, same_on_batch=False, resample=bilinear, align_corners=True)
+    (ColorJitter_2): ColorJitter(brightness=0.25, contrast=0.1, saturation=0.1, hue=0.1, p=0.5, p_batch=1.0, same_on_batch=False)
+    (RandomGrayscale_3): RandomGrayscale(p=0.5, p_batch=1.0, same_on_batch=False)
+  )
+  (2): NormalizeVideo()
+  (3): StackClipInChannels()
+), 'val': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'test': Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+), 'denormalize': Sequential(
+  (0): UnstackClip()
+  (1): DenormalizeVideo()
+)}
+[2025-06-19 13:23:42,956] INFO [__main__.feature_extractor_inference:515] gpu_transform: Sequential(
+  (0): ToFloat()
+  (1): NormalizeVideo()
+  (2): StackClipInChannels()
+)
+[2025-06-19 13:23:44,046] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-19 13:23:45,192] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-19 13:23:45,192] INFO [deepethogram.feature_extractor.train.build_model_from_cfg:220] feature extractor weightfile: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-19 13:23:45,281] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component spatial from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-19 13:23:46,790] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component flow from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-19 13:23:48,032] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt
+[2025-06-19 13:23:48,032] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250602_134424_flow_generator_train\lightning_checkpoints\epoch=0-step=999.ckpt...
+[2025-06-19 13:23:48,233] INFO [deepethogram.utils.load_feature_extractor_components:630] loading component fusion from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250612_101251_feature_extractor_train\lightning_checkpoints\epoch=7-step=7999.ckpt
+[2025-06-19 13:23:48,328] INFO [__main__.feature_extractor_inference:545] best epoch from loaded file: 7
+[2025-06-19 13:23:48,347] INFO [__main__.feature_extractor_inference:552] thresholds: [0.5        0.50758693 0.49753769 0.66335025 0.98995075 0.6733995
+ 0.56788241 0.03024774 0.83418744 0.78394121]
+[2025-06-19 13:23:50,042] INFO [__main__.extract:383] inference batch size: 8
+[2025-06-19 13:24:03,316] INFO [__main__.print_debug_statement:128] images shape: torch.Size([8, 33, 224, 224])
+[2025-06-19 13:24:03,316] INFO [__main__.print_debug_statement:129] logits shape: torch.Size([8, 10])
+[2025-06-19 13:24:03,316] INFO [__main__.print_debug_statement:130] spatial_features shape: torch.Size([8, 512])
+[2025-06-19 13:24:03,316] INFO [__main__.print_debug_statement:131] flow_features shape: torch.Size([8, 512])
+[2025-06-19 13:24:03,316] INFO [__main__.print_debug_statement:133] spatial: min 0.0 mean 1.1701630353927612 max 3.7583582401275635 shape torch.Size([8, 512])
+[2025-06-19 13:24:03,316] INFO [__main__.print_debug_statement:135] flow   : min 0.0 mean 0.3065190613269806 max 18.856922149658203 shape torch.Size([8, 512])
+[2025-06-19 13:24:03,346] INFO [__main__.print_debug_statement:144] channel min:  tensor([    -0.0117,     -0.0022,     -0.0018,     -0.0117,     -0.0022,
+            -0.0018,     -0.0117,     -0.0022,     -0.0018,     -0.0117,
+            -0.0022,     -0.0018,     -0.0117,     -0.0022,     -0.0018,
+            -1.8572,     -1.8973,     -1.6440,     -1.8572,     -1.8973,
+            -1.6440,     -1.8572,     -1.8973,     -1.6440,     -1.8572,
+            -1.8973,     -1.6440,     -1.8572,     -1.8973,     -1.6440,
+            -1.8572,     -1.8973,     -1.6440], device='cuda:0')
+[2025-06-19 13:24:03,347] INFO [__main__.print_debug_statement:145] channel mean: tensor([-0.0117, -0.0022, -0.0018, -0.0117, -0.0022, -0.0018, -0.0117, -0.0022,
+        -0.0018, -0.0117, -0.0022, -0.0018, -0.0117, -0.0022, -0.0018, -0.1679,
+        -0.1916,  0.0829, -0.1660, -0.2060,  0.1064, -0.1659, -0.2068,  0.1112,
+        -0.1654, -0.2090,  0.1212, -0.1696, -0.2083,  0.1200, -0.1629, -0.2000,
+         0.1003], device='cuda:0')
+[2025-06-19 13:24:03,347] INFO [__main__.print_debug_statement:146] channel max : tensor([    -0.0117,     -0.0022,     -0.0018,     -0.0117,     -0.0022,
+            -0.0018,     -0.0117,     -0.0022,     -0.0018,     -0.0117,
+            -0.0022,     -0.0018,     -0.0117,     -0.0022,     -0.0018,
+             2.5897,      2.5362,      2.8588,      2.5897,      2.5362,
+             2.8588,      2.5897,      2.5362,      2.8588,      2.5897,
+             2.5362,      2.8588,      2.5897,      2.5362,      2.8588,
+             2.5897,      2.5362,      2.8588], device='cuda:0')
+[2025-06-19 13:24:03,352] INFO [__main__.print_debug_statement:147] channel std : tensor([0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+        0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.2634, 1.2499, 1.2679,
+        1.2716, 1.2409, 1.2918, 1.2712, 1.2411, 1.2925, 1.2730, 1.2388, 1.2990,
+        1.2747, 1.2385, 1.2932, 1.2681, 1.2447, 1.2774], device='cuda:0')
+[2025-06-19 13:24:14,120] INFO [__main__.extract:416] probabilities: torch.Size([1781, 10])
+[2025-06-19 13:24:14,120] INFO [__main__.extract:416] logits: torch.Size([1781, 10])
+[2025-06-19 13:24:14,120] INFO [__main__.extract:416] spatial_features: torch.Size([1781, 512])
+[2025-06-19 13:24:14,120] INFO [__main__.extract:416] flow_features: torch.Size([1781, 512])
+[2025-06-19 13:24:14,120] INFO [__main__.extract:416] debug: torch.Size([1781])
+[2025-06-19 13:24:14,120] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:24:30,154] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:24:45,698] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:25:01,243] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:25:16,852] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:25:32,956] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:25:47,788] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:26:02,834] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:26:17,851] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:26:32,534] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:26:47,158] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:27:01,783] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:27:16,600] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:27:32,730] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:27:48,546] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:28:03,919] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:28:19,970] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:28:34,730] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:28:49,291] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:29:03,913] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:29:18,716] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:29:34,538] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:29:50,334] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:30:06,334] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:30:22,097] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:30:37,855] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:30:53,986] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:31:10,195] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:31:26,125] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:31:42,155] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:31:58,042] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:32:12,880] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:32:27,814] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:32:42,667] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:32:56,666] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:33:10,728] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:33:25,740] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:33:40,647] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:33:55,668] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:34:10,681] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:34:25,738] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:34:40,676] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:34:55,717] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:35:12,520] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:35:29,095] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:35:45,749] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:36:02,420] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:36:19,716] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:36:39,183] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:36:56,276] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:37:14,853] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:37:32,289] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:37:49,242] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:38:05,616] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:38:21,884] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:38:42,785] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:39:00,878] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:39:17,402] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:39:34,626] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:39:52,033] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:40:08,186] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:40:26,890] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:40:44,825] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:41:03,778] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:41:20,840] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:41:38,293] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:41:56,478] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:42:14,100] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:42:32,068] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:42:52,118] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:43:09,160] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:43:27,706] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:43:45,705] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:44:03,532] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:44:22,051] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:44:39,576] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:44:58,356] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:45:16,512] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:45:34,151] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:45:52,572] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:46:09,853] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:46:26,808] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:46:45,710] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:47:05,449] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:47:23,379] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:47:41,581] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:47:59,256] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:48:18,236] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:48:34,879] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:48:51,562] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:49:10,639] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:49:26,669] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:49:43,825] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:49:59,231] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:50:14,573] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:50:32,009] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:50:49,805] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:51:05,398] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:51:23,288] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:51:39,724] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:51:56,677] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:52:13,738] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:52:31,784] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:52:48,580] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:53:04,610] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:53:20,141] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:53:37,327] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:53:54,250] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:54:13,278] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:54:30,074] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:54:48,809] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:55:04,791] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:55:20,988] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:55:36,446] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:55:51,945] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:56:07,913] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:56:25,849] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:56:42,937] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:56:58,660] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:57:13,942] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:57:31,667] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:57:48,079] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:58:03,876] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:58:21,430] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:58:38,061] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:58:52,842] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:59:08,914] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:59:26,731] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:59:42,905] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 13:59:59,870] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:00:14,841] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:00:29,618] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:00:44,445] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:01:00,431] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:01:23,084] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:01:41,265] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:01:57,801] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:02:15,492] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:02:34,330] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:02:53,439] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:03:12,281] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:03:30,266] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:03:47,561] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:04:04,763] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:04:23,198] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:04:43,266] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:05:03,651] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:05:24,776] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:05:44,627] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:06:06,054] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:06:25,178] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:06:41,972] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:06:58,567] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:07:12,910] WARNING [__main__.extract:439] error calculating f1: list index out of range
+[2025-06-19 14:07:26,674] WARNING [__main__.extract:439] error calculating f1: list index out of range

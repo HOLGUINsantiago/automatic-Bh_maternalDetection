@@ -1,0 +1,127 @@
+[2025-06-19 15:23:45,073] INFO [deepethogram.gui.main.initialize_project:1021] loaded project configuration: split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+run:
+  type: gui
+  model: null
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250619_152345
+label_view_width: 31
+control_arrow_jump: 31
+vertical_arrow_jump: 3
+cmap: deepethogram
+unlabeled_alpha: 0.1
+prediction_opacity: 0.2
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    'N': 675269913600
+    mean:
+    - 0.4222093413583818
+    - 0.4279406932145969
+    - 0.36511059715897476
+    std:
+    - 0.2231115239390951
+    - 0.22555331806847045
+    - 0.22208480446455378
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+sequence:
+  filter_length: 15
+train:
+  loss_weight_exp: 1.0
+
+[2025-06-19 15:23:45,075] INFO [deepethogram.gui.main.initialize_project:1022] cwd: D:\LBN\Maternal_auto_classification_train_deepethogram\gui_logs\250619_152345
+[2025-06-19 15:23:47,056] INFO [deepethogram.gui.main.project_loaded_buttons:175] Number finalized labels: 657
+[2025-06-19 15:24:05,087] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CageC-LBN-2024-07-06_22-54-40\\CageC-LBN-2024-07-06_22-54-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CageC-LBN-2024-07-06_22-54-40\\CageC-LBN-2024-07-06_22-54-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CageC-LBN-2024-07-06_22-54-40\\CageC-LBN-2024-07-06_22-54-40.mp4', 'keypoint': None, 'key': 'CageC-LBN-2024-07-06_22-54-40'}
+[2025-06-19 15:24:05,108] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-19 15:24:06,743] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-19 15:24:13,477] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CageC-LBN-2024-07-06_22-54-40/CageC-LBN-2024-07-06_22-54-40.mp4
+[2025-06-19 15:25:57,850] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 15:26:48,441] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-19 15:26:51,622] INFO [deepethogram.gui.main.get_selected_models:1136] {'flow_generator': {'no pretrained weights': None, '200221_115158_TinyMotionNet': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200221_115158_TinyMotionNet\\checkpoint.pt', '250507_172617_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250507_172617_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt', '250602_134424_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_134424_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt'}, 'feature_extractor': {'no pretrained weights': None, '200415_125824_hidden_two_stream_kinetics_degf': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200415_125824_hidden_two_stream_kinetics_degf\\checkpoint.pt', '250515_172551_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250515_172551_feature_extractor_train\\lightning_checkpoints\\epoch=16-step=16999.ckpt', '250602_161402_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161402_feature_extractor_train\\checkpoint.pt', '250602_161815_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161815_feature_extractor_train\\lightning_checkpoints\\epoch=14-step=14999.ckpt', '250603_092630_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_092630_feature_extractor_train\\lightning_checkpoints\\epoch=17-step=17999.ckpt', '250612_101251_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250612_101251_feature_extractor_train\\lightning_checkpoints\\epoch=7-step=7999.ckpt'}, 'sequence': {'': None, 'no pretrained weights': None, '250603_145653_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_145653_sequence_train\\lightning_checkpoints\\epoch=28-step=9685.ckpt', '250616_145332_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250616_145332_sequence_train\\lightning_checkpoints\\epoch=24-step=16349.ckpt'}}
+[2025-06-19 15:26:51,628] INFO [deepethogram.gui.main.get_selected_models:1136] {'flow_generator': {'no pretrained weights': None, '200221_115158_TinyMotionNet': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200221_115158_TinyMotionNet\\checkpoint.pt', '250507_172617_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250507_172617_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt', '250602_134424_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_134424_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt'}, 'feature_extractor': {'no pretrained weights': None, '200415_125824_hidden_two_stream_kinetics_degf': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200415_125824_hidden_two_stream_kinetics_degf\\checkpoint.pt', '250515_172551_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250515_172551_feature_extractor_train\\lightning_checkpoints\\epoch=16-step=16999.ckpt', '250602_161402_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161402_feature_extractor_train\\checkpoint.pt', '250602_161815_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161815_feature_extractor_train\\lightning_checkpoints\\epoch=14-step=14999.ckpt', '250603_092630_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_092630_feature_extractor_train\\lightning_checkpoints\\epoch=17-step=17999.ckpt', '250612_101251_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250612_101251_feature_extractor_train\\lightning_checkpoints\\epoch=7-step=7999.ckpt'}, 'sequence': {'': None, 'no pretrained weights': None, '250603_145653_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_145653_sequence_train\\lightning_checkpoints\\epoch=28-step=9685.ckpt', '250616_145332_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250616_145332_sequence_train\\lightning_checkpoints\\epoch=24-step=16349.ckpt'}}
+[2025-06-19 15:26:51,628] INFO [deepethogram.gui.main.get_selected_models:1136] {'flow_generator': {'no pretrained weights': None, '200221_115158_TinyMotionNet': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200221_115158_TinyMotionNet\\checkpoint.pt', '250507_172617_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250507_172617_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt', '250602_134424_flow_generator_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_134424_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt'}, 'feature_extractor': {'no pretrained weights': None, '200415_125824_hidden_two_stream_kinetics_degf': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\pretrained_models\\200415_125824_hidden_two_stream_kinetics_degf\\checkpoint.pt', '250515_172551_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250515_172551_feature_extractor_train\\lightning_checkpoints\\epoch=16-step=16999.ckpt', '250602_161402_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161402_feature_extractor_train\\checkpoint.pt', '250602_161815_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_161815_feature_extractor_train\\lightning_checkpoints\\epoch=14-step=14999.ckpt', '250603_092630_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_092630_feature_extractor_train\\lightning_checkpoints\\epoch=17-step=17999.ckpt', '250612_101251_feature_extractor_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250612_101251_feature_extractor_train\\lightning_checkpoints\\epoch=7-step=7999.ckpt'}, 'sequence': {'': None, 'no pretrained weights': None, '250603_145653_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250603_145653_sequence_train\\lightning_checkpoints\\epoch=28-step=9685.ckpt', '250616_145332_sequence_train': 'D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250616_145332_sequence_train\\lightning_checkpoints\\epoch=24-step=16349.ckpt'}}
+[2025-06-19 15:26:51,628] INFO [deepethogram.gui.main.featureextractor_train:385] feature extractor train called with args: ['python', '-m', 'deepethogram.feature_extractor.train', 'project.path=D:\\LBN\\Maternal_auto_classification_train_deepethogram', 'feature_extractor.weights=D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250612_101251_feature_extractor_train\\lightning_checkpoints\\epoch=7-step=7999.ckpt', 'flow_generator.weights=D:\\LBN\\Maternal_auto_classification_train_deepethogram\\models\\250602_134424_flow_generator_train\\lightning_checkpoints\\epoch=0-step=999.ckpt']
+[2025-06-19 15:28:37,217] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 15:31:12,480] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-19 15:32:12,491] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 15:34:27,552] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-19 15:35:31,130] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 15:35:53,190] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_20-08-42\\Cage3-LBN-2024-12-10_20-08-42_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_20-08-42\\Cage3-LBN-2024-12-10_20-08-42_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_20-08-42\\Cage3-LBN-2024-12-10_20-08-42.mp4', 'keypoint': None, 'key': 'Cage3-LBN-2024-12-10_20-08-42'}
+[2025-06-19 15:35:53,226] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-19 15:35:56,203] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-19 15:35:56,204] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-19 15:37:00,094] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 15:37:39,891] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_21-08-42\\Cage3-LBN-2024-12-10_21-08-42_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_21-08-42\\Cage3-LBN-2024-12-10_21-08-42_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_21-08-42\\Cage3-LBN-2024-12-10_21-08-42.mp4', 'keypoint': None, 'key': 'Cage3-LBN-2024-12-10_21-08-42'}
+[2025-06-19 15:37:39,943] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-19 15:37:42,951] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-19 15:37:42,952] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-19 15:38:30,405] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-19 15:38:30,420] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_21-08-42/Cage3-LBN-2024-12-10_21-08-42.mp4
+[2025-06-19 15:39:04,497] INFO [deepethogram.gui.main.save:800] saving...
+[2025-06-19 15:39:04,517] INFO [deepethogram.gui.main.finalize:771] finalizing labels for file D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/Cage3-LBN-2024-12-10_21-08-42/Cage3-LBN-2024-12-10_21-08-42.mp4
+[2025-06-19 15:40:13,979] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 15:48:45,248] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-19 15:49:46,168] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 15:51:21,410] INFO [deepethogram.gui.main.featureextractor_train:395] Training finished. If you see error messages above, training did not complete successfully.
+[2025-06-19 15:51:21,410] INFO [deepethogram.gui.main.featureextractor_train:400] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2025-06-19 15:51:31,712] INFO [deepethogram.gui.main.project_loaded_buttons:175] Number finalized labels: 657
+[2025-06-19 15:59:51,543] INFO [deepethogram.gui.main.initialize_video:226] Record for loaded video: {'flow': None, 'label': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CageC-LBN-2024-07-06_22-54-40\\CageC-LBN-2024-07-06_22-54-40_labels.csv', 'output': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CageC-LBN-2024-07-06_22-54-40\\CageC-LBN-2024-07-06_22-54-40_outputs.h5', 'rgb': 'D:/LBN/Maternal_auto_classification_train_deepethogram/DATA/CageC-LBN-2024-07-06_22-54-40\\CageC-LBN-2024-07-06_22-54-40.mp4', 'keypoint': None, 'key': 'CageC-LBN-2024-07-06_22-54-40'}
+[2025-06-19 15:59:51,608] INFO [deepethogram.projects.import_outputfile:791] Key used to load outputfile: tgmj
+[2025-06-19 15:59:53,276] INFO [deepethogram.gui.main.import_outputfile:886] CHANGING LATENT NAME TO : tgmj
+[2025-06-19 15:59:53,276] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling
+[2025-06-19 16:01:11,559] INFO [deepethogram.gui.main.log_idle:151] User has been idle for 60.0 seconds...
+[2025-06-19 16:11:09,997] INFO [deepethogram.gui.main.user_did_something:138] User restarted labeling

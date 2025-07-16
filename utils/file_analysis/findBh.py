@@ -19,7 +19,7 @@ for root, _, files in os.walk(base_dir):
                 df = df.iloc[:, 1:]
 
             # Verificar si hay algún 1 en la columna 'background'
-            if 'Selfgrooming' in df.columns and df['Selfgrooming'].sum() > 0:
+            if df['background'].sum() > 0 :
                 files_with_background.append(file_path)
 
 # Mostrar los archivos encontrados

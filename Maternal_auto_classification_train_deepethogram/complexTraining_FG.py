@@ -7,7 +7,7 @@ import os
 if __name__ == '__main__':
     project_path = r"D:\LBN\Maternal_auto_classification_train_deepethogram"
 
-    flow_weights = r"D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200313_125331_TinyMotionNet3D_kinetics\checkpoint.pt"
+    flow_weights = r"D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200310_174416_MotionNet_kinetics\checkpoint.pt"
 
     cfg = make_config(
         project_path=project_path,
@@ -15,7 +15,7 @@ if __name__ == '__main__':
         run_type='train',
         model='flow_generator',
         use_command_line=False,
-        preset="deg_s"
+        preset="deg_m"
     )
 
     cfg.flow_generator.weights = flow_weights

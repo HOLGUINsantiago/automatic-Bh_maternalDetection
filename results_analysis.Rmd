@@ -5,10 +5,6 @@ date: "2025-05-29"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Library importing
 
 ```{r}
@@ -46,7 +42,6 @@ library(corrplot)
 library(vegan)
 library(readxl)
 library(here)
-library(package)
 ```
 
 # Data preparation
@@ -66,12 +61,25 @@ library(package)
 ### Importing function and other declarations
 
 ```{r}
-import_csv <- function(..., sep = ";", stringsAsFactors = TRUE, header = TRUE, encoding = "UTF-8") {
-  path <- here(...)  # Constructs the full path from parts
-  read.csv(path, sep = sep, stringsAsFactors = stringsAsFactors, header = header, fileEncoding = encoding)
+import_csv <- function(..., sep = ";", stringsAsFactors = TRUE, header = TRUE, encoding = "UTF-8", convert_empty_to_na = TRUE) {
+  path <- here(...)  # Construye la ruta completa
+
+  # Define los valores a tratar como NA solo si se indica
+  na_vals <- if (convert_empty_to_na) c("", "NA") else NULL
+
+  read.csv(
+    path,
+    sep = sep,
+    stringsAsFactors = stringsAsFactors,
+    header = header,
+    fileEncoding = encoding,
+    na.strings = na_vals
+  )
 }
 
 deadPups <- c("C1-3", "C7-1")
+ado_data <- FALSE
+adult_data <- FALSE
 ```
 
 ### Juvenile data
@@ -85,32 +93,51 @@ juvenile_df <- juvenile_df %>%
     CageID = sub("(?i)^cage\\s*", "", CageID, perl = TRUE)  # Remove "Cage" prefix 
   )
 
+cage_counts <- juvenile_df %>%
+  group_by(CageID) %>%
+  summarise(n_groups = n_distinct(Condition)) %>%
+  filter(n_groups > 1)
+
+# Para los CageID que se repiten en varios Condition, añadir la primera letra de Condition
+juvenile_df <- juvenile_df %>%
+  mutate(
+    CageID = if_else(
+      CageID %in% cage_counts$CageID,
+      paste0(substr(Condition, 1, 1), "_", CageID),  # Añade la primera letra de Condition
+      CageID
+    )
+  )
+
 juvenile_df <- subset(juvenile_df, Project %in% c("VEAVE"))  # Keep only rows from the VEAVE project
+
+ids_a_eliminar <- deadPups  
+juvenile_df <- juvenile_df %>% 
+  filter(!(PupID %in% ids_a_eliminar)) 
 
 juvenile_df_only <- subset(juvenile_df, Cohort %in% c("Cohort 0", "Cohort 1", "Cohort 2"))  # Filter specific cohorts
 
-ids_a_eliminar <- deadPups  # List of PupIDs to remove : dead pups
-juvenile_df <- juvenile_df %>% 
-  filter(!(PupID %in% ids_a_eliminar))  # Filter out specific PupIDs
+
 ```
 
 ### Adolescent data
 
 ```{r}
-ado_df <- import_csv("pups_data","ado","...")  
+if(ado_data)
+  ado_df <- import_csv("pups_data","ado","...")  
 ```
 
 ### adult data
 
 ```{r}
-adult_df <- import_csv("pups_data","adult","...") 
+if(adult_data)
+  adult_df <- import_csv("pups_data","adult","...") 
 ```
 
 ### Mapping IDs
 
 ```{r}
-# Load the pups mapping file (contains cage, pup_id, maternal_Cage, etc.)
-mapps <- import_csv("pups_data", "...")
+if(adult_data || ado_data){
+  mapps <- import_csv("pups_data", "...")
 
 # Create a standardized Pup_label per individual, prefixed with "C" only if needed
 mapps$Pup_label <- ifelse(
@@ -118,14 +145,15 @@ mapps$Pup_label <- ifelse(
   paste0(mapps$maternal_Cage, "-", mapps$pup_id),
   paste0("C", mapps$maternal_Cage, "-", mapps$pup_id)
 )
+}
 
-# Join mapps to ado_df using keys: cage and pup_id
-ado_df <- ado_df %>%
+if(ado_data)
+  ado_df <- ado_df %>%
   left_join(mapps %>% select(cage, pup_id, Pup_label),
             by = c("cage", "pup_id"))
 
-# Join mapps to adult_df using same keys
-adult_df <- adult_df %>%
+if(adult_data)
+  adult_df <- adult_df %>%
   left_join(mapps %>% select(cage, pup_id, Pup_label),
             by = c("cage", "pup_id"))
 
@@ -135,7 +163,7 @@ adult_df <- adult_df %>%
 
 ```{r}
 
-maternal_df <- import_csv("maternal_data","Resume_df.csv")  
+maternal_df <- import_csv("maternal_data","Resume_df.csv",sep =",")  
 
 maternal_df$Transition <- maternal_df$Nest_exits_bouts + maternal_df$Nest_entry_bouts  # Calculate total transitions
 
@@ -152,7 +180,7 @@ if ("Start_time" %in% colnames(maternal_df)) {
   # Remove daytime (7:30 to 19:59)
 }
 
-maternal_full_df <- import_csv("maternal_data","behavioural_annotation.csv")  # Load full maternal annotation data
+maternal_full_df <- import_csv("maternal_data","behavioural_annotation.csv", sep=",")  # Load full maternal annotation data
 
 maternal_full_df <- maternal_full_df %>%
   mutate(Start_time = ymd_hms(gsub("T", " ", Start_time)))  # Convert Start_time to POSIXct format
@@ -168,7 +196,7 @@ maternal_full_df <- maternal_full_df %>%
       frame * Recording_duration / total_frames  # Adjust using frame index and recording duration
   ) %>%
   ungroup() %>%
-  select(-start_0, -total_frames) %>%
+  dplyr::select(-start_0, -total_frames) %>%
   mutate(Day = floor(Time / 86400) + 1)  # Compute the day number from total seconds
 
 maternal_full_df <- maternal_full_df %>%
@@ -214,6 +242,9 @@ process_missing_data <- function(df, df_name = "df") {
     df_problematic <- df_clean[, problematic_cols, drop = FALSE]
     df_for_imputation <- df_clean[, !too_many_levels, drop = FALSE]
     
+    df_for_imputation[] <- lapply(df_for_imputation, function(x) {
+    if (is.logical(x)) as.numeric(x) else x
+    })
     # Impute missing data with missForest
     imputed_result <- missForest(df_for_imputation)
     df_imputed <- imputed_result$ximp
@@ -231,9 +262,15 @@ process_missing_data <- function(df, df_name = "df") {
 }
 
 # Example: apply on juvenile_df, ado_df, adult_df
+juvenile_unic_completed <- process_missing_data(juvenile_df_only, "juvenile_df_only")
+
 juvenile_all_completed <- process_missing_data(juvenile_df, "juvenile_df")
-ado_all_completed      <- process_missing_data(ado_df, "ado_df")
-adult_all_completed    <- process_missing_data(adult_df, "adult_df")
+
+if(ado_data)
+  ado_all_completed      <- process_missing_data(ado_df, "ado_df")
+
+if(adult_data)
+  adult_all_completed    <- process_missing_data(adult_df, "adult_df")
 ```
 
 # Functions creation
@@ -671,14 +708,17 @@ cluster_rf_analysis_mat <- function(data_df,
       na.omit()
 
     df_cage_mean <- df %>%
-      group_by(CageID, Group) %>%
-      summarise(across(where(is.numeric), mean, na.rm = TRUE)) %>%
-      ungroup()
-
-    mat_scaled <- df_cage_mean %>%
-      column_to_rownames("CageID") %>%
-      dplyr::select(-Group) %>%
-      scale()
+    group_by(CageID, Group) %>%
+    summarise(across(where(is.numeric), mean, na.rm = TRUE), .groups = "drop")
+  
+  if(any(duplicated(df_cage_mean$CageID))){
+    stop("CageID contiene valores duplicados. Por favor, revisa los datos.")
+  }
+  
+  mat_scaled <- df_cage_mean %>%
+    column_to_rownames("CageID") %>%
+    dplyr::select(-Group) %>%
+    scale()
 
     annotation <- df_cage_mean %>%
       dplyr::select(CageID, Group) %>%
@@ -1346,6 +1386,8 @@ fit_VAR_models <- function(df,
     time_unit <- frame_col
   }
   
+  view(df_proc)
+  
   # Seleccionar columnas de comportamiento si no se pasa explícitamente
   if (is.null(behav_vars)) {
     vars_to_exclude <- c(frame_col, "time_bin", "Cage", "Start_time", "LBN", 
@@ -1372,12 +1414,11 @@ fit_VAR_models <- function(df,
   # Split selon le grouping (ou tout en une fois si NULL)
   if (!is.null(group_by_col)) {
     data_groups <- df_unique %>% group_split(.data[[group_by_col]])
-    names(data_groups) <- df_unique %>% pull(group_by_col) %>% unique()
+    names(data_groups) <- df_unique %>% pull(group_by_col) %>% as.character() %>% unique()
   } else {
     data_groups <- list(All = df_unique)
   }
   
-  view(data_groups)
   # Fit des modèles VAR
   var_models <- imap(data_groups, function(df_g, name) {
     ts_data <- ts(df_g %>% dplyr::select(all_of(behav_vars)), start = 0, frequency = 1)
@@ -1705,7 +1746,7 @@ analyze_var <- function(var_name) {
           if (!is.na(shapiro_p) && shapiro_p <= 0.05) {
             if (i == 1) {
               data_sub <- df_tibble %>%
-                select(all_of(c(var_name, "Condition"))) %>%
+                dplyr::select(all_of(c(var_name, "Condition"))) %>%
                 filter(!is.na(.data[[var_name]]))
               kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$Condition), error = function(e) NULL)
               if (!is.null(kw_test)) {
@@ -1722,7 +1763,7 @@ analyze_var <- function(var_name) {
               }
             } else if (i == 2) {
               data_sub <- df_tibble %>%
-                select(all_of(c(var_name, "CageID"))) %>%
+                dplyr::select(all_of(c(var_name, "CageID"))) %>%
                 filter(!is.na(.data[[var_name]]), !is.na(CageID))
               kw_test <- tryCatch(kruskal.test(data_sub[[var_name]] ~ data_sub$CageID), error = function(e) NULL)
               if (!is.null(kw_test)) {
@@ -1759,7 +1800,7 @@ analyze_var <- function(var_name) {
   # Modèle 3 et 5 : Kruskal-Wallis CageID selon Condition (LBN/CONT)
   for (cond in c("LBN", "CONT")) {
     data_sub <- df_tibble %>%
-      select(all_of(c(var_name, "Condition", "CageID"))) %>%
+      dplyr::select(all_of(c(var_name, "Condition", "CageID"))) %>%
       filter(!is.na(.data[[var_name]]), Condition == cond, !is.na(CageID))
     
     if (nrow(data_sub) > 2) {
@@ -2062,8 +2103,10 @@ frobenius_df <- as.data.frame(as.table(frobenius_mat)) %>%
   filter(CageA != CageB) %>%  # Remove self-comparisons
   drop_na()  # Remove rows with NA distances
 
-# Show first rows of the data frame
-head(frobenius_df)
+frobenius_mat <- frobenius_mat[, colSums(!is.na(frobenius_mat)) > 0]
+
+# Eliminar filas que son completamente NA
+frobenius_mat <- frobenius_mat[rowSums(!is.na(frobenius_mat)) > 0, ]
 
 # 5. Plot heatmap of Frobenius distances between VAR models
 pheatmap(
@@ -2093,7 +2136,7 @@ df_maternal_summary <- maternal_df %>%
 
 
 df_maternal_summary <- df_maternal_summary %>%
-  select(Cage.ID, all_of(beh_cols))
+  dplyr::select(Cage.ID, all_of(beh_cols))
 
 df_fenotipos_summary <- juvenile_all_completed %>%
   group_by(CageID) %>%
@@ -2107,14 +2150,12 @@ df_merged <- inner_join(
 
 pup_cols <- setdiff(colnames(df_merged), c("Cage.ID", beh_cols))
 
-pup_cols <- c("d.ear.c.open","tot.n.voc.p14","av.ep.dur.p14","flip.AUC.p7.10","norm.av.front.lat","d.transition","d.eye.l.open","d.walk")
-
-behav_data <- df_merged %>% select(all_of(beh_cols))
-pup_data <- df_merged %>% select(all_of(pup_cols))
+behav_data <- df_merged %>% dplyr::select(all_of(beh_cols))
+pup_data <- df_merged %>% dplyr::select(all_of(pup_cols))
 
 # Eliminar columnas con varianza 0
-behav_data <- behav_data %>% select(where(~ var(.x, na.rm=TRUE) > 0))
-pup_data <- pup_data %>% select(where(~ var(.x, na.rm=TRUE) > 0))
+behav_data <- behav_data %>% dplyr::select(where(~ var(.x, na.rm=TRUE) > 0))
+pup_data <- pup_data %>% dplyr::select(where(~ var(.x, na.rm=TRUE) > 0))
 
 # Correlaciones cruzadas
 cor_cross <- cor(behav_data, pup_data, use = "pairwise.complete.obs")
@@ -2185,7 +2226,7 @@ print(predictions)
 
 # Generate heatmap using pheatmap
 predictions_heatmap_data <- predictions %>%
-  select(-Cage.ID)
+  dplyr::select(-Cage.ID)
 
 pheatmap(t(as.matrix(predictions_heatmap_data)),
          main = "Heatmap of Predicted Phenotypes",

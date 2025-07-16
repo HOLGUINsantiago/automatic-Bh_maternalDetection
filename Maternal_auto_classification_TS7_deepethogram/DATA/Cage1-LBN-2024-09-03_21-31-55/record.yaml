@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: Cage1-LBN-2024-09-03_21-31-55
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage1-LBN-2024-09-03_21-31-55.mp4
+  default: Cage1-LBN-2024-09-03_21-31-55.mp4
+stats:
+  all: []
+  default: []

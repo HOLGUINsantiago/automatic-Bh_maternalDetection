@@ -1,0 +1,550 @@
+[2025-06-25 16:20:16,532] INFO [deepethogram.feature_extractor.train.feature_extractor_train:66] args: d:/LBN/Maternal_auto_classification_train_deepethogram/complexTraining_FE.py
+[2025-06-25 16:20:16,533] INFO [deepethogram.feature_extractor.train.feature_extractor_train:71] configuration used ~~~~~
+[2025-06-25 16:20:16,541] INFO [deepethogram.feature_extractor.train.feature_extractor_train:72] split:
+  reload: true
+  file: D:\LBN\Maternal_auto_classification_train_deepethogram\SPLITS\split_1.yaml
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+notes: null
+log:
+  level: info
+augs:
+  brightness: 0.25
+  contrast: 0.1
+  hue: 0.1
+  saturation: 0.1
+  color_p: 0.5
+  grayscale: 0.5
+  crop_size: null
+  resize:
+  - 224
+  - 224
+  dali: false
+  random_resize: false
+  pad: null
+  LR: 0.5
+  UD: 0.0
+  degrees: 10
+  normalization:
+    'N': 694834329600
+    mean:
+    - 0.4213915600330549
+    - 0.426960783932345
+    - 0.365874038370559
+    std:
+    - 0.224414912593986
+    - 0.2267886049471975
+    - 0.22340896343317201
+feature_extractor:
+  arch: resnet50
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 1
+  curriculum: false
+  inputs: both
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models\200410_142156_hidden_two_stream_kinetics_degm
+  n_flow: 10
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 1000
+    test: 20
+  num_epochs: 100
+  lr: 0.0001
+  scheduler: plateau
+  min_lr: 5.0e-07
+  stopping_type: learning_rate
+  milestones:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  weight_loss: true
+  patience: 3
+  early_stopping_begins: 0
+  viz_metrics: true
+  viz_examples: 10
+  reduction_factor: 0.1
+  loss_weight_exp: 1.0
+  loss_gamma: 1.0
+  label_smoothing: 0.05
+  oversampling_exp: 0.0
+  regularization:
+    style: l2_sp
+    alpha: 1.0e-05
+    beta: 0.001
+flow_generator:
+  type: flow_generator
+  flow_loss: MotionNet
+  flow_max: 10
+  input_images: 11
+  flow_sparsity: false
+  smooth_weight_multiplier: 1.0
+  sparsity_weight: 0.0
+  loss: MotionNet
+  max: 5
+  n_rgb: 11
+  arch: MotionNet
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+  'n': 10
+postprocessor:
+  type: min_bout_per_behavior
+  min_bout_length: 10
+inference:
+  directory_list: all
+  ignore_error: true
+  overwrite: false
+  use_loaded_model_cfg: true
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+run:
+  type: train
+  model: feature_extractor
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250625_162016_feature_extractor_train
+sequence:
+  filter_length: 15
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-25 16:20:19,832] INFO [deepethogram.projects.get_weightfile_from_cfg:1079] loading specified weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-25 16:20:19,832] INFO [deepethogram.feature_extractor.train.feature_extractor_train:79] loading flow generator from file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt
+[2025-06-25 16:20:19,832] INFO [deepethogram.utils.load_state:341] loading from checkpoint file D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_164900_flow_generator_train\lightning_checkpoints\epoch=1-step=1999.ckpt...
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-17_23-07-19
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-00-00
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-10-00
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_20-50-00
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_21-00-00
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-10-01
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_22-30-01
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-19_23-00-01
+[2025-06-25 16:20:24,007] WARNING [deepethogram.projects.filter_records_for_filetypes:663] No label file found in record: Cage8-CONT-2024-12-20_02-10-06
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-06_20-00-34 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-06_20-20-34 assigned to split val
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-06_22-10-34 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-06_22-40-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-06_23-20-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-06_23-40-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_04-50-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_05-30-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_06-20-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_06-50-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_07-10-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_07-20-35 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_20-56-20 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_22-06-20 assigned to split val
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_22-26-20 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_22-46-20 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-07_23-46-20 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-08_04-46-21 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-08_05-06-21 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-08_22-06-23 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-08_23-46-23 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file CONT-2024-05-09_05-16-23 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-08_20-28-34 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-08_20-48-34 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-08_21-18-34 assigned to split train
+[2025-06-25 16:20:32,202] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-08_22-28-34 assigned to split train
+[2025-06-25 16:20:32,214] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-08_22-48-34 assigned to split train
+[2025-06-25 16:20:32,214] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-09_04-38-34 assigned to split train
+[2025-06-25 16:20:32,214] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-09_04-58-34 assigned to split train
+[2025-06-25 16:20:32,214] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-09_05-18-34 assigned to split train
+[2025-06-25 16:20:32,215] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-09_05-58-34 assigned to split train
+[2025-06-25 16:20:32,215] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-09_07-28-34 assigned to split train
+[2025-06-25 16:20:32,215] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-09_20-28-37 assigned to split val
+[2025-06-25 16:20:32,216] INFO [deepethogram.data.utils.update_split:451] file Cage1-CONT-2024-12-10_04-48-38 assigned to split train
+[2025-06-25 16:20:32,216] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_20-34-40 assigned to split train
+[2025-06-25 16:20:32,216] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_20-44-40 assigned to split train
+[2025-06-25 16:20:32,216] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_21-04-40 assigned to split train
+[2025-06-25 16:20:32,217] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_21-24-40 assigned to split train
+[2025-06-25 16:20:32,217] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_21-44-40_bright_contrast assigned to split train
+[2025-06-25 16:20:32,217] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_21-44-40_combo123 assigned to split val
+[2025-06-25 16:20:32,217] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_21-44-40_combo124 assigned to split val
+[2025-06-25 16:20:32,218] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_21-44-40_combo234 assigned to split train
+[2025-06-25 16:20:32,218] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_21-44-40_flip assigned to split train
+[2025-06-25 16:20:32,218] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_22-04-40 assigned to split train
+[2025-06-25 16:20:32,218] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_22-14-40_blur assigned to split train
+[2025-06-25 16:20:32,219] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_22-14-40_zoom_crop assigned to split train
+[2025-06-25 16:20:32,219] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_22-34-40 assigned to split train
+[2025-06-25 16:20:32,219] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_22-44-40 assigned to split train
+[2025-06-25 16:20:32,220] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_23-14-40 assigned to split train
+[2025-06-25 16:20:32,220] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_23-24-40 assigned to split train
+[2025-06-25 16:20:32,220] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_23-34-40 assigned to split val
+[2025-06-25 16:20:32,221] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-30_23-54-40 assigned to split train
+[2025-06-25 16:20:32,221] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_00-04-40 assigned to split train
+[2025-06-25 16:20:32,221] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_04-34-40 assigned to split train
+[2025-06-25 16:20:32,221] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_04-44-40 assigned to split train
+[2025-06-25 16:20:32,222] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_04-54-40 assigned to split train
+[2025-06-25 16:20:32,222] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_05-04-40 assigned to split train
+[2025-06-25 16:20:32,222] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_05-14-40 assigned to split train
+[2025-06-25 16:20:32,222] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_05-24-40 assigned to split train
+[2025-06-25 16:20:32,222] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_05-34-40 assigned to split train
+[2025-06-25 16:20:32,223] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_05-44-40 assigned to split train
+[2025-06-25 16:20:32,223] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_06-04-40 assigned to split train
+[2025-06-25 16:20:32,223] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_06-24-40 assigned to split train
+[2025-06-25 16:20:32,223] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_06-34-40 assigned to split train
+[2025-06-25 16:20:32,224] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_06-44-40 assigned to split train
+[2025-06-25 16:20:32,224] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_06-54-40 assigned to split train
+[2025-06-25 16:20:32,224] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_20-35-28 assigned to split train
+[2025-06-25 16:20:32,224] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_20-55-28 assigned to split train
+[2025-06-25 16:20:32,225] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_21-15-28 assigned to split train
+[2025-06-25 16:20:32,225] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_21-45-28 assigned to split train
+[2025-06-25 16:20:32,225] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_21-55-28 assigned to split val
+[2025-06-25 16:20:32,225] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_22-05-28 assigned to split train
+[2025-06-25 16:20:32,226] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_22-15-28 assigned to split train
+[2025-06-25 16:20:32,226] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_22-45-28 assigned to split train
+[2025-06-25 16:20:32,226] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_22-55-28 assigned to split train
+[2025-06-25 16:20:32,227] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_23-25-28 assigned to split train
+[2025-06-25 16:20:32,227] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-08-31_23-55-28 assigned to split train
+[2025-06-25 16:20:32,227] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_00-05-28 assigned to split train
+[2025-06-25 16:20:32,227] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_04-25-28 assigned to split train
+[2025-06-25 16:20:32,228] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_04-35-28 assigned to split train
+[2025-06-25 16:20:32,229] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_04-45-28 assigned to split train
+[2025-06-25 16:20:32,229] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_04-55-28 assigned to split train
+[2025-06-25 16:20:32,230] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_05-15-28 assigned to split train
+[2025-06-25 16:20:32,230] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_05-35-28 assigned to split train
+[2025-06-25 16:20:32,231] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_05-45-28 assigned to split train
+[2025-06-25 16:20:32,231] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_06-05-28 assigned to split train
+[2025-06-25 16:20:32,232] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_06-25-28 assigned to split train
+[2025-06-25 16:20:32,232] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_06-45-28 assigned to split train
+[2025-06-25 16:20:32,234] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_07-15-28 assigned to split train
+[2025-06-25 16:20:32,234] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_20-15-28 assigned to split train
+[2025-06-25 16:20:32,235] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_20-25-28 assigned to split train
+[2025-06-25 16:20:32,235] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_20-35-28 assigned to split train
+[2025-06-25 16:20:32,235] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_20-45-28 assigned to split train
+[2025-06-25 16:20:32,235] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-01_20-55-28 assigned to split train
+[2025-06-25 16:20:32,236] INFO [deepethogram.data.utils.update_split:451] file Cage1-LBN-2024-09-03_22-21-56 assigned to split train
+[2025-06-25 16:20:32,236] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_21-28-34 assigned to split val
+[2025-06-25 16:20:32,236] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_21-58-35 assigned to split train
+[2025-06-25 16:20:32,237] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_22-48-35 assigned to split train
+[2025-06-25 16:20:32,237] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_22-58-35 assigned to split train
+[2025-06-25 16:20:32,238] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_22-58-35_combo123 assigned to split train
+[2025-06-25 16:20:32,238] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_22-58-35_combo124 assigned to split val
+[2025-06-25 16:20:32,238] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_22-58-35_combo234 assigned to split train
+[2025-06-25 16:20:32,239] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_22-58-35_flip assigned to split train
+[2025-06-25 16:20:32,239] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_22-58-35_zoom_crop assigned to split train
+[2025-06-25 16:20:32,239] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-08_23-18-35 assigned to split train
+[2025-06-25 16:20:32,239] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-09_05-48-35 assigned to split train
+[2025-06-25 16:20:32,240] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-09_07-08-35 assigned to split train
+[2025-06-25 16:20:32,240] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-10_05-38-39 assigned to split train
+[2025-06-25 16:20:32,240] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-10_05-58-39 assigned to split train
+[2025-06-25 16:20:32,240] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-10_20-28-40 assigned to split train
+[2025-06-25 16:20:32,241] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_20-42-14 assigned to split train
+[2025-06-25 16:20:32,241] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_20-42-14_blur assigned to split train
+[2025-06-25 16:20:32,241] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_20-42-14_combo234 assigned to split train
+[2025-06-25 16:20:32,241] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_20-42-14_zoom_crop assigned to split train
+[2025-06-25 16:20:32,242] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_21-02-14 assigned to split train
+[2025-06-25 16:20:32,242] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_21-02-14_blur assigned to split train
+[2025-06-25 16:20:32,242] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_21-02-14_bright_contrast assigned to split train
+[2025-06-25 16:20:32,243] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_21-02-14_combo234 assigned to split train
+[2025-06-25 16:20:32,243] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_21-02-14_flip assigned to split val
+[2025-06-25 16:20:32,243] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_22-52-14 assigned to split train
+[2025-06-25 16:20:32,243] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_22-52-14_blur assigned to split train
+[2025-06-25 16:20:32,244] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_22-52-14_combo123 assigned to split train
+[2025-06-25 16:20:32,244] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_22-52-14_flip assigned to split train
+[2025-06-25 16:20:32,244] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_22-52-14_zoom_crop assigned to split train
+[2025-06-25 16:20:32,245] INFO [deepethogram.data.utils.update_split:451] file Cage2-LBN-2024-12-11_23-42-14 assigned to split train
+[2025-06-25 16:20:32,245] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_21-38-35 assigned to split train
+[2025-06-25 16:20:32,245] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_21-38-35_blur assigned to split train
+[2025-06-25 16:20:32,246] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_21-38-35_bright_contrast assigned to split train
+[2025-06-25 16:20:32,246] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_21-38-35_combo123 assigned to split train
+[2025-06-25 16:20:32,247] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_21-38-35_combo124 assigned to split train
+[2025-06-25 16:20:32,248] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_21-38-35_flip assigned to split train
+[2025-06-25 16:20:32,250] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_22-28-35_blur assigned to split train
+[2025-06-25 16:20:32,251] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_22-28-35_bright_contrast assigned to split train
+[2025-06-25 16:20:32,252] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_22-28-35_combo123 assigned to split train
+[2025-06-25 16:20:32,252] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_22-28-35_combo234 assigned to split train
+[2025-06-25 16:20:32,252] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_22-28-35_flip assigned to split train
+[2025-06-25 16:20:32,252] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-08_22-28-35_zoom_crop assigned to split train
+[2025-06-25 16:20:32,253] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-09_07-28-36 assigned to split train
+[2025-06-25 16:20:32,253] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_20-08-42 assigned to split train
+[2025-06-25 16:20:32,255] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_20-08-42_blur assigned to split train
+[2025-06-25 16:20:32,256] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_20-08-42_flip assigned to split train
+[2025-06-25 16:20:32,258] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_21-08-42 assigned to split train
+[2025-06-25 16:20:32,259] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_21-28-42 assigned to split train
+[2025-06-25 16:20:32,260] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_21-28-42_blur assigned to split train
+[2025-06-25 16:20:32,260] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_21-28-42_bright_contrast assigned to split train
+[2025-06-25 16:20:32,261] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_21-28-42_combo123 assigned to split train
+[2025-06-25 16:20:32,261] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_21-28-42_combo234 assigned to split train
+[2025-06-25 16:20:32,261] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-10_21-28-42_flip assigned to split train
+[2025-06-25 16:20:32,262] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-11_04-38-42 assigned to split train
+[2025-06-25 16:20:32,262] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-11_04-38-42_blur assigned to split train
+[2025-06-25 16:20:32,262] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-11_04-38-42_combo123 assigned to split train
+[2025-06-25 16:20:32,262] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-11_04-38-42_combo124 assigned to split train
+[2025-06-25 16:20:32,263] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-11_04-38-42_combo234 assigned to split train
+[2025-06-25 16:20:32,263] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-11_04-38-42_flip assigned to split train
+[2025-06-25 16:20:32,264] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-11_07-28-42 assigned to split train
+[2025-06-25 16:20:32,264] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-12-15_blur assigned to split train
+[2025-06-25 16:20:32,264] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-12-15_bright_contrast assigned to split train
+[2025-06-25 16:20:32,264] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-12-15_combo123 assigned to split train
+[2025-06-25 16:20:32,265] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-12-15_flip assigned to split train
+[2025-06-25 16:20:32,265] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-12-15_zoom_crop assigned to split train
+[2025-06-25 16:20:32,266] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-52-15_combo234 assigned to split val
+[2025-06-25 16:20:32,266] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-52-15_flip assigned to split train
+[2025-06-25 16:20:32,267] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-12_04-52-15_zoom_crop assigned to split train
+[2025-06-25 16:20:32,267] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-13_22-13-41 assigned to split train
+[2025-06-25 16:20:32,268] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-14_06-23-41 assigned to split train
+[2025-06-25 16:20:32,269] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-14_06-23-41_blur assigned to split val
+[2025-06-25 16:20:32,271] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-14_06-23-41_bright_contrast assigned to split train
+[2025-06-25 16:20:32,272] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-14_06-23-41_combo123 assigned to split train
+[2025-06-25 16:20:32,273] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-14_06-23-41_combo234 assigned to split train
+[2025-06-25 16:20:32,273] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-14_06-23-41_flip assigned to split train
+[2025-06-25 16:20:32,279] INFO [deepethogram.data.utils.update_split:451] file Cage3-LBN-2024-12-14_06-23-41_zoom_crop assigned to split train
+[2025-06-25 16:20:32,279] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_20-02-17 assigned to split train
+[2025-06-25 16:20:32,279] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_20-22-17 assigned to split train
+[2025-06-25 16:20:32,279] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_20-52-17 assigned to split train
+[2025-06-25 16:20:32,279] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_21-02-17 assigned to split train
+[2025-06-25 16:20:32,279] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_21-12-17 assigned to split val
+[2025-06-25 16:20:32,279] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_21-22-17 assigned to split train
+[2025-06-25 16:20:32,287] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_21-42-17 assigned to split train
+[2025-06-25 16:20:32,287] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_22-12-17 assigned to split train
+[2025-06-25 16:20:32,288] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_22-42-17 assigned to split train
+[2025-06-25 16:20:32,289] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_22-52-17 assigned to split train
+[2025-06-25 16:20:32,295] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_23-02-17 assigned to split train
+[2025-06-25 16:20:32,296] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_23-12-17 assigned to split train
+[2025-06-25 16:20:32,296] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_23-32-17 assigned to split train
+[2025-06-25 16:20:32,297] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-12_23-52-17 assigned to split train
+[2025-06-25 16:20:32,297] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_00-02-17 assigned to split train
+[2025-06-25 16:20:32,298] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_04-22-17 assigned to split train
+[2025-06-25 16:20:32,298] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_04-32-17 assigned to split train
+[2025-06-25 16:20:32,299] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_05-12-17 assigned to split train
+[2025-06-25 16:20:32,299] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_05-22-17 assigned to split train
+[2025-06-25 16:20:32,301] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_05-42-17 assigned to split train
+[2025-06-25 16:20:32,302] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_05-52-17 assigned to split train
+[2025-06-25 16:20:32,306] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_07-22-17 assigned to split train
+[2025-06-25 16:20:32,306] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_20-23-41 assigned to split train
+[2025-06-25 16:20:32,307] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_20-33-41 assigned to split train
+[2025-06-25 16:20:32,308] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-13_21-53-41 assigned to split val
+[2025-06-25 16:20:32,308] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-14_06-13-42 assigned to split train
+[2025-06-25 16:20:32,308] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-14_07-23-42 assigned to split train
+[2025-06-25 16:20:32,309] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-15_21-51-54 assigned to split train
+[2025-06-25 16:20:32,310] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-15_22-41-54 assigned to split train
+[2025-06-25 16:20:32,310] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-16_04-41-55 assigned to split train
+[2025-06-25 16:20:32,311] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-16_07-01-55 assigned to split train
+[2025-06-25 16:20:32,311] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-16_20-34-36 assigned to split train
+[2025-06-25 16:20:32,312] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-16_21-04-36 assigned to split train
+[2025-06-25 16:20:32,312] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-16_23-04-36 assigned to split train
+[2025-06-25 16:20:32,312] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-17_04-14-36 assigned to split train
+[2025-06-25 16:20:32,312] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-17_06-24-36 assigned to split train
+[2025-06-25 16:20:32,313] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-17_07-24-36 assigned to split train
+[2025-06-25 16:20:32,313] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-17_20-24-46 assigned to split train
+[2025-06-25 16:20:32,314] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-17_22-04-46 assigned to split train
+[2025-06-25 16:20:32,314] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-17_22-44-46 assigned to split train
+[2025-06-25 16:20:32,314] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-17_23-34-46 assigned to split train
+[2025-06-25 16:20:32,314] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-18_21-44-46 assigned to split train
+[2025-06-25 16:20:32,315] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-18_22-54-46 assigned to split train
+[2025-06-25 16:20:32,315] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-19_07-14-46 assigned to split train
+[2025-06-25 16:20:32,315] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-19_21-45-14 assigned to split train
+[2025-06-25 16:20:32,316] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_02-25-14 assigned to split train
+[2025-06-25 16:20:32,316] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_02-35-14 assigned to split train
+[2025-06-25 16:20:32,316] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_02-45-14 assigned to split train
+[2025-06-25 16:20:32,317] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_02-55-14 assigned to split train
+[2025-06-25 16:20:32,317] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_03-05-14 assigned to split train
+[2025-06-25 16:20:32,317] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_03-35-14 assigned to split train
+[2025-06-25 16:20:32,317] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_03-45-14 assigned to split train
+[2025-06-25 16:20:32,318] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_03-55-14 assigned to split train
+[2025-06-25 16:20:32,318] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_04-05-14 assigned to split train
+[2025-06-25 16:20:32,318] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_04-15-14 assigned to split train
+[2025-06-25 16:20:32,318] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_04-25-14 assigned to split val
+[2025-06-25 16:20:32,319] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_04-35-14 assigned to split train
+[2025-06-25 16:20:32,319] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_04-45-14 assigned to split train
+[2025-06-25 16:20:32,319] INFO [deepethogram.data.utils.update_split:451] file Cage6-CONT-2024-12-20_05-05-14 assigned to split val
+[2025-06-25 16:20:32,319] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-13_06-07-33 assigned to split train
+[2025-06-25 16:20:32,320] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-13_07-07-33 assigned to split train
+[2025-06-25 16:20:32,320] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-13_20-13-44 assigned to split train
+[2025-06-25 16:20:32,320] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-13_20-33-44 assigned to split train
+[2025-06-25 16:20:32,320] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-15_04-13-47 assigned to split train
+[2025-06-25 16:20:32,320] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-15_22-13-49 assigned to split train
+[2025-06-25 16:20:32,321] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_20-33-51 assigned to split train
+[2025-06-25 16:20:32,321] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_21-03-51 assigned to split train
+[2025-06-25 16:20:32,321] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_21-33-51 assigned to split train
+[2025-06-25 16:20:32,321] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_21-43-51 assigned to split train
+[2025-06-25 16:20:32,321] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_22-03-51 assigned to split train
+[2025-06-25 16:20:32,321] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_22-43-51 assigned to split train
+[2025-06-25 16:20:32,322] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_23-03-51 assigned to split train
+[2025-06-25 16:20:32,322] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_23-23-51 assigned to split train
+[2025-06-25 16:20:32,322] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-16_23-53-51 assigned to split train
+[2025-06-25 16:20:32,322] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-17_00-03-51 assigned to split val
+[2025-06-25 16:20:32,322] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-17_05-33-51 assigned to split train
+[2025-06-25 16:20:32,323] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-17_06-53-52 assigned to split train
+[2025-06-25 16:20:32,323] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-17_07-03-52 assigned to split train
+[2025-06-25 16:20:32,323] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-18_20-17-22 assigned to split train
+[2025-06-25 16:20:32,323] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-19_04-17-22 assigned to split train
+[2025-06-25 16:20:32,323] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-19_05-37-23 assigned to split train
+[2025-06-25 16:20:32,324] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-19_06-07-23 assigned to split train
+[2025-06-25 16:20:32,324] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-19_07-07-23 assigned to split train
+[2025-06-25 16:20:32,324] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-19_20-20-00 assigned to split train
+[2025-06-25 16:20:32,324] INFO [deepethogram.data.utils.update_split:451] file Cage8-CONT-2024-12-20_02-00-06 assigned to split train
+[2025-06-25 16:20:32,324] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_20-03-20 assigned to split train
+[2025-06-25 16:20:32,325] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_20-23-20 assigned to split train
+[2025-06-25 16:20:32,325] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_20-33-20 assigned to split train
+[2025-06-25 16:20:32,325] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_21-13-20 assigned to split train
+[2025-06-25 16:20:32,325] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_21-43-20 assigned to split train
+[2025-06-25 16:20:32,326] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_22-13-20 assigned to split train
+[2025-06-25 16:20:32,326] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_22-23-20 assigned to split train
+[2025-06-25 16:20:32,326] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_23-03-20 assigned to split train
+[2025-06-25 16:20:32,326] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-05_23-53-20 assigned to split train
+[2025-06-25 16:20:32,326] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_04-03-20 assigned to split train
+[2025-06-25 16:20:32,327] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_04-13-20 assigned to split train
+[2025-06-25 16:20:32,327] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_04-23-20 assigned to split train
+[2025-06-25 16:20:32,327] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_05-33-20 assigned to split train
+[2025-06-25 16:20:32,327] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_05-33-20_blur assigned to split train
+[2025-06-25 16:20:32,327] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_05-33-20_combo123 assigned to split val
+[2025-06-25 16:20:32,328] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_05-33-20_combo124 assigned to split val
+[2025-06-25 16:20:32,328] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_05-33-20_flip assigned to split train
+[2025-06-25 16:20:32,328] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_05-33-20_zoom_crop assigned to split train
+[2025-06-25 16:20:32,328] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_06-13-21 assigned to split train
+[2025-06-25 16:20:32,328] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_06-33-21 assigned to split train
+[2025-06-25 16:20:32,328] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_06-53-21 assigned to split train
+[2025-06-25 16:20:32,329] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_07-03-21 assigned to split train
+[2025-06-25 16:20:32,329] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_07-23-21 assigned to split train
+[2025-06-25 16:20:32,329] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_07-33-21 assigned to split train
+[2025-06-25 16:20:32,329] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_20-14-42 assigned to split train
+[2025-06-25 16:20:32,329] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-06_22-24-42 assigned to split train
+[2025-06-25 16:20:32,330] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-07_04-54-43 assigned to split train
+[2025-06-25 16:20:32,330] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-07_05-44-43 assigned to split train
+[2025-06-25 16:20:32,330] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-07_20-44-49 assigned to split train
+[2025-06-25 16:20:32,330] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-07_21-04-49 assigned to split train
+[2025-06-25 16:20:32,331] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-07_22-54-49 assigned to split train
+[2025-06-25 16:20:32,331] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-07_23-54-50_combo234 assigned to split train
+[2025-06-25 16:20:32,331] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-07_23-54-50_flip assigned to split train
+[2025-06-25 16:20:32,331] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-08_04-54-50 assigned to split train
+[2025-06-25 16:20:32,331] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-08_05-34-50 assigned to split train
+[2025-06-25 16:20:32,332] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-08_05-54-50 assigned to split train
+[2025-06-25 16:20:32,332] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-08_07-34-50 assigned to split train
+[2025-06-25 16:20:32,332] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-08_21-44-52 assigned to split train
+[2025-06-25 16:20:32,332] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-08_23-14-52 assigned to split train
+[2025-06-25 16:20:32,332] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-09_05-24-53 assigned to split train
+[2025-06-25 16:20:32,332] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-09_22-26-36 assigned to split train
+[2025-06-25 16:20:32,333] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-09_23-06-36 assigned to split train
+[2025-06-25 16:20:32,333] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-09_23-36-36 assigned to split train
+[2025-06-25 16:20:32,333] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-10_04-56-37 assigned to split val
+[2025-06-25 16:20:32,333] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-10_05-16-37 assigned to split val
+[2025-06-25 16:20:32,333] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-10_22-46-39 assigned to split val
+[2025-06-25 16:20:32,334] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_04-16-42 assigned to split train
+[2025-06-25 16:20:32,334] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_04-46-42 assigned to split train
+[2025-06-25 16:20:32,334] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_04-56-42 assigned to split val
+[2025-06-25 16:20:32,334] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_05-06-42 assigned to split train
+[2025-06-25 16:20:32,335] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_05-16-42 assigned to split val
+[2025-06-25 16:20:32,335] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_05-26-42 assigned to split train
+[2025-06-25 16:20:32,335] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_05-46-42 assigned to split train
+[2025-06-25 16:20:32,335] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_06-16-42 assigned to split train
+[2025-06-25 16:20:32,335] INFO [deepethogram.data.utils.update_split:451] file CageA-LBN-2024-07-12_06-26-42 assigned to split train
+[2025-06-25 16:20:32,336] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_20-04-40 assigned to split train
+[2025-06-25 16:20:32,336] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_20-24-40 assigned to split train
+[2025-06-25 16:20:32,336] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_20-34-40 assigned to split train
+[2025-06-25 16:20:32,336] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_20-54-40 assigned to split train
+[2025-06-25 16:20:32,336] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_21-04-40 assigned to split train
+[2025-06-25 16:20:32,337] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_21-14-40 assigned to split val
+[2025-06-25 16:20:32,337] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_21-24-40 assigned to split train
+[2025-06-25 16:20:32,337] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_21-44-40 assigned to split train
+[2025-06-25 16:20:32,337] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_21-54-40 assigned to split val
+[2025-06-25 16:20:32,337] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_22-14-40 assigned to split train
+[2025-06-25 16:20:32,338] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_22-44-40 assigned to split train
+[2025-06-25 16:20:32,338] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_22-54-40 assigned to split train
+[2025-06-25 16:20:32,338] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_23-04-40 assigned to split train
+[2025-06-25 16:20:32,338] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_23-34-41 assigned to split train
+[2025-06-25 16:20:32,338] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_23-34-41_blur assigned to split train
+[2025-06-25 16:20:32,339] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_23-34-41_combo123 assigned to split train
+[2025-06-25 16:20:32,339] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_23-34-41_combo234 assigned to split val
+[2025-06-25 16:20:32,339] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_23-34-41_zoom_crop assigned to split val
+[2025-06-25 16:20:32,339] INFO [deepethogram.data.utils.update_split:451] file CageC-LBN-2024-07-06_23-44-41 assigned to split train
+[2025-06-25 16:20:32,339] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_20-24-39 assigned to split train
+[2025-06-25 16:20:32,340] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_20-34-39 assigned to split train
+[2025-06-25 16:20:32,340] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_21-44-39 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_21-54-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_22-04-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_22-24-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_22-54-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_23-34-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-06_23-54-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_04-04-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_04-14-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_04-24-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_04-54-40 assigned to split train
+[2025-06-25 16:20:32,341] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_05-04-40 assigned to split train
+[2025-06-25 16:20:32,343] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_05-34-40 assigned to split train
+[2025-06-25 16:20:32,343] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_06-24-40 assigned to split train
+[2025-06-25 16:20:32,344] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_06-34-40 assigned to split train
+[2025-06-25 16:20:32,344] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-07_06-44-40 assigned to split val
+[2025-06-25 16:20:32,344] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-08_23-12-13 assigned to split train
+[2025-06-25 16:20:32,344] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-09_22-02-16 assigned to split train
+[2025-06-25 16:20:32,344] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-10_21-32-14 assigned to split train
+[2025-06-25 16:20:32,345] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-12_06-12-15 assigned to split train
+[2025-06-25 16:20:32,345] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-12_21-02-20 assigned to split train
+[2025-06-25 16:20:32,345] INFO [deepethogram.data.utils.update_split:451] file CageD-CONT-2024-07-12_22-32-20 assigned to split train
+[2025-06-25 16:20:32,345] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-03_20-11-56 assigned to split train
+[2025-06-25 16:20:32,345] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_06-32-39 assigned to split train
+[2025-06-25 16:20:32,345] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_06-42-39 assigned to split train
+[2025-06-25 16:20:32,346] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_07-12-39 assigned to split train
+[2025-06-25 16:20:32,346] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_07-32-39 assigned to split train
+[2025-06-25 16:20:32,346] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_20-07-43 assigned to split val
+[2025-06-25 16:20:32,346] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_20-47-43 assigned to split train
+[2025-06-25 16:20:32,346] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_21-17-43 assigned to split train
+[2025-06-25 16:20:32,347] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-05_21-27-43 assigned to split train
+[2025-06-25 16:20:32,347] INFO [deepethogram.data.utils.update_split:451] file CageK1-CONT-2024-09-10_06-26-49 assigned to split train
+[2025-06-25 16:20:32,347] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-16_21-25-50 assigned to split train
+[2025-06-25 16:20:32,347] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-16_21-55-50 assigned to split train
+[2025-06-25 16:20:32,347] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-16_21-55-50_blur assigned to split train
+[2025-06-25 16:20:32,348] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-16_21-55-50_bright_contrast assigned to split train
+[2025-06-25 16:20:32,348] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-16_21-55-50_combo123 assigned to split val
+[2025-06-25 16:20:32,348] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-16_21-55-50_combo124 assigned to split val
+[2025-06-25 16:20:32,348] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-16_21-55-50_zoom_crop assigned to split train
+[2025-06-25 16:20:32,348] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-17_04-25-50 assigned to split train
+[2025-06-25 16:20:32,348] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-17_05-35-50 assigned to split train
+[2025-06-25 16:20:32,349] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-17_05-55-50_blur assigned to split train
+[2025-06-25 16:20:32,349] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-17_05-55-50_combo123 assigned to split val
+[2025-06-25 16:20:32,349] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-17_05-55-50_flip assigned to split train
+[2025-06-25 16:20:32,349] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-17_05-55-50_zoom_crop assigned to split train
+[2025-06-25 16:20:32,349] INFO [deepethogram.data.utils.update_split:451] file CageK2-LBN-2024-09-18_20-55-56 assigned to split val
+[2025-06-25 16:22:09,628] INFO [deepethogram.data.utils.make_loss_weight:115] Class counts: [     0 679837 385104 249875  10106  72442 246316    517  34156  59605]
+[2025-06-25 16:22:09,628] INFO [deepethogram.data.utils.make_loss_weight:116] Pos weight: [          inf    0.56573708    1.76404815    3.25991396  104.32812191
+   13.69376881    3.32146511 2057.88974855   30.1642464    16.85833403]
+[2025-06-25 16:22:09,628] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight, weighted: [   0.            0.56573707    1.7640481     3.259914    104.328125
+   13.6937685     3.321465   2057.8896       30.164246     16.858334  ]
+[2025-06-25 16:22:09,628] INFO [deepethogram.data.utils.make_loss_weight:118] Softmax weight: [0.         0.00069873 0.00123348 0.00190103 0.04700374 0.00655724
+ 0.0019285  0.91880045 0.01390736 0.00796946]
+[2025-06-25 16:22:09,628] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight transformed: [0.         0.00069873 0.00123348 0.00190103 0.04700374 0.00655724
+ 0.0019285  0.9188005  0.01390736 0.00796946]

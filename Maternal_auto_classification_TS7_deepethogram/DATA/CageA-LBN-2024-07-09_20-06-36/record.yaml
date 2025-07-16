@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: CageA-LBN-2024-07-09_20-06-36
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - CageA-LBN-2024-07-09_20-06-36.mp4
+  default: CageA-LBN-2024-07-09_20-06-36.mp4
+stats:
+  all: []
+  default: []

@@ -1,0 +1,20 @@
+flow:
+  all: []
+  default: []
+key: Cage7-LBN-2024-12-17_20-54-49
+keypoint:
+  all: []
+  default: []
+label:
+  all: []
+  default: []
+output:
+  all: []
+  default: []
+rgb:
+  all:
+  - Cage7-LBN-2024-12-17_20-54-49.mp4
+  default: Cage7-LBN-2024-12-17_20-54-49.mp4
+stats:
+  all: []
+  default: []

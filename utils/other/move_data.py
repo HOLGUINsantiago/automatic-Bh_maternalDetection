@@ -29,7 +29,7 @@ def copy_folders_with_labels_csv(source_dir, destination_dir):
                 print(f"Le dossier existe déjà : {destination_path}, non copié.")
 
 # Exemple d'utilisation
-source_dir = r"D:\LBN\Maternal_auto_classification_TS7_deepethogram\DATA"
-destination_dir = r"D:\LBN\Maternal_auto_classification_train_deepethogram\DATA"
+source_dir = r"D:\Copie securite\Maternal_auto_classification_train_deepethogram\DATA"
+destination_dir = r"D:\TRY"
 
 copy_folders_with_labels_csv(source_dir, destination_dir)
