@@ -58,6 +58,36 @@ library(here)
 
 -   actual cage for adult and ado df must be named "cage"
 
+### Exporting df
+
+```{r}
+export_csv <- function(df, ..., sep = ";", row.names = FALSE, na = "") {
+  # Recoger argumentos de ruta y file_name automáticamente
+  path_parts <- list(...)
+  if (length(path_parts) == 0) {
+    stop("Debe proporcionar al menos el nombre del archivo.")
+  }
+  
+  file_name <- path_parts[[length(path_parts)]]
+  folders <- path_parts[-length(path_parts)]
+  
+  # Construir la ruta completa
+  dir_path <- if (length(folders) > 0) here::here(folders) else here::here()
+  if (!dir.exists(dir_path)) {
+    dir.create(dir_path, recursive = TRUE)
+  }
+  
+  full_path <- file.path(dir_path, file_name)
+  
+  # Guardar el CSV
+  write.csv(df, full_path, sep = sep, row.names = row.names, na = na)
+  
+  message("CSV exportado a: ", full_path)
+}
+
+
+```
+
 ### Importing function and other declarations
 
 ```{r}
@@ -162,8 +192,10 @@ if(adult_data)
 ### Maternal data
 
 ```{r}
+days_to_keep <- c(1, 2, 3 ,4, 5, 6, 7 ,8)
+#days_to_keep <- c(1, 2 ,4, 5, 6)
 
-maternal_df <- import_csv("maternal_data","Resume_df.csv",sep =",")  
+maternal_df <- import_csv("Resume_df.csv",sep =",")  
 
 maternal_df$Transition <- maternal_df$Nest_exits_bouts + maternal_df$Nest_entry_bouts  # Calculate total transitions
 
@@ -171,7 +203,7 @@ maternal_df <- maternal_df %>%
   mutate(Day = floor(Time / 86400) + 1)  # Convert time (in seconds) to day number (1-indexed)
 
 maternal_df <- maternal_df %>%
-  filter(Day >= 1 & Day <= 7)  # Keep only days 1 to 7
+  filter(Day %in% days_to_keep) # Keep only days 1 to 7
 
 if ("Start_time" %in% colnames(maternal_df)) {
   maternal_df <- maternal_df %>%
@@ -180,7 +212,9 @@ if ("Start_time" %in% colnames(maternal_df)) {
   # Remove daytime (7:30 to 19:59)
 }
 
-maternal_full_df <- import_csv("maternal_data","behavioural_annotation.csv", sep=",")  # Load full maternal annotation data
+maternal_full_df <- import_csv("behavioural_annotation.csv", sep=",")  # Load full maternal annotation data
+
+maternal_full_df <- maternal_full_df %>% filter(Cage != "K2")
 
 maternal_full_df <- maternal_full_df %>%
   mutate(Start_time = ymd_hms(gsub("T", " ", Start_time)))  # Convert Start_time to POSIXct format
@@ -200,7 +234,7 @@ maternal_full_df <- maternal_full_df %>%
   mutate(Day = floor(Time / 86400) + 1)  # Compute the day number from total seconds
 
 maternal_full_df <- maternal_full_df %>%
-  filter(Day >= 1 & Day <= 7) %>%  # Keep days 1 to 7
+   filter(Day %in% days_to_keep) %>%
   filter(!(hour(Start_time) == 7 & minute(Start_time) >= 30 | hour(Start_time) > 7 & hour(Start_time) < 20))
  # Remove data from light phase (7:30–19:59)
 
@@ -1089,6 +1123,8 @@ summary_cage <- maternal_df %>%
     .groups = "drop"
   )
 
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "on_nest_bouts.csv")
+
 plot_behavior_boxplot(
   df = summary_cage,
   title = "On nest bouts",
@@ -1103,6 +1139,8 @@ summary_cage <- maternal_df %>%
     Onnest_duration_mean = mean(Onnest_duration, na.rm = TRUE),
     .groups = "drop"
   )
+
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "on_nest_duration.csv")
 
 plot_behavior_boxplot(
   df = summary_cage,
@@ -1124,6 +1162,8 @@ summary_cage <- maternal_df %>%
     duration_mean_diff = Onnest_duration_mean / Offnest_duration_mean
   )
 
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "on-off_nest_ratio.csv")
+
 plot_behavior_boxplot(
   df = summary_cage,
   title = "On / off nest ratio duration",
@@ -1138,6 +1178,8 @@ summary_cage <- maternal_df %>%
     Build_duration_mean = mean(Build_duration, na.rm = TRUE),
     .groups = "drop"
   )
+
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "build_duration.csv")
 
 plot_behavior_boxplot(
   df = summary_cage,
@@ -1154,6 +1196,8 @@ summary_cage <- maternal_df %>%
     .groups = "drop"
   )
 
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "eat_drink_duration.csv")
+
 plot_behavior_boxplot(
   df = summary_cage,
   title = "Eating and drinking duration",
@@ -1168,6 +1212,8 @@ summary_cage <- maternal_df %>%
     Eat_drink_duration_mean = mean(Eat_drink_bouts, na.rm = TRUE),
     .groups = "drop"
   )
+
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "eat_drink_bouts.csv")
 
 plot_behavior_boxplot(
   df = summary_cage,
@@ -1195,6 +1241,8 @@ summary_cage_diff <- maternal_df %>%
     duration_mean_diff = ifelse(Offnest_duration_mean == 0, 0, Onnest_duration_mean / Offnest_duration_mean)
   )
 
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "on-off_nest_ratio_evolution.csv")
+
 plot_duration_ratio_with_wilcox(summary_cage_diff, "duration_mean_diff", "Onnest / Offnest duration ratio per day", "Onnest / Offnest ratio in a 60-second video", colors = c("LBN" = "#1a80bb", "CONT" = "#f2c45f"))
 
 ```
@@ -1209,9 +1257,10 @@ summarise(Build_sum = mean(Build_duration, na.rm = TRUE), .groups = "drop")
 
 plot_duration_ratio_with_wilcox(build_summary, "Build_sum", "Build duration per day", "Build meand duration in a 60-second video", colors = c("LBN" = "#1a80bb", "CONT" = "#f2c45f"))
 
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "building_duration_evolution.csv")
 ```
 
-### Transitions per day evolution
+### Transitions per day evolution (On nest bouts)
 
 ```{r}
 transition_summary <- maternal_df %>%
@@ -1220,6 +1269,7 @@ summarise(Transition = mean(Transition, na.rm = TRUE), .groups = "drop")
 
 plot_duration_ratio_with_wilcox(transition_summary, "Transition", "Transition mean number per day", "Transitions mean duration in a 60-second video", colors = c("LBN" = "#1a80bb", "CONT" = "#f2c45f"))
 
+export_csv(summary_cage, "maternal_analysis", "direct_condition_comparision", "on_nest_bouts_evolution.csv")
 ```
 
 ### Changepoint and daily evolution
@@ -1303,6 +1353,8 @@ LBN_cage_means <- LBN_cage_means %>% left_join(slopes, by = "Behavior")
 medians <- medians %>% left_join(slopes, by = "Behavior")
 rupture_points <- rupture_points %>% left_join(slopes, by = "Behavior")
 
+export_csv(LBN_cage_means, "maternal_analysis", "LBN_behaviours_evolution", "change_point_and_evolution.csv")
+
 # 9. Graphique final
 ggplot(LBN_cage_means, aes(x = factor(Day), y = mean_bouts, fill = Behavior)) +
   geom_boxplot(alpha = 0.6, outlier.shape = NA) +
@@ -1330,7 +1382,9 @@ ggplot(LBN_cage_means, aes(x = factor(Day), y = mean_bouts, fill = Behavior)) +
   theme(legend.position = "none")
 ```
 
-## Clustering
+## Clustering comportements maternels 
+
+On force la formation de 3 groupes et on utilise seulement 3 dimensions de la PCA pour clustering
 
 ```{r}
 
@@ -1358,7 +1412,7 @@ maternal_cleaned <- maternal_means_full %>%
 maternal_cleaned <- maternal_cleaned %>%
   dplyr::select(-c("Recording_duration", "Day", "Time"))
 
-res_auto <- analyser_clusters_pca_mat(maternal_cleaned, colnames(maternal_cleaned),2, 3)
+res_auto <- analyser_clusters_pca_mat(maternal_cleaned, colnames(maternal_cleaned),3, 3)
 ```
 
 ## VAR
@@ -1368,16 +1422,16 @@ res_auto <- analyser_clusters_pca_mat(maternal_cleaned, colnames(maternal_cleane
 ```{r}
 fit_VAR_models <- function(df, 
                            behav_vars = NULL,
-                           group_by_col = NULL,
-                           frame_col = "Time",
+                           frame_col = "frame",
                            bin_size = NULL,
                            lag = 1,
                            auto_lag = FALSE,
                            lag_max = 10,
                            verbose = TRUE) {
+  
   df_proc <- df
   
-  # Temporal binning si especificado
+  # Temporal binning si se especifica
   if (!is.null(bin_size)) {
     df_proc <- df_proc %>%
       mutate(time_bin = floor(.data[[frame_col]] / bin_size))
@@ -1386,111 +1440,136 @@ fit_VAR_models <- function(df,
     time_unit <- frame_col
   }
   
-  view(df_proc)
+  # Definir ID de video = Cage + Start_time + Group
+  df_proc <- df_proc %>%
+    mutate(Video_ID = paste0(Cage, "_", Start_time, "_", Group, "_", Day))
   
-  # Seleccionar columnas de comportamiento si no se pasa explícitamente
+  # Selección de variables de comportamiento si no se especifica
   if (is.null(behav_vars)) {
     vars_to_exclude <- c(frame_col, "time_bin", "Cage", "Start_time", "LBN", 
                          "Recording_duration", "Sexe", "Group", "ID.blind", 
                          "PupID", "background", "Cohort", "Project", 
-                         "Nest_exits", "Nest_entry", "Cage.ID", "Date", "Day", "Time", "frame", "cluster", "Condition")
+                         "Nest_exits", "Nest_entry", "Cage.ID", "Date", "Day", 
+                         "Time", "cluster", "Condition", "Video_ID")
     behav_vars <- setdiff(colnames(df_proc), vars_to_exclude)
   }
   
-  print(behav_vars)
-  if (!is.null(group_by_col) && !(group_by_col %in% colnames(df_proc))) {
-    stop(paste("La columna", group_by_col, "no existe en el data.frame"))
-  }
+  if (verbose) print(glue::glue("Variables de comportamiento utilizadas: {toString(behav_vars)}"))
+  
+  # Eliminar NA en variables de comportamiento
   df_proc <- df_proc %>%
-  drop_na(all_of(behav_vars))
+    drop_na(all_of(behav_vars))
   
-  print(df_proc)
-
-  # Mantener solo una línea por temps et groupe (pré-agrégation)
+  # Consolidar duplicados por Video_ID + time_unit
   df_unique <- df_proc %>%
-    group_by(across(all_of(c(group_by_col, time_unit)))) %>%
-    summarise(across(all_of(behav_vars), max, na.rm = TRUE), .groups = "drop")
-
-  # Split selon le grouping (ou tout en une fois si NULL)
-  if (!is.null(group_by_col)) {
-    data_groups <- df_unique %>% group_split(.data[[group_by_col]])
-    names(data_groups) <- df_unique %>% pull(group_by_col) %>% as.character() %>% unique()
-  } else {
-    data_groups <- list(All = df_unique)
-  }
+    group_by(Video_ID, .data[[time_unit]]) %>%
+    summarise(across(all_of(behav_vars), max, na.rm = TRUE), .groups = "drop") %>%
+    arrange(Video_ID, .data[[time_unit]])
   
-  # Fit des modèles VAR
+  # Separar por Video_ID
+  data_groups <- df_unique %>%
+    group_split(Video_ID)
+  
+  names(data_groups) <- df_unique %>%
+    pull(Video_ID) %>%
+    unique() %>%
+    as.character()
+  
+  # Fit VAR por video
   var_models <- imap(data_groups, function(df_g, name) {
     ts_data <- ts(df_g %>% dplyr::select(all_of(behav_vars)), start = 0, frequency = 1)
-
+    
     p <- lag
     if (auto_lag) {
-      if (verbose) cat(glue::glue("[{name}] Sélection du lag optimal...\n"))
       p <- tryCatch({
         VARselect(ts_data, lag.max = lag_max, type = "const")$selection["AIC(n)"]
       }, error = function(e) {
-        warning(glue::glue("Lag auto échoué pour {name}, fallback à p=1"))
+        warning(glue::glue("Lag auto fallido para {name}, usando p=1"))
         1
       })
     }
     
-    if (verbose) cat(glue::glue("[{name}] Ajustement VAR avec p={p}...\n"))
-    
+
     tryCatch({
       VAR(ts_data, p = p, type = "const")
     }, error = function(e) {
-      warning(glue::glue("Échec modèle VAR pour {name} : {e$message}"))
+      warning(glue::glue("Error VAR para {name}: {e$message}"))
       NULL
     })
   })
-
+  
   return(var_models)
 }
+
+```
+
+### Extract P matrix
+
+```{r}
+extract_P_matrix <- function(var_model) {
+  coefs_list <- coef(var_model)
+  variables <- names(coefs_list)  # Comportamientos como filas
+  predictors <- rownames(coefs_list[[1]])
+  predictors <- predictors[grepl(".l", predictors)]  # solo predictores con lags
+
+  # Tus 9 comportamientos de interés
+  beh_cols <- c("Onnest", "Offnest", "ABN", "Carryingpups", 
+                "Selfgrooming", "Eat_drink", "Kicking", 
+                "Groomingpups", "Build")
+
+  n_vars <- length(variables)
+  n_beh <- length(beh_cols)
+
+  # Matriz P: filas = comportamientos observados, columnas = 9 comportamientos de interés
+  P_matrix <- matrix(0, nrow = n_vars, ncol = n_beh)
+
+  rownames(P_matrix) <- variables
+  colnames(P_matrix) <- beh_cols
+
+  for (i in seq_along(variables)) {
+    for (j in seq_along(predictors)) {
+      pred_name <- gsub(".l1", "", predictors[j])
+      if (pred_name %in% beh_cols) {  # Solo si el predictor está en tus 9
+        coef_value <- coefs_list[[i]][predictors[j], "Estimate"]
+        P_matrix[variables[i], pred_name] <- coef_value
+      }
+    }
+  }
+
+  return(P_matrix)
+}
+
 ```
 
 ### Visualization
 
 ```{r}
-plot_VAR_graph <- function(var_model, var_name_labels = NULL,
-                           min_width = 1, max_width = 1.5,
+plot_VAR_graph <- function(coef_matrix,
+                           var_name_labels = NULL,
+                           min_width = 1,
+                           max_width = 1.5,
                            edge_col = "#01cb01",
                            title = "Réseau comportemental VAR (probabilités de transition)") {
-  # Nombre de lags
-  p <- var_model$p
+  # Matriz de coeficientes promedio
+  coef_prom <- coef_matrix
   
-  # Extraire les matrices A_k
-  coef_matrices <- lapply(1:p, function(k) {
-    sapply(var_model$varresult, function(x) {
-      coefs <- coef(x)
-      start_idx <- 1 + (k - 1) * ncol(var_model$y)
-      end_idx <- start_idx + ncol(var_model$y) - 1
-      coefs[start_idx:end_idx]
-    })
-  })
-  
-  # Convertir en tableau 3D [cible, source, lag]
-  coef_array <- array(unlist(coef_matrices), dim = c(ncol(var_model$y), ncol(var_model$y), p))
-  
-  # Moyenne des A_k (effet moyen entre variables)
-  coef_prom <- apply(coef_array, c(1, 2), mean)
-
+  # Imprimir matriz cruda
   print(coef_prom)
-
   
-  # Supprimer les influences négatives
+  # Eliminar influencias negativas
   coef_prom[coef_prom < 0] <- 0
   
-  # Transformer en "probabilités de transition"
+  # Calcular probabilidades de transición
   coef_prob <- coef_prom / rowSums(coef_prom)
   coef_prob[is.na(coef_prob)] <- 0
   
-  # Normaliser les largeurs d’arêtes
+  # Normalizar anchos de aristas
   edge_width_norm <- (coef_prob - min(coef_prob)) / (max(coef_prob) - min(coef_prob))
   edge_width_norm <- edge_width_norm * (max_width - min_width) + min_width
   
   print(coef_prob)
   
-  # Étiquettes des nœuds
+  # Etiquetas de nodos
   if (is.null(var_name_labels)) {
     var_name_labels <- colnames(coef_prob)
   } else {
@@ -1498,15 +1577,9 @@ plot_VAR_graph <- function(var_model, var_name_labels = NULL,
     rownames(coef_prob) <- var_name_labels
   }
   
-  # Total de aristas posibles (para matriz simétrica)
-  n_edges <- sum(coef_prob != 0 & !is.na(coef_prob))
-  
-  # Tamaño de fuente
-  font_size <- 1
-  
-  # Tamaño del nodo para que quepan las etiquetas
+  # Calcular tamaño de nodo
   max_label_length <- max(nchar(var_name_labels))
-  node_size <- min(9, max_label_length * font_size )
+  node_size <- min(9, max_label_length * 1 )
   
   # Llamada a qgraph
   qgraph::qgraph(coef_prob,
@@ -1516,12 +1589,12 @@ plot_VAR_graph <- function(var_model, var_name_labels = NULL,
     edge.width = edge_width_norm[coef_prob != 0],
     labels = var_name_labels,
     label.cex = 1,
-    label.font = 1.7,                     # Negrita
-    vsize = node_size,                         # Tamaño del nodo
-    #color = adjustcolor("yellow", alpha.f = 0.6),  
+    label.font = 1.7,   # negrita
+    vsize = node_size,
     border.width = 2,
     border.color = "black",
-    legend = FALSE
+    legend = FALSE,
+    title = title
   )
 }
 
@@ -1896,6 +1969,8 @@ condition_impacted_strict <- full_results %>%
 ```{r}
 fill_colors <- c("CONT" = "#a00000", "LBN" = "#1a80bb")
 
+export_csv(summary_cage, "juvenile_analysis", "juvenile_df.csv")
+
 walk(condition_impacted_normal, ~{
   print(plot_variable_box(
     df = juvenile_df,
@@ -1908,21 +1983,25 @@ walk(condition_impacted_normal, ~{
 
 ```
 
-## PCA
+## PCA et clustering (hclust)
 
-### All very important variables - true data
+### All variables affected by LBN (Strict filter) - true data 
+
+We do not impose a specific number of clusters, the clusterated groups are automatic
 
 ```{r}
 analyser_clusters_pca(juvenile_df, condition_impacted_strict, 2, -1)
 ```
 
-First results validated = Good separation between CONT and LBN - 8 observable groups
+First results validated = Good separation between CONT and LBN. We impose 8 observable groups
 
 ```{r}
 analyser_clusters_pca(juvenile_df, condition_impacted_strict, 2, 8)
 ```
 
-### All important variables - Corrected data
+### All variables impacted by LBN condition (Not strict filter) - Completed data by Miss forest
+
+We do not impose specific number of clusters, the clusterisation si automatic. A second clustering is done with random forest instead of PCA
 
 ```{r}
 clusters <- analyser_clusters_pca(juvenile_all_completed, condition_impacted_normal, 3, -1)
@@ -1930,37 +2009,41 @@ cluster_rf_analysis(juvenile_all_completed, condition_impacted_normal)
 ```
 
 \
-There are two intrusive variables =\> Two LBN are into CONT cluster, but we'll try. 5 observable groups
+There are two intrusive variables =\> Two LBN are into CONT cluster.
+
+We impose the clustering to 6 because we could observe 6 groups on automatic clustering
 
 ```{r}
 analyser_clusters_pca(juvenile_all_completed, condition_impacted_normal, 4, 6)
 ```
 
-### All very cage impacted - All data
+### All variables where there is a maternal effect - All data (missing data too)
+
+Automatic clusterisation
 
 ```{r}
 analyser_clusters_pca(juvenile_df, cage_impacted_strict, 2, -1)
 ```
 
-Very good separation between conditions
+Imposing 5 clusters
 
 ```{r}
 clusters <- analyser_clusters_pca(juvenile_df, cage_impacted_strict, 2, 5)
 ```
 
-### All cage impacted - corrected data
+### All variables where there is a maternal effect - Corrected data (missing forest)
 
 ```{r}
 analyser_clusters_pca(juvenile_all_completed, cage_impacted_strict, 2, -1)
 ```
 
-2 Cont into LBN group - not very good
+Impose 5 groups for clustering
 
 ```{r}
 analyser_clusters_pca(juvenile_all_completed, cage_impacted_strict, 2, 5)
 ```
 
-### All cage impacted - corrected data
+### All variables where there is a maternal effect (no strict filter) - All data (missing data too)
 
 ```{r}
 analyser_clusters_pca(juvenile_all_completed,unique(c(cage_impacted_normal, cage_impacted_strict, condition_impacted_normal, condition_impacted_strict)) , 4, -1)
@@ -1968,7 +2051,7 @@ analyser_clusters_pca(juvenile_all_completed,unique(c(cage_impacted_normal, cage
 cluster_rf_analysis(juvenile_all_completed, unique(c(cage_impacted_normal, cage_impacted_strict, condition_impacted_normal, condition_impacted_strict)))
 ```
 
-2 intrusive CONT.6 groups
+6 imposed groups
 
 ```{r}
 analyser_clusters_pca(juvenile_all_completed, cage_impacted_normal, 4, 6)
@@ -1979,145 +2062,208 @@ analyser_clusters_pca(juvenile_all_completed, cage_impacted_normal, 4, 6)
 ## VAR
 
 ```{r}
-
 group_VARs <- fit_VAR_models(
   df = maternal_full_df,
-  group_by_col = "Group",
   bin_size = 60,
   auto_lag = TRUE,
   lag_max = 10
 )
+```
 
-cage_VARs <- fit_VAR_models(
-  df = maternal_full_df,
-  group_by_col = "Cage.ID",
-  bin_size = 6,
-  auto_lag = TRUE,
-  lag_max = 5
-)
+## Evolution for individual
 
-global_VAR <- fit_VAR_models(
-  df = maternal_full_df,
-  bin_size = 60,
-  auto_lag = TRUE,
-  lag_max = 10
-)
+```{r}
+options(warn = -1) 
 
-beh_cols <- c("Onnest", "Offnest", "ABN", "Carryingpups", "Selfgrooming", "Eat_drink", "Kicking", "Groomingpups", "Build")
+VAR_names <- names(group_VARs)
 
-plot_VAR_graph(cage_VARs[["7"]], beh_cols)
+Cage_Group_Day_names <- VAR_names %>%
+  str_split("_", n = 4, simplify = TRUE) %>%
+  as_tibble() %>%
+  transmute(key = paste(V1, V3, V4, sep = "_")) %>%
+  pull(key)
+
+indices_by_group <- split(seq_along(group_VARs), Cage_Group_Day_names)
+
+group_day_P_matrices <- list()
+
+for (group_key in names(indices_by_group)) {
+  indices <- indices_by_group[[group_key]]
+  
+  P_matrices_list <- lapply(indices, function(idx) {
+    extract_P_matrix(group_VARs[[idx]])
+  })
+
+  if (length(P_matrices_list) == 0) next
+  
+  # Filtrar matrices con las mismas dimensiones (por seguridad)
+  dims <- sapply(P_matrices_list, dim)
+  keep <- apply(dims, 2, function(x) all(x == dims[,1]))
+  P_matrices_list <- P_matrices_list[keep]
+  
+  # Promediar elemento por elemento
+  P_mean <- Reduce("+", P_matrices_list) / length(P_matrices_list)
+  
+  group_day_P_matrices[[group_key]] <- P_mean
+}
+
+plot_VAR_graph(group_day_P_matrices[["1_LBN_1"]], title= "1_LBN_1")
+plot_VAR_graph(group_day_P_matrices[["1_LBN_2"]], title= "1_LBN_2")
+#plot_VAR_graph(group_day_P_matrices[["1_LBN_3"]], title= "1_LBN_3")
+plot_VAR_graph(group_day_P_matrices[["1_LBN_4"]], title= "1_LBN_4")
+plot_VAR_graph(group_day_P_matrices[["1_LBN_5"]], title= "1_LBN_5")
+#plot_VAR_graph(group_day_P_matrices[["1_LBN_6"]], title= "1_LBN_6")
+#plot_VAR_graph(group_day_P_matrices[["1_LBN_7"]], title= "1_LBN_7")
+
+for (name in names(group_day_P_matrices)) {
+  mat <- group_day_P_matrices[[name]]
+  
+  # Si es un objeto matriz válido
+  if (!is.null(mat) && is.matrix(mat)) {
+    # Convertir a data.frame para exportar
+    df_to_export <- as.data.frame(mat)
+    
+    # Guardar como CSV en "outputs/VAR_matrices"
+    export_csv(df_to_export, "maternal_analysis", "VAR_matrices", paste0(name, ".csv"))
+  }
+}
+
+options(warn = 0) 
 ```
 
 ### Control vs LBN comparison
 
 ```{r}
 
-# Compare VAR models "A" and "1" excluding variables "Carryingpups" and "Kicking", generate plot with title "1 vs A"
-diff_matrix <- compare_VAR_models(
-  model_A = cage_VARs[["A"]],
-  model_B = cage_VARs[["1"]],
-  exclude = c("Carryingpups", "Kicking"),
-  title = "1 vs A",
-  plot = TRUE
-)
+Condition_names <- names(group_day_P_matrices) %>%
+  str_split("_", n = 3, simplify = TRUE) %>%
+  as_tibble() %>%
+  transmute(key = V2) %>%
+  pull(key)
 
-# Extract unique Cage IDs and their experimental Groups, rename Group column to Condition
-cage_conditions <- maternal_full_df %>%
-  distinct(Cage.ID, Group) %>%
-  rename(Condition = Group)
+indices_by_condition <- split(seq_along(group_day_P_matrices), Condition_names)
 
-# Initialize a data frame to store comparison results between each cage VAR model and the control group VAR model "CONT"
-diff_results <- map_dfr(names(cage_VARs), function(cage_id) {
-  result <- tryCatch({
-    # Compare VAR model of the current cage with the control group VAR model excluding "Carryingpups"
-    diff_matrix <- compare_VAR_models(
-      model_A = cage_VARs[[cage_id]],
-      model_B = group_VARs[["CONT"]],
-      exclude = c("Carryingpups"),
-      plot = FALSE
-    )
-    
-    # Calculate the Frobenius norm of the difference matrix if it exists and is non-empty; otherwise assign NA
-    dist_val <- if (!is.null(diff_matrix) && nrow(diff_matrix) > 0 && ncol(diff_matrix) > 0) {
-      norm(as.matrix(diff_matrix), type = "F")
-    } else {
-      NA
-    }
-    
-    # Return a data frame with Cage ID and the computed Frobenius distance
-    data.frame(Cage.ID = cage_id, Frobenius_Dist = dist_val)
-  }, error = function(e) {
-    # If error occurs during comparison, return NA for that cage ID
-    data.frame(Cage.ID = cage_id, Frobenius_Dist = NA)
+condition_P_matrices <- list()
+
+for (condition_key in names(indices_by_condition)) {
+  indices <- indices_by_condition[[condition_key]]
+  
+  P_matrices_list <- lapply(indices, function(idx) {
+    group_day_P_matrices[[idx]]
   })
-})
+  
+  if (length(P_matrices_list) == 0) next
+  
+  # Filtrar matrices con mismas dimensiones (seguridad)
+  dims <- sapply(P_matrices_list, dim)
+  keep <- apply(dims, 2, function(x) all(x == dims[,1]))
+  P_matrices_list <- P_matrices_list[keep]
+  
+  # Promedio elemento por elemento
+  P_mean <- Reduce("+", P_matrices_list) / length(P_matrices_list)
+  
+  condition_P_matrices[[condition_key]] <- P_mean
+}
 
-# Join the diff_results with cage_conditions to add experimental Condition information for each cage
-diff_results <- left_join(diff_results, cage_conditions, by = "Cage.ID")
+# Visualización de las redes de transición promedio por condición
+plot_VAR_graph(condition_P_matrices[["LBN"]], title = "LBN")
+plot_VAR_graph(condition_P_matrices[["CONT"]], title = "CONT")
 
+for (name in names(condition_P_matrices)) {
+  mat <- condition_P_matrices[[name]]
+  
+  # Si es un objeto matriz válido
+  if (!is.null(mat) && is.matrix(mat)) {
+    # Convertir a data.frame para exportar
+    df_to_export <- as.data.frame(mat)
+    
+    # Guardar como CSV en "outputs/VAR_matrices"
+    export_csv(df_to_export, "maternal_analysis", "dam_condition_day", paste0(name, ".csv"))
+  }
+}
 ```
 
 ### ALL vs ALL
 
 ```{r}
-# 1. Get the list of Cage IDs from the cage_VARs list
-cage_ids <- names(cage_VARs)
+matrix_names <- names(group_day_P_matrices)
 
-# 2. Initialize an empty square matrix with NA, with row and column names as cage IDs
-n <- length(cage_ids)
-frobenius_mat <- matrix(NA, nrow = n, ncol = n, dimnames = list(cage_ids, cage_ids))
+# Extraer el CAGE de cada nombre (ej: "1_LBN_3" -> "1")
+cage_condition_ids <- matrix_names %>%
+  str_split("_", simplify = TRUE) %>%
+  apply(1, function(x) paste(x[1], x[2], sep = "_"))
 
-# 3. Fill the matrix by computing pairwise Frobenius distances between VAR models
-for (i in seq_along(cage_ids)) {
-  for (j in seq_along(cage_ids)) {
-    if (i <= j) {  # Compute only upper triangle and diagonal (matrix is symmetric)
-      mat_i <- cage_VARs[[cage_ids[i]]]
-      mat_j <- cage_VARs[[cage_ids[j]]]
+indices_by_cage <- split(seq_along(group_day_P_matrices), cage_condition_ids)
+
+cage_P_matrices <- list()
+
+for (cage_key in names(indices_by_cage)) {
+  indices <- indices_by_cage[[cage_key]]
+  
+  matrices_list <- lapply(indices, function(idx) group_day_P_matrices[[idx]])
+  
+  # Filtrar matrices con dimensiones iguales
+  dims <- sapply(matrices_list, dim)
+  keep <- apply(dims, 2, function(x) all(x == dims[,1]))
+  matrices_list <- matrices_list[keep]
+  
+  # Calcular promedio elemento a elemento
+  P_mean <- Reduce("+", matrices_list) / length(matrices_list)
+  
+  cage_P_matrices[[cage_key]] <- P_mean
+}
+
+
+cage_keys <- names(cage_P_matrices)
+n <- length(cage_keys)
+
+frobenius_mat <- matrix(NA, nrow = n, ncol = n, dimnames = list(cage_keys, cage_keys))
+
+for (i in seq_along(cage_keys)) {
+  for (j in seq_along(cage_keys)) {
+    if (i <= j) {
+      mat_i <- cage_P_matrices[[cage_keys[i]]]
+      mat_j <- cage_P_matrices[[cage_keys[j]]]
       
-      # Calculate Frobenius distance of difference matrix, handling errors gracefully
+      # Excluir variable "Carryingpups"
+      var_names <- rownames(mat_i)
+      keep_vars <- which(var_names != "Carryingpups")
+      
+      mat_i_red <- mat_i[keep_vars, keep_vars, drop=FALSE]
+      mat_j_red <- mat_j[keep_vars, keep_vars, drop=FALSE]
+      
+      # Calcular distancia de Frobenius
       dist_val <- tryCatch({
-        diff_matrix <- compare_VAR_models(
-          model_A = mat_i,
-          model_B = mat_j,
-          exclude = c("Carryingpups"),  # Exclude this variable from comparison
-          plot = FALSE
-        )
-        
-        if (!is.null(diff_matrix) && nrow(diff_matrix) > 0 && ncol(diff_matrix) > 0) {
-          norm(as.matrix(diff_matrix), type = "F")  # Frobenius norm of difference matrix
-        } else {
-          NA  # Return NA if difference matrix is null or empty
-        }
+        diff_matrix <- mat_i_red - mat_j_red
+        norm(diff_matrix, type = "F")
       }, error = function(e) NA)
       
-      # Assign the computed distance to both symmetric positions in the matrix
       frobenius_mat[i, j] <- dist_val
       frobenius_mat[j, i] <- dist_val
     }
   }
 }
 
-# 4. Convert the matrix to a tidy data frame in long format
 frobenius_df <- as.data.frame(as.table(frobenius_mat)) %>%
   rename(CageA = Var1, CageB = Var2, Frobenius_Dist = Freq) %>%
-  filter(CageA != CageB) %>%  # Remove self-comparisons
-  drop_na()  # Remove rows with NA distances
+  filter(CageA != CageB) %>%
+  drop_na()
 
 frobenius_mat <- frobenius_mat[, colSums(!is.na(frobenius_mat)) > 0]
-
-# Eliminar filas que son completamente NA
 frobenius_mat <- frobenius_mat[rowSums(!is.na(frobenius_mat)) > 0, ]
 
-# 5. Plot heatmap of Frobenius distances between VAR models
+df_to_export <- as.data.frame(frobenius_mat)
+    
+export_csv(df_to_export, "VAR_maternal",  "all_cages_differences.csv")
+
 pheatmap(
-  frobenius_mat, 
-  main = "Frobenius Distance Between VAR Models",
-  display_numbers = TRUE,      # Display numerical values on the heatmap
+  frobenius_mat,
+  main = "Frobenius Distance Between Cages (using mean P matrices)",
+  display_numbers = TRUE,
   clustering_method = "ward.D2",
-  fontsize_row = 10, 
+  fontsize_row = 10,
   fontsize_col = 10
 )
-
 ```
 
 # Linear analysis

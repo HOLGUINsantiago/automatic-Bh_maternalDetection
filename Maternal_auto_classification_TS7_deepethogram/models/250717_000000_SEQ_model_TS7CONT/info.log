@@ -1,0 +1,171 @@
+[2025-06-16 14:53:32,199] INFO [__main__.sequence_train:43] args: C:\Users\TeamGranon\anaconda3\envs\deg_env\lib\site-packages\deepethogram\sequence\train.py project.path=D:\LBN\Maternal_auto_classification_train_deepethogram reload.weights=D:\LBN\Maternal_auto_classification_train_deepethogram\models\250603_145653_sequence_train\lightning_checkpoints\epoch=28-step=9685.ckpt
+[2025-06-16 14:53:32,199] INFO [__main__.sequence_train:49] Configuration used: 
+[2025-06-16 14:53:32,215] INFO [__main__.sequence_train:50] split:
+  reload: true
+  file: null
+  train_val_test:
+  - 0.9
+  - 0.1
+  - 0.0
+compute:
+  fp16: false
+  num_workers: 3
+  batch_size: 8
+  min_batch_size: 8
+  max_batch_size: 128
+  distributed: false
+  gpu_id: 0
+  dali: false
+  metrics_workers: 0
+reload:
+  overwrite_cfg: false
+  latest: false
+  weights: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250603_145653_sequence_train\lightning_checkpoints\epoch=28-step=9685.ckpt
+notes: null
+log:
+  level: info
+feature_extractor:
+  arch: resnet18
+  fusion: average
+  sampler: null
+  final_bn: false
+  sampling_ratio: null
+  final_activation: sigmoid
+  dropout_p: 0.25
+  n_flows: 10
+  n_rgb: 1
+  curriculum: false
+  inputs: both
+  weights: pretrained
+train:
+  steps_per_epoch:
+    train: 1000
+    val: 1000
+    test: 20
+  num_epochs: 100
+  lr: 0.0001
+  scheduler: plateau
+  min_lr: 5.0e-07
+  stopping_type: learning_rate
+  milestones:
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+  - 300
+  weight_loss: true
+  patience: 5
+  early_stopping_begins: 0
+  viz_metrics: true
+  viz_examples: 10
+  reduction_factor: 0.1
+  loss_weight_exp: 1.0
+  loss_gamma: 1.0
+  label_smoothing: 0.05
+  oversampling_exp: 0.0
+  regularization:
+    style: l2
+    alpha: 0.01
+    beta: 0.001
+sequence:
+  arch: tgmj
+  latent_name: resnet18
+  output_name: null
+  sequence_length: 180
+  dropout_p: 0.5
+  num_layers: 3
+  hidden_size: 64
+  nonoverlapping: true
+  filter_length: 15
+  input_dropout: 0.5
+  n_filters: 8
+  tgm_reduction: max
+  c_in: 1
+  c_out: 8
+  soft_attn: true
+  num_features: 128
+  bidirectional: false
+  rnn_style: lstm
+  hidden_dropout: 0.0
+  weights: null
+  nonlinear_classification: true
+  final_bn: true
+  input_type: features
+augs:
+  LR: 0.5
+  UD: 0.0
+  brightness: 0.25
+  contrast: 0.1
+  crop_size: null
+  degrees: 10
+  grayscale: 0.5
+  hue: 0.1
+  normalization:
+    'N': 618077952000
+    mean:
+    - 0.42517412266678273
+    - 0.43137161373889366
+    - 0.36341115380866434
+    std:
+    - 0.21811947189196618
+    - 0.22076338169887563
+    - 0.21714027118257334
+  pad: null
+  random_resize: false
+  resize:
+  - 224
+  - 224
+  saturation: 0.1
+cmap: deepethogram
+control_arrow_jump: 31
+label_view_width: 31
+postprocessor:
+  min_bout_length: 10
+  type: min_bout_per_behavior
+prediction_opacity: 0.2
+project:
+  class_names:
+  - background
+  - Onnest
+  - Offnest
+  - ABN
+  - Carryingpups
+  - Selfgrooming
+  - Eat_drink
+  - Kicking
+  - Groomingpups
+  - Build
+  config_file: project_config.yaml
+  data_path: D:\LBN\Maternal_auto_classification_train_deepethogram\DATA
+  labeler: null
+  model_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models
+  name: Maternal_auto_classification
+  path: D:\LBN\Maternal_auto_classification_train_deepethogram
+  pretrained_path: D:\LBN\Maternal_auto_classification_train_deepethogram\models\pretrained_models
+run:
+  type: train
+  model: sequence
+  dir: D:\LBN\Maternal_auto_classification_train_deepethogram\models\250616_145332_sequence_train
+unlabeled_alpha: 0.1
+vertical_arrow_jump: 3
+
+[2025-06-16 14:53:37,647] INFO [deepethogram.data.utils.make_loss_weight:115] Class counts: [    63 589615 336001 188428  11790  73186 220092    525  30511  50036]
+[2025-06-16 14:53:37,647] INFO [deepethogram.data.utils.make_loss_weight:116] Pos weight: [14685.33333333     0.56922568     1.7536793      3.91030526
+    77.47659033    11.64229497     3.20387383  1761.36
+    29.32476812    17.49146614]
+[2025-06-16 14:53:37,648] INFO [deepethogram.data.utils.make_loss_weight:117] Pos weight, weighted: [14685.333          0.56922567     1.7536793      3.9103053
+    77.47659       11.642295       3.2038739   1761.36
+    29.324768      17.491467  ]
+[2025-06-16 14:53:37,648] INFO [deepethogram.data.utils.make_loss_weight:118] Softmax weight: [0.8846088  0.00009452 0.00016586 0.00029576 0.00472692 0.00076149
+ 0.00025321 0.10615306 0.00182657 0.00111381]
+[2025-06-16 14:53:37,648] INFO [deepethogram.data.utils.make_loss_weight:119] Softmax weight transformed: [0.8846088  0.00009452 0.00016586 0.00029576 0.00472692 0.00076149
+ 0.00025321 0.10615306 0.00182657 0.00111381]
+[2025-06-16 14:53:38,382] WARNING [deepethogram.projects.get_weightfile_from_cfg:1090] no sequence weights found...
+[2025-06-16 14:53:38,382] INFO [__main__.sequence_train:63] Total trainable params: 266,278
+[2025-06-16 14:53:38,382] INFO [deepethogram.feature_extractor.train.get_metrics:632] key metric: f1_class_mean
+[2025-06-16 14:53:38,390] INFO [deepethogram.feature_extractor.losses.__init__:100] Focal loss: gamma 1.00 smoothing: 0.05
+[2025-06-16 14:53:38,390] INFO [deepethogram.losses.get_regularization_loss:188] Regularization: L2. alpha: 0.01 
+[2025-06-16 14:53:38,391] INFO [deepethogram.base.__init__:95] scheduler mode: max
+[2025-06-16 14:53:38,625] INFO [deepethogram.base.configure_optimizers:227] learning rate: 0.0001
+[2025-06-16 16:10:55,643] INFO [deepethogram.callbacks.on_train_epoch_end:257] Stopping criterion reached! setting trainer.should_stop=True

@@ -1,10 +1,24 @@
-# Maternal behaviours automatic classification - With [DeepEthogram](https://github.com/jbohnslav/deepethogram)
+# [Maternal behaviours automatic classification](https://github.com/HOLGUINsantiago/automatic-Bh_maternalDetection) - With [DeepEthogram](https://github.com/jbohnslav/deepethogram)
 
 - Written by Santiago Holguin 
 - [holguinsanty@gmail.com](mailto:holguinsanty@gmail.com)
 
+## Clone our repository
+### Clone with git :
+First make sur to have [Git](https://git-scm.com/downloads) installed on your pc. Then execute on console: 
+
+`git clone https://github.com/HOLGUINsantiago/automatic-Bh_maternalDetection `
+
+### Get pretrained models :
+
+On demand to [holguinsanty@gmail.com](mailto:holguinsanty@gmail.com)
+
+1. Copy the pretrained models on your deepEthogram project `Maternal_auto_classification_TS7_deepethogram/models/` (if the folders exist, delete them, they are not usefull)
+
+1. Copy the pretrained models on your deepEthogram project `Maternal_auto_classification_train_deepethogram/models/` (if the folders exist, delete them, they are not usefull)
+
 ## DeepEthogram installation - For NVIDIA GPU - CUDA 11.8
-Make sure to have cuda and conda installed on your PC
+Make sure to have [cuda](https://developer.nvidia.com/cuda-11-8-0-download-archive) and [conda](https://www.anaconda.com/docs/getting-started/miniconda/install#windows-powershell) installed on your PC
 1. Create environment : 
     
     `conda create --name deg python=3.7`
@@ -33,7 +47,7 @@ Make sure to have cuda and conda installed on your PC
     
     `pip install deepethogram`
     
-8. Try it !!
+8. Try it !! (ALWAYS YOU USE DEEPETHOGRAM YOU'LL NEED TO ACTIVATE THE CONDA ENVIRONMENT :  `conda activate deg`)
     
     `deepethogram`
 

@@ -1,0 +1,1 @@
+Directory having the outputs of [post-processing script](analyseResultats.ipynb) 
